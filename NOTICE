@@ -1,0 +1,32 @@
+CLLMs for Copilot Chat
+======================
+
+This project is a derivative work, adapted into a multi-provider extension for
+Chinese frontier LLMs (Qwen, z.ai GLM, MiniMax) and other OpenAI-compatible
+providers, of:
+
+  deepseek-v4-for-copilot
+  Copyright (c) 2026 Vizards
+  https://github.com/Vizards/deepseek-v4-for-copilot
+  Licensed under the MIT License.
+
+The original project established the architecture used here: registering a
+BYOK model into the GitHub Copilot Chat model picker through the native
+vscode.LanguageModelChatProvider API, including the streaming request
+pipeline, the vision proxy bridge, thinking-mode handling, prompt-cache
+diagnostics, and internationalization.
+
+Modifications in this project include (non-exhaustive):
+  - A multi-provider architecture with first-class Qwen (DashScope), z.ai
+    (Zhipu GLM), and MiniMax providers, each with its own base URL, API key,
+    and model IDs; fully configurable for other compatible providers.
+  - Per-provider thinking control: Qwen's `enable_thinking` / `thinking_budget`,
+    GLM's `thinking: { type }`, and MiniMax's `thinking: { type: "adaptive" }`
+    with `reasoning_split`.
+  - Hybrid vision: native image input (Qwen-VL, GLM-4.5V) plus the Copilot-model
+    proxy fallback for text-only models.
+  - DashScope cache-usage accounting (prompt_tokens_details.cached_tokens).
+  - Rebranding to CLLMs, multi-provider model registry, pricing, and documentation.
+
+Grateful thanks to the original author. The MIT License text covering both the
+original work and this adaptation is in the LICENSE file.

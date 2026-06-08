@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#1E1B4B" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Center (MiMo - Purple) -->
+    <radialGradient id="center" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#C084FC"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </radialGradient>
+    <!-- Left (Qwen - Blue) -->
+    <radialGradient id="left" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#3B82F6"/>
+    </radialGradient>
+    <!-- Right (GLM - Cyan) -->
+    <radialGradient id="right" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#5EEAD4"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </radialGradient>
+    <!-- TopLeft (MiniMax - Pink) -->
+    <radialGradient id="topLeft" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#F9A8D4"/>
+      <stop offset="100%" stop-color="#EC4899"/>
+    </radialGradient>
+    <!-- TopRight (Kimi - Amber) -->
+    <radialGradient id="topRight" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </radialGradient>
+
+    <filter id="softShadow">
+      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <!-- Background glow -->
+  <circle cx="64" cy="64" r="62" fill="url(#bgGlow)"/>
+
+  <!-- Connection pulse lines (dashed, translucent) -->
+  <line x1="64" y1="64" x2="34" y2="76" stroke="#818CF8" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5"/>
+  <line x1="64" y1="64" x2="94" y2="76" stroke="#818CF8" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5"/>
+  <line x1="64" y1="64" x2="38" y2="44" stroke="#818CF8" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5"/>
+  <line x1="64" y1="64" x2="90" y2="44" stroke="#818CF8" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5"/>
+
+  <!-- Node dots (each provider) -->
+  <!-- Center - MiMo -->
+  <circle cx="64" cy="64" r="12" fill="url(#center)" filter="url(#softShadow)"/>
+  <!-- Left - Qwen -->
+  <circle cx="34" cy="76" r="7" fill="url(#left)" filter="url(#softShadow)"/>
+  <!-- Right - GLM -->
+  <circle cx="94" cy="76" r="7" fill="url(#right)" filter="url(#softShadow)"/>
+  <!-- Top-Left - MiniMax -->
+  <circle cx="38" cy="44" r="6" fill="url(#topLeft)" filter="url(#softShadow)"/>
+  <!-- Top-Right - Kimi -->
+  <circle cx="90" cy="44" r="6" fill="url(#topRight)" filter="url(#softShadow)"/>
+
+  <!-- Brain outline on top (AI / reasoning symbol) -->
+  <path d="M59 53 C53 47 47 47 45 50
+           C43 53 44 56 44 58
+           C44 60 46 63 48 64
+           C46 65 45 67 46 69
+           C47 71 49 72 51 72
+           C53 72 55 71 56 69
+           C57 68 58 67 59 66
+           C60 68 61 69 63 69
+           C65 69 66 68 67 66
+           C68 64 69 62 69 60
+           C69 58 70 56 68 53
+           C66 50 63 50 61 52
+           C60 53 59 54 59 53Z"
+        fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.85"/>
+</svg>

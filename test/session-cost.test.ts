@@ -1,0 +1,144 @@
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+import { formatSessionCost, SessionCostTracker } from '../src/provider/pricing/session';
+import type { LlmUsage, ModelDefinition } from '../src/types';
+
+function model(id: string, overrides: Partial<ModelDefinition> = {}): ModelDefinition {
+	return {
+		id,
+		name: id.toUpperCase(),
+		provider: 'qwen',
+		family: 'test',
+		version: '1',
+		detail: '',
+		maxInputTokens: 1000,
+		maxOutputTokens: 1000,
+		capabilities: { toolCalling: true, imageInput: false, thinking: false },
+		requiresThinkingParam: false,
+		pricing: {
+			USD: { cacheHitInput: 0.1, cacheMissInput: 1, output: 5 },
+			CNY: { cacheHitInput: 0.8, cacheMissInput: 4, output: 16 },
+		},
+		...overrides,
+	};
+}
+
+function usage(overrides: Partial<LlmUsage> = {}): LlmUsage {
+	return {
+		prompt_tokens: 0,
+		completion_tokens: 0,
+		total_tokens: 0,
+		...overrides,
+	};
+}
+
+describe('SessionCostTracker', () => {
+	it('starts empty', () => {
+		const tracker = new SessionCostTracker();
+		assert.equal(tracker.isEmpty(), true);
+		assert.equal(tracker.getTotalCost(), 0);
+		assert.equal(tracker.getSummary(), undefined);
+	});
+
+	it('computes cost from cache-miss input, cached input, and output prices', () => {
+		const tracker = new SessionCostTracker();
+		tracker.record(
+			model('qwen3-coder-plus'),
+			usage({
+				prompt_tokens: 1_000_000,
+				completion_tokens: 1_000_000,
+				total_tokens: 2_000_000,
+				prompt_tokens_details: { cached_tokens: 400_000 },
+			}),
+			'USD',
+		);
+
+		// 600k non-cached @ $1 + 400k cached @ $0.1 + 1M output @ $5
+		// = 0.6 + 0.04 + 5 = 5.64 per 1M unit
+		assert.ok(Math.abs(tracker.getTotalCost() - 5.64) < 1e-9);
+		const summary = tracker.getSummary();
+		assert.equal(summary?.currency, 'USD');
+		assert.equal(summary?.items.length, 1);
+		assert.equal(summary?.items[0].requests, 1);
+	});
+
+	it('aggregates repeated usage for the same model', () => {
+		const tracker = new SessionCostTracker();
+		const m = model('qwen3-coder-plus');
+		tracker.record(m, usage({ prompt_tokens: 1_000_000, total_tokens: 1_000_000 }), 'USD');
+		tracker.record(m, usage({ completion_tokens: 1_000_000, total_tokens: 1_000_000 }), 'USD');
+
+		const summary = tracker.getSummary();
+		assert.equal(summary?.items.length, 1);
+		assert.equal(summary?.items[0].requests, 2);
+		assert.equal(summary?.items[0].promptTokens, 1_000_000);
+		assert.equal(summary?.items[0].completionTokens, 1_000_000);
+		// $1 input + $5 output = $6
+		assert.ok(Math.abs(tracker.getTotalCost() - 6) < 1e-9);
+	});
+
+	it('sorts the breakdown by descending cost', () => {
+		const tracker = new SessionCostTracker();
+		tracker.record(model('cheap'), usage({ prompt_tokens: 1000, total_tokens: 1000 }), 'USD');
+		tracker.record(
+			model('pricey'),
+			usage({ completion_tokens: 1_000_000, total_tokens: 1_000_000 }),
+			'USD',
+		);
+		const summary = tracker.getSummary();
+		assert.deepEqual(
+			summary?.items.map((i) => i.modelId),
+			['pricey', 'cheap'],
+		);
+	});
+
+	it('ignores models without pricing in the active currency', () => {
+		const tracker = new SessionCostTracker();
+		tracker.record(
+			model('no-price', { pricing: undefined }),
+			usage({ prompt_tokens: 1_000_000, total_tokens: 1_000_000 }),
+			'USD',
+		);
+		assert.equal(tracker.isEmpty(), true);
+		assert.equal(tracker.getTotalCost(), 0);
+	});
+
+	it('ignores usage when no display currency is resolved', () => {
+		const tracker = new SessionCostTracker();
+		tracker.record(model('qwen3-coder-plus'), usage({ prompt_tokens: 1000 }), undefined);
+		assert.equal(tracker.isEmpty(), true);
+	});
+
+	it('resets the tally when the display currency changes mid-session', () => {
+		const tracker = new SessionCostTracker();
+		tracker.record(model('m'), usage({ prompt_tokens: 1_000_000, total_tokens: 1_000_000 }), 'USD');
+		assert.ok(tracker.getTotalCost() > 0);
+
+		tracker.record(model('m'), usage({ prompt_tokens: 1_000_000, total_tokens: 1_000_000 }), 'CNY');
+		const summary = tracker.getSummary();
+		assert.equal(summary?.currency, 'CNY');
+		assert.equal(summary?.items.length, 1);
+		assert.equal(summary?.items[0].requests, 1);
+		// Only the CNY request remains: 1M input @ ¥4
+		assert.ok(Math.abs(tracker.getTotalCost() - 4) < 1e-9);
+	});
+
+	it('reset clears all accumulated state', () => {
+		const tracker = new SessionCostTracker();
+		tracker.record(model('m'), usage({ prompt_tokens: 1_000_000, total_tokens: 1_000_000 }), 'USD');
+		tracker.reset();
+		assert.equal(tracker.isEmpty(), true);
+		assert.equal(tracker.getTotalCost(), 0);
+		assert.equal(tracker.getSummary(), undefined);
+	});
+});
+
+describe('formatSessionCost', () => {
+	it('formats USD with a dollar sign and 4 decimals', () => {
+		assert.equal(formatSessionCost(1.5, 'USD'), '$1.5000');
+	});
+
+	it('formats CNY with a yuan sign', () => {
+		assert.equal(formatSessionCost(0.1234, 'CNY'), '¥0.1234');
+	});
+});

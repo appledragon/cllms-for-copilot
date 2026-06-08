@@ -1,0 +1,470 @@
+{
+  "name": "cllms-for-copilot",
+  "displayName": "CLLMs for Copilot Chat",
+  "description": "Pick Qwen, GLM (z.ai), MiniMax, Xiaomi MiMo, Moonshot Kimi, and Tencent Hunyuan models from the Copilot Chat model picker. Vision, thinking mode, agent tools — zero config, BYOK.",
+  "icon": "resources/icon.png",
+  "version": "0.1.0",
+  "publisher": "CuiLiAn",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/appledragon/cllms-for-copilot"
+  },
+  "engines": {
+    "vscode": "^1.116.0",
+    "node": ">=24"
+  },
+  "categories": [
+    "AI",
+    "Chat",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "qwen",
+    "glm",
+    "z.ai",
+    "zhipu",
+    "minimax",
+    "xiaomi",
+    "mimo",
+    "moonshot",
+    "kimi",
+    "copilot",
+    "github copilot",
+    "copilot chat",
+    "vision",
+    "byok",
+    "language model",
+    "thinking",
+    "reasoning",
+    "ai",
+    "chat"
+  ],
+  "activationEvents": [
+    "onUri",
+    "onStartupFinished"
+  ],
+  "enabledApiProposals": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languageModelChatProviders": [
+      {
+        "vendor": "cllms",
+        "displayName": "CLLMs (Qwen · GLM · MiniMax · MiMo · Kimi · Hunyuan)"
+      }
+    ],
+    "commands": [
+      {
+        "command": "cllms.setApiKey",
+        "title": "%cllms.command.setApiKey%"
+      },
+      {
+        "command": "cllms.getApiKey",
+        "title": "%cllms.command.getApiKey%"
+      },
+      {
+        "command": "cllms.clearApiKey",
+        "title": "%cllms.command.clearApiKey%"
+      },
+      {
+        "command": "cllms.setVisionModel",
+        "title": "%cllms.command.setVisionModel%"
+      },
+      {
+        "command": "cllms.testConnection",
+        "title": "%cllms.command.testConnection%"
+      },
+      {
+        "command": "cllms.showSessionCost",
+        "title": "%cllms.command.showSessionCost%"
+      },
+      {
+        "command": "cllms.openSettings",
+        "title": "%cllms.command.openSettings%"
+      },
+      {
+        "command": "cllms.showLogs",
+        "title": "%cllms.command.showLogs%"
+      },
+      {
+        "command": "cllms.openRequestDumpsFolder",
+        "title": "%cllms.command.openRequestDumpsFolder%"
+      }
+    ],
+    "walkthroughs": [
+      {
+        "id": "cllmsGettingStarted",
+        "title": "%cllms.walkthrough.title%",
+        "description": "%cllms.walkthrough.description%",
+        "steps": [
+          {
+            "id": "setApiKey",
+            "title": "%cllms.walkthrough.setApiKey.title%",
+            "description": "%cllms.walkthrough.setApiKey.description%",
+            "media": {
+              "markdown": "resources/walkthrough/set-api-key.md"
+            },
+            "completionEvents": [
+              "onCommand:cllms.setApiKey"
+            ]
+          },
+          {
+            "id": "showModels",
+            "title": "%cllms.walkthrough.showModels.title%",
+            "description": "%cllms.walkthrough.showModels.description%",
+            "media": {
+              "markdown": "resources/walkthrough/show-models.md"
+            }
+          },
+          {
+            "id": "advancedSettings",
+            "title": "%cllms.walkthrough.advancedSettings.title%",
+            "description": "%cllms.walkthrough.advancedSettings.description%",
+            "media": {
+              "markdown": "resources/walkthrough/advanced-settings.md"
+            }
+          }
+        ]
+      }
+    ],
+    "configuration": {
+      "title": "%cllms.config.title%",
+      "properties": {
+        "cllms.baseUrl": {
+          "type": "string",
+          "default": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+          "description": "%cllms.config.baseUrl.description%"
+        },
+        "cllms.maxTokens": {
+          "type": "number",
+          "default": 0,
+          "minimum": 0,
+          "description": "%cllms.config.maxTokens.description%"
+        },
+        "cllms.maxRetries": {
+          "type": "number",
+          "default": 2,
+          "minimum": 0,
+          "maximum": 5,
+          "markdownDescription": "%cllms.config.maxRetries.description%"
+        },
+        "cllms.experimental.stabilizeToolList": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "%cllms.config.experimental.stabilizeToolList.description%",
+          "tags": [
+            "experimental"
+          ]
+        },
+        "cllms.modelIdOverrides": {
+          "type": "object",
+          "default": {
+            "qwen3-coder-plus": "qwen3-coder-plus",
+            "qwen-plus": "qwen-plus",
+            "qwen3-max": "qwen3-max",
+            "qwen3-vl-plus": "qwen3-vl-plus"
+          },
+          "description": "%cllms.config.modelIdOverrides.description%",
+          "additionalProperties": false,
+          "properties": {
+            "qwen3-coder-plus": {
+              "type": "string",
+              "description": "%cllms.config.modelIdOverrides.qwen3-coder-plus.description%"
+            },
+            "qwen-plus": {
+              "type": "string",
+              "description": "%cllms.config.modelIdOverrides.qwen-plus.description%"
+            },
+            "qwen3-max": {
+              "type": "string",
+              "description": "%cllms.config.modelIdOverrides.qwen3-max.description%"
+            },
+            "qwen3-vl-plus": {
+              "type": "string",
+              "description": "%cllms.config.modelIdOverrides.qwen3-vl-plus.description%"
+            }
+          }
+        },
+        "cllms.qwenIntl.baseUrl": {
+          "type": "string",
+          "default": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+          "markdownDescription": "%cllms.config.qwenIntl.baseUrl.description%"
+        },
+        "cllms.qwenIntl.modelIdOverrides": {
+          "type": "object",
+          "default": {
+            "qwen3-coder-plus-intl": "qwen3-coder-plus",
+            "qwen-plus-intl": "qwen-plus",
+            "qwen3-max-intl": "qwen3-max",
+            "qwen3-vl-plus-intl": "qwen3-vl-plus"
+          },
+          "markdownDescription": "%cllms.config.qwenIntl.modelIdOverrides.description%",
+          "additionalProperties": false,
+          "properties": {
+            "qwen3-coder-plus-intl": {
+              "type": "string",
+              "description": "%cllms.config.qwenIntl.modelIdOverrides.qwen3-coder-plus-intl.description%"
+            },
+            "qwen-plus-intl": {
+              "type": "string",
+              "description": "%cllms.config.qwenIntl.modelIdOverrides.qwen-plus-intl.description%"
+            },
+            "qwen3-max-intl": {
+              "type": "string",
+              "description": "%cllms.config.qwenIntl.modelIdOverrides.qwen3-max-intl.description%"
+            },
+            "qwen3-vl-plus-intl": {
+              "type": "string",
+              "description": "%cllms.config.qwenIntl.modelIdOverrides.qwen3-vl-plus-intl.description%"
+            }
+          }
+        },
+        "cllms.zai.baseUrl": {
+          "type": "string",
+          "default": "https://api.z.ai/api/paas/v4",
+          "markdownDescription": "%cllms.config.zai.baseUrl.description%"
+        },
+        "cllms.zai.modelIdOverrides": {
+          "type": "object",
+          "default": {
+            "glm-4.6": "glm-4.6",
+            "glm-4.5-air": "glm-4.5-air",
+            "glm-4.5v": "glm-4.5v"
+          },
+          "markdownDescription": "%cllms.config.zai.modelIdOverrides.description%",
+          "additionalProperties": false,
+          "properties": {
+            "glm-4.6": {
+              "type": "string",
+              "description": "%cllms.config.zai.modelIdOverrides.glm-4.6.description%"
+            },
+            "glm-4.5-air": {
+              "type": "string",
+              "description": "%cllms.config.zai.modelIdOverrides.glm-4.5-air.description%"
+            },
+            "glm-4.5v": {
+              "type": "string",
+              "description": "%cllms.config.zai.modelIdOverrides.glm-4.5v.description%"
+            }
+          }
+        },
+        "cllms.minimax.baseUrl": {
+          "type": "string",
+          "default": "https://api.minimaxi.com/v1",
+          "markdownDescription": "%cllms.config.minimax.baseUrl.description%"
+        },
+        "cllms.minimax.modelIdOverrides": {
+          "type": "object",
+          "default": {
+            "MiniMax-M3": "MiniMax-M3",
+            "MiniMax-M2.7": "MiniMax-M2.7"
+          },
+          "markdownDescription": "%cllms.config.minimax.modelIdOverrides.description%",
+          "additionalProperties": false,
+          "properties": {
+            "MiniMax-M3": {
+              "type": "string",
+              "description": "%cllms.config.minimax.modelIdOverrides.MiniMax-M3.description%"
+            },
+            "MiniMax-M2.7": {
+              "type": "string",
+              "description": "%cllms.config.minimax.modelIdOverrides.MiniMax-M2.7.description%"
+            }
+          }
+        },
+        "cllms.minimaxIntl.baseUrl": {
+          "type": "string",
+          "default": "https://api.minimax.io/v1",
+          "markdownDescription": "%cllms.config.minimaxIntl.baseUrl.description%"
+        },
+        "cllms.minimaxIntl.modelIdOverrides": {
+          "type": "object",
+          "default": {
+            "MiniMax-M3-intl": "MiniMax-M3",
+            "MiniMax-M2.7-intl": "MiniMax-M2.7"
+          },
+          "markdownDescription": "%cllms.config.minimaxIntl.modelIdOverrides.description%",
+          "additionalProperties": false,
+          "properties": {
+            "MiniMax-M3-intl": {
+              "type": "string",
+              "description": "%cllms.config.minimaxIntl.modelIdOverrides.MiniMax-M3-intl.description%"
+            },
+            "MiniMax-M2.7-intl": {
+              "type": "string",
+              "description": "%cllms.config.minimaxIntl.modelIdOverrides.MiniMax-M2.7-intl.description%"
+            }
+          }
+        },
+        "cllms.xiaomi.baseUrl": {
+          "type": "string",
+          "default": "https://api.xiaomimimo.com/v1",
+          "markdownDescription": "%cllms.config.xiaomi.baseUrl.description%"
+        },
+        "cllms.xiaomi.modelIdOverrides": {
+          "type": "object",
+          "default": {
+            "mimo-v2.5-pro": "mimo-v2.5-pro",
+            "mimo-v2.5": "mimo-v2.5",
+            "mimo-v2-flash": "mimo-v2-flash"
+          },
+          "markdownDescription": "%cllms.config.xiaomi.modelIdOverrides.description%",
+          "additionalProperties": false,
+          "properties": {
+            "mimo-v2.5-pro": {
+              "type": "string",
+              "description": "%cllms.config.xiaomi.modelIdOverrides.mimo-v2.5-pro.description%"
+            },
+            "mimo-v2.5": {
+              "type": "string",
+              "description": "%cllms.config.xiaomi.modelIdOverrides.mimo-v2.5.description%"
+            },
+            "mimo-v2-flash": {
+              "type": "string",
+              "description": "%cllms.config.xiaomi.modelIdOverrides.mimo-v2-flash.description%"
+            }
+          }
+        },
+        "cllms.moonshot.baseUrl": {
+          "type": "string",
+          "default": "https://api.moonshot.cn/v1",
+          "markdownDescription": "%cllms.config.moonshot.baseUrl.description%"
+        },
+        "cllms.moonshot.modelIdOverrides": {
+          "type": "object",
+          "default": {
+            "kimi-k2.6": "kimi-k2.6",
+            "kimi-k2.5": "kimi-k2.5"
+          },
+          "markdownDescription": "%cllms.config.moonshot.modelIdOverrides.description%",
+          "additionalProperties": false,
+          "properties": {
+            "kimi-k2.6": {
+              "type": "string",
+              "description": "%cllms.config.moonshot.modelIdOverrides.kimi-k2.6.description%"
+            },
+            "kimi-k2.5": {
+              "type": "string",
+              "description": "%cllms.config.moonshot.modelIdOverrides.kimi-k2.5.description%"
+            }
+          }
+        },
+        "cllms.moonshotIntl.baseUrl": {
+          "type": "string",
+          "default": "https://api.moonshot.ai/v1",
+          "markdownDescription": "%cllms.config.moonshotIntl.baseUrl.description%"
+        },
+        "cllms.moonshotIntl.modelIdOverrides": {
+          "type": "object",
+          "default": {
+            "kimi-k2.6-intl": "kimi-k2.6",
+            "kimi-k2.5-intl": "kimi-k2.5"
+          },
+          "markdownDescription": "%cllms.config.moonshotIntl.modelIdOverrides.description%",
+          "additionalProperties": false,
+          "properties": {
+            "kimi-k2.6-intl": {
+              "type": "string",
+              "description": "%cllms.config.moonshotIntl.modelIdOverrides.kimi-k2.6-intl.description%"
+            },
+            "kimi-k2.5-intl": {
+              "type": "string",
+              "description": "%cllms.config.moonshotIntl.modelIdOverrides.kimi-k2.5-intl.description%"
+            }
+          }
+        },
+        "cllms.hunyuan.baseUrl": {
+          "type": "string",
+          "default": "https://api.hunyuan.cloud.tencent.com/v1",
+          "markdownDescription": "%cllms.config.hunyuan.baseUrl.description%"
+        },
+        "cllms.hunyuan.modelIdOverrides": {
+          "type": "object",
+          "default": {
+            "hunyuan-2.0-think": "hunyuan-2.0-think-20250516",
+            "hunyuan-turbos": "hunyuan-turbos-latest",
+            "hunyuan-t1": "hunyuan-t1-latest",
+            "hunyuan-a13b": "hunyuan-a13b"
+          },
+          "markdownDescription": "%cllms.config.hunyuan.modelIdOverrides.description%",
+          "additionalProperties": false,
+          "properties": {
+            "hunyuan-2.0-think": {
+              "type": "string",
+              "description": "%cllms.config.hunyuan.modelIdOverrides.hunyuan-2.0-think.description%"
+            },
+            "hunyuan-turbos": {
+              "type": "string",
+              "description": "%cllms.config.hunyuan.modelIdOverrides.hunyuan-turbos.description%"
+            },
+            "hunyuan-t1": {
+              "type": "string",
+              "description": "%cllms.config.hunyuan.modelIdOverrides.hunyuan-t1.description%"
+            },
+            "hunyuan-a13b": {
+              "type": "string",
+              "description": "%cllms.config.hunyuan.modelIdOverrides.hunyuan-a13b.description%"
+            }
+          }
+        },
+        "cllms.visionModel": {
+          "type": "string",
+          "default": "",
+          "tags": [
+            "advanced"
+          ],
+          "markdownDescription": "%cllms.config.visionModel.description%"
+        },
+        "cllms.visionPrompt": {
+          "type": "string",
+          "editPresentation": "multilineText",
+          "default": "Describe all image attachments in this message.\n\nIf there is one image, describe it directly.\nIf there are multiple images:\n1. Describe each image separately, preserving their order.\n2. Then provide a combined description explaining the overall context and relationships across the images.\n\nReturn one concise factual description suitable for inserting into a text-only chat prompt. Include visible text, objects, UI elements, people, and relevant context. Do not invent details.",
+          "markdownDescription": "%cllms.config.visionPrompt.description%"
+        },
+        "cllms.debugMode": {
+          "type": "string",
+          "default": "minimal",
+          "enum": [
+            "minimal",
+            "metadata",
+            "verbose"
+          ],
+          "enumItemLabels": [
+            "%cllms.config.debugMode.minimal.label%",
+            "%cllms.config.debugMode.metadata.label%",
+            "%cllms.config.debugMode.verbose.label%"
+          ],
+          "markdownEnumDescriptions": [
+            "%cllms.config.debugMode.minimal.description%",
+            "%cllms.config.debugMode.metadata.description%",
+            "%cllms.config.debugMode.verbose.description%"
+          ],
+          "markdownDescription": "%cllms.config.debugMode.description%"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('out', { recursive: true, force: true, maxRetries: process.platform === 'win32' ? 10 : 0 })\"",
+    "vscode:prepublish": "node -e \"require('node:fs').mkdirSync('dist',{recursive:true});require('node:fs').copyFileSync('README.md','dist/README.marketplace.md')\" && npm run compile",
+    "compile": "npm run clean && tsc -p ./",
+    "watch": "npm run clean && tsc -watch -p ./",
+    "lint": "oxlint",
+    "format": "oxfmt --write src/ test/",
+    "format:check": "oxfmt --check src/ test/",
+    "clean:test": "node -e \"require('node:fs').rmSync('out-test', { recursive: true, force: true })\"",
+    "test": "npm run clean:test && tsc -p tsconfig.test.json && node --require ./test/vscode-shim.cjs --test \"out-test/test/**/*.test.js\"",
+    "package": "vsce package --readme-path dist/README.marketplace.md -o dist/",
+    "login": "vsce login CuiLiAn"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "@types/vscode": "^1.116.0",
+    "@vscode/vsce": "^3.9.1",
+    "ovsx": "0.10.12",
+    "oxfmt": "^0.47.0",
+    "oxlint": "^1.62.0",
+    "sharp": "^0.34.5",
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,0 +1,25 @@
+out/
+out-test/
+dist/
+node_modules/
+*.vsix
+.vscode-test/
+.dev/
+
+# Build / tooling artifacts
+*.tsbuildinfo
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
+.env*
+!.env.example
+/node_modules
+/out
+/out-test
