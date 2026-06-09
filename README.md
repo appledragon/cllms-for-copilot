@@ -25,7 +25,6 @@ CLLMs began as a Qwen-focused adaptation of [**Vizards/deepseek-v4-for-copilot**
 Install from the registry used by your editor:
 
 1. **Microsoft VS Code** — install from [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=cuilian.cllms-for-copilot).
-2. **Editors that use Open VSX** — install from [Open VSX](https://open-vsx.org/extension/appledragon/cllms-for-copilot).
 
 ### Usage
 

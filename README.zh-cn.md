@@ -23,7 +23,6 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 根据你所使用的编辑器选择对应的注册表安装：
 
 1. **Microsoft VS Code** — 从 [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=cuilian.cllms-for-copilot) 安装。
-2. **使用 Open VSX 的编辑器** — 从 [Open VSX](https://open-vsx.org/extension/appledragon/cllms-for-copilot) 安装。
 
 ### 使用步骤
 
