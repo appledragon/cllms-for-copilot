@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+
+- Improve README wording to better acknowledge original author Vizards' contribution.
+
 ## 0.1.0
 
 Initial release of **CLLMs for Copilot Chat** — Chinese frontier LLMs (Qwen, z.ai GLM, MiniMax, Xiaomi MiMo, Moonshot Kimi) in the GitHub Copilot Chat model picker (BYOK). Project identity renamed from `qwen-for-copilot` to `cllms-for-copilot`; settings/commands are now prefixed `cllms.*`.
