@@ -87,6 +87,10 @@ Six providers ship out of the box. Each model carries its own API key and endpoi
 
 Model IDs are the official provider names and are fully configurable via `cllms.modelIdOverrides` / `cllms.zai.modelIdOverrides` / `cllms.minimax.modelIdOverrides` / `cllms.xiaomi.modelIdOverrides` / `cllms.moonshot.modelIdOverrides` / `cllms.hunyuan.modelIdOverrides` for third-party / self-hosted endpoints.
 
+## Adding a new model
+
+Want to add your own model? See [Adding a new model](./docs/adding-a-model.md) for a step-by-step guide.
+
 ## Testing Status
 
 | Provider | Status | Notes |

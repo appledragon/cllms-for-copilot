@@ -85,6 +85,10 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 
 模型 ID 即各服务商官方模型名，可通过 `cllms.modelIdOverrides` / `cllms.zai.modelIdOverrides` / `cllms.minimax.modelIdOverrides` / `cllms.xiaomi.modelIdOverrides` / `cllms.moonshot.modelIdOverrides` / `cllms.hunyuan.modelIdOverrides` 完全自定义，以对接第三方 / 自托管端点。
 
+## 添加新模型
+
+想要添加自己的模型？参见 [添加新模型](./docs/adding-a-model.zh-cn.md) 的逐步指南。
+
 ## 测试状态
 
 | 服务商 | 状态 | 备注 |
