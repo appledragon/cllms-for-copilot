@@ -4,7 +4,7 @@
 
 ## Thanks
 
-CLLMs began as a Qwen-focused adaptation of [**Vizards/deepseek-v4-for-copilot**](https://github.com/Vizards/deepseek-v4-for-copilot) by [**Vizards**](https://github.com/Vizards), which pioneered the approach of plugging a BYOK model into the Copilot Chat picker via the native `LanguageModelChatProvider` API, and has since grown into a multi-provider extension for Qwen, z.ai (GLM), MiniMax, Xiaomi MiMo, Moonshot Kimi, and Tencent Hunyuan. Huge thanks to the original author — the provider pipeline, vision proxy, thinking-mode handling, and diagnostics here are deeply inspired by and built upon the generous foundation that Vizards created and shared with the community.
+CLLMs began as a Qwen-focused adaptation of [**Vizards/deepseek-v4-for-copilot**](https://github.com/Vizards/deepseek-v4-for-copilot) by [**Vizards**](https://github.com/Vizards), which pioneered the approach of plugging a BYOK model into the Copilot Chat picker via the native `LanguageModelChatProvider` API, and has since grown into a multi-provider extension for Qwen, z.ai (GLM), MiniMax, Xiaomi MiMo, Moonshot Kimi, and Tencent Hunyuan. Huge thanks to the original author — the provider pipeline, vision proxy, thinking-mode handling, and diagnostics here are deeply inspired by the generous foundation that Vizards created and shared with the community.
 
 ## Getting Started
 
@@ -28,14 +28,14 @@ Install from the registry used by your editor:
 
 ### Usage
 
-1. Run **CLLMs: Set API Key** from the Command Palette (`Cmd+Shift+P`) and pick a provider
+1. Run **CLLMs: Set API Key** from the Command Palette (`Cmd/Ctrl+Shift+P`) and pick a provider
 2. Paste that provider's API key or compatible token (Qwen DashScope keys usually start with `sk-`)
 3. Open Copilot Chat, click the model picker, pick a model
 4. That's it — chat away
 
 ## Models
 
-Six providers ship out of the box. Each model carries its own API key and endpoint, so you can use Qwen, z.ai (GLM), MiniMax, Xiaomi MiMo, Moonshot Kimi, Tencent Hunyuan, or any combination at the same time from the Copilot model picker.
+Six providers ship out of the box. Each model has its own API key and endpoint, so you can use Qwen, z.ai (GLM), MiniMax, Xiaomi MiMo, Moonshot Kimi, Tencent Hunyuan, or any combination at the same time from the Copilot model picker.
 
 **Qwen (DashScope)**
 
@@ -95,13 +95,13 @@ Want to add your own model? See [Adding a new model](./docs/adding-a-model.md) f
 
 | Provider | Status | Notes |
 |---|---|---|
-| Qwen (DashScope 国内) | ✅ Tested | Qwen3 Coder Plus, Qwen Plus, Qwen3 Max, Qwen3-VL Plus — all verified. |
+| Qwen (DashScope China) | ✅ Tested | Qwen3 Coder Plus, Qwen Plus, Qwen3 Max, Qwen3-VL Plus — all verified. |
 | Qwen (DashScope International) | ⚠️ Untested | API compatibility should match the domestic endpoint. Test tokens or test reports welcome! |
 | z.ai (Zhipu GLM) | ✅ Tested | GLM-4.6, GLM-4.5-Air, GLM-4.5V — all verified. |
-| MiniMax (国内) | ✅ Tested | MiniMax-M3, MiniMax-M2.7 — all verified. |
+| MiniMax (China) | ✅ Tested | MiniMax-M3, MiniMax-M2.7 — all verified. |
 | MiniMax (International) | ⚠️ Untested | API compatibility should match the domestic endpoint. Test tokens or test reports welcome! |
 | Xiaomi MiMo | ✅ Tested | MiMo V2.5 Pro, MiMo V2.5 (Omni), MiMo V2 Flash — all verified. |
-| Moonshot (Kimi 国内) | ✅ Tested | Kimi K2.6, Kimi K2.5 — all verified. |
+| Moonshot (Kimi China) | ✅ Tested | Kimi K2.6, Kimi K2.5 — all verified. |
 | Moonshot (Kimi International) | ⚠️ Untested | API compatibility should match the domestic endpoint. Test tokens or test reports welcome! |
 | Tencent Hunyuan (混元) | ✅ Tested | Standard OpenAI-compatible API — all verified. |
 
@@ -163,7 +163,7 @@ Example `settings.json` override for compatible API proxies:
 ```
 ## Using z.ai (Zhipu GLM)
 
-z.ai is a first-class provider — no proxy or model-ID hacking required:
+z.ai works out of the box — no proxy or model-ID hacking required:
 
 1. Run **`CLLMs: Set API Key`** and pick **z.ai (Zhipu GLM)**. Get a key from the [z.ai API keys page](https://z.ai/manage-apikey/apikey-list).
 2. Open the Copilot Chat model picker — the GLM models appear alongside the Qwen ones.
@@ -172,7 +172,7 @@ GLM thinking is sent in z.ai's native format (`thinking: { type: "enabled" }`), 
 
 ## Using MiniMax
 
-MiniMax is also a first-class provider:
+MiniMax works the same way:
 
 1. Run **`CLLMs: Set API Key`** and pick **MiniMax**. Get a key from the [MiniMax platform](https://platform.minimax.io/user-center/basic-information/interface-key).
 2. Open the Copilot Chat model picker — **MiniMax-M3** and **MiniMax-M2.7** appear alongside the others.
@@ -181,7 +181,7 @@ MiniMax thinking is sent in its native format (`thinking: { type: "adaptive" }`)
 
 ## Using Xiaomi MiMo
 
-Xiaomi MiMo is a first-class provider too:
+Xiaomi MiMo is set up the same way:
 
 1. Run **`CLLMs: Set API Key`** and pick **Xiaomi MiMo**. Create a pay-as-you-go (`sk-...`) key on the [Xiaomi MiMo open platform](https://platform.xiaomimimo.com) console.
 2. Open the Copilot Chat model picker — **MiMo V2.5 Pro**, **MiMo V2.5 (Omni)**, and **MiMo V2 Flash** appear alongside the others.
@@ -192,7 +192,7 @@ MiMo is a hybrid-reasoning family: thinking is on by default and sent in the sam
 
 ## Using Moonshot (Kimi)
 
-Moonshot Kimi is a first-class provider too:
+Moonshot Kimi is just as straightforward:
 
 1. Run **`CLLMs: Set API Key`** and pick **Moonshot (Kimi)**. Create a key in the [Moonshot console](https://platform.moonshot.ai/console/api-keys).
 2. Open the Copilot Chat model picker — **Kimi K2.6** and **Kimi K2.5** appear alongside the others.
@@ -203,7 +203,7 @@ Kimi K2.6 / K2.5 are native-multimodal hybrid-reasoning models (256K context): t
 
 ## Using Tencent Hunyuan (混元)
 
-Tencent Hunyuan is a first-class provider too:
+Tencent Hunyuan works the same way:
 
 1. Run **`CLLMs: Set API Key`** and pick **Tencent Hunyuan (混元)**. Get an API key from the [Tencent Cloud Hunyuan console](https://console.cloud.tencent.com/hunyuan).
 2. Open the Copilot Chat model picker — **Tencent HY 2.0 Think**, **Hunyuan TurboS**, **Hunyuan T1**, and **Hunyuan A13B** appear alongside the others.
@@ -223,7 +223,7 @@ Beyond the six built-in providers, requests go through a standard OpenAI-compati
 }
 ```
 
-First-class, named entries for more Chinese providers are on the roadmap.
+Dedicated native entries for more Chinese providers are on the roadmap.
 
 ## License
 

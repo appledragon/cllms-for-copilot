@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+
+- Fix broken relative links (`中文`, `Adding a new model`) in the Marketplace README by transforming them to absolute GitHub URLs at publish time.
+
 ## 0.1.1
 
 - Improve README wording to better acknowledge original author Vizards' contribution.

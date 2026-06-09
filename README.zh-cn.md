@@ -2,7 +2,7 @@
 
 ## 致谢
 
-CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Vizards/deepseek-v4-for-copilot)（作者 [**Vizards**](https://github.com/Vizards)）面向 Qwen 的改编，原项目首创了通过原生 `LanguageModelChatProvider` API 将自带密钥（BYOK）的模型接入 Copilot Chat 选择器的方案；如今它已发展为支持 Qwen、z.ai（GLM）、MiniMax、小米 MiMo、Moonshot Kimi 与腾讯混元的多 Provider 扩展。在此向原作者致以诚挚感谢——这里的 provider 流水线、视觉代理、思考模式处理与诊断能力，都深受 Vizards 所创造并慷慨分享给社区的那份基础工作的启发与滋养。
+CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Vizards/deepseek-v4-for-copilot)（作者 [**Vizards**](https://github.com/Vizards)）面向 Qwen 的改编，原项目首创了通过原生 `LanguageModelChatProvider` API 将自带密钥（BYOK）的模型接入 Copilot Chat 选择器的方案；如今它已发展为支持 Qwen、z.ai（GLM）、MiniMax、小米 MiMo、Moonshot Kimi 与腾讯混元的多 Provider 扩展。在此向原作者致以诚挚感谢——本项目的 provider 流水线、视觉代理、思考模式处理与诊断能力，都深受 Vizards 打造并开源的那份基础工作的启发与帮助。
 
 ## 快速开始
 
@@ -26,14 +26,14 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 
 ### 使用步骤
 
-1. 通过命令面板（`Cmd+Shift+P`）运行 **CLLMs: 设置 API Key**，并选择一个 Provider
+1. 通过命令面板（`Cmd/Ctrl+Shift+P`）运行 **CLLMs: 设置 API Key**，并选择一个 Provider
 2. 粘贴该 Provider 的 API Key 或兼容 token（Qwen DashScope Key 通常以 `sk-` 开头）
 3. 打开 Copilot Chat，点击模型选择器，选择一个模型
 4. 搞定——开始聊天
 
 ## 模型
 
-内置六个 Provider，每个模型各自携带自己的 API Key 与端点，因此你可以在 Copilot 模型选择器里同时使用 Qwen、z.ai（GLM）、MiniMax、小米 MiMo、Moonshot Kimi、腾讯混元或任意组合。
+内置六个 Provider，每个模型自带独立的 API Key 与端点，因此你可以在 Copilot 模型选择器里同时使用 Qwen、z.ai（GLM）、MiniMax、小米 MiMo、Moonshot Kimi、腾讯混元或任意组合。
 
 **Qwen（DashScope）**
 
@@ -101,7 +101,7 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 | 小米 MiMo | ✅ 已测试 | MiMo V2.5 Pro、MiMo V2.5（Omni）、MiMo V2 Flash — 全部验证通过。 |
 | Moonshot（Kimi 国内） | ✅ 已测试 | Kimi K2.6、Kimi K2.5 — 全部验证通过。 |
 | Moonshot（Kimi International） | ⚠️ 未测试 | API 兼容性应与国内端点一致。欢迎提供测试 token 或测试反馈！ |
-| 腾讯混元 | ✅ 已测试  | 标准 OpenAI 兼容 API——全部验证通过。 |
+| 腾讯混元 | ✅ 已测试 | 标准 OpenAI 兼容 API——全部验证通过。 |
 
 > **💡 求助！** 国际端点与国内端点共享相同的 API 接口，理论上应该开箱即用——但尚未实际验证。如果你有国际站 API Key，欢迎试用并[反馈测试结果](https://github.com/appledragon/cllms-for-copilot/issues)。如果你愿意贡献测试 token，请通过 GitHub Issues 联系我们。每一次测试都能让这些服务商更加稳定可靠。
 
@@ -161,7 +161,7 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 ```
 ## 使用 z.ai（智谱 GLM）
 
-z.ai 是一等 Provider——无需任何代理或改写模型 ID：
+z.ai 开箱即用——无需代理或改写模型 ID：
 
 1. 运行 **`CLLMs: 设置 API Key`** 并选择 **z.ai（智谱 GLM）**。在 [z.ai API Key 页面](https://z.ai/manage-apikey/apikey-list) 获取密钥。
 2. 打开 Copilot Chat 模型选择器——GLM 模型会和 Qwen 模型一起出现。
@@ -170,7 +170,7 @@ GLM 的思考模式以 z.ai 原生格式发送（`thinking: { type: "enabled" }`
 
 ## 使用 MiniMax
 
-MiniMax 同样是一等 Provider：
+MiniMax 同样开箱即用：
 
 1. 运行 **`CLLMs: 设置 API Key`** 并选择 **MiniMax**。在 [MiniMax 平台](https://platform.minimax.io/user-center/basic-information/interface-key) 获取密钥。
 2. 打开 Copilot Chat 模型选择器——**MiniMax-M3** 与 **MiniMax-M2.7** 会和其他模型一起出现。
@@ -179,7 +179,7 @@ MiniMax 的思考模式以其原生格式发送（`thinking: { type: "adaptive" 
 
 ## 使用小米 MiMo
 
-小米 MiMo 同样是一等 Provider：
+小米 MiMo 也无须额外配置：
 
 1. 运行 **`CLLMs: 设置 API Key`** 并选择 **小米 MiMo**。在 [小米 MiMo 开放平台](https://platform.xiaomimimo.com) 控制台创建按量付费（`sk-...`）密钥。
 2. 打开 Copilot Chat 模型选择器——**MiMo V2.5 Pro**、**MiMo V2.5（Omni）**、**MiMo V2 Flash** 会和其他模型一起出现。
@@ -190,7 +190,7 @@ MiMo 是混合推理模型家族：思考模式默认开启，并以与 GLM 相�
 
 ## 使用 Moonshot（Kimi）
 
-Moonshot Kimi 同样是一等 Provider：
+Moonshot Kimi 也开箱即用：
 
 1. 运行 **`CLLMs: 设置 API Key`** 并选择 **Moonshot（Kimi）**。在 [Moonshot 控制台](https://platform.moonshot.ai/console/api-keys) 创建密钥。
 2. 打开 Copilot Chat 模型选择器——**Kimi K2.6** 与 **Kimi K2.5** 会和其他模型一起出现。
@@ -201,9 +201,9 @@ Kimi K2.6 / K2.5 是原生多模态混合推理模型（256K 上下文）：思�
 
 ## 使用腾讯混元
 
-腾讯混元同样是一等 Provider：
+腾讯混元同样无需额外配置：
 
-1. 运行 **`CLLMs: 设置 API Key`** 并选择 **Tencent Hunyuan (混元)**。在[腾讯云混元控制台](https://console.cloud.tencent.com/hunyuan)获取 API Key。
+1. 运行 **`CLLMs: 设置 API Key`** 并选择 **Tencent Hunyuan（混元）**。在[腾讯云混元控制台](https://console.cloud.tencent.com/hunyuan)获取 API Key。
 2. 打开 Copilot Chat 模型选择器——**Tencent HY 2.0 Think**、**Hunyuan TurboS**、**Hunyuan T1**、**Hunyuan A13B** 会和其他模型一起出现。
 
 混元使用标准 OpenAI 兼容 Chat Completions API。HY 2.0 Think 和 T1 是深度思考模型，思考模式以 GLM 风格 `thinking: { type: "enabled" | "disabled" }` 发送；TurboS 和 A13B 是快速指令模型。四个模型均支持工具调用；目前没有原生视觉模型，图片附件会走视觉代理回退方案。默认端点为 `https://api.hunyuan.cloud.tencent.com/v1`。
@@ -222,7 +222,7 @@ Kimi K2.6 / K2.5 是原生多模态混合推理模型（256K 上下文）：思�
 }
 ```
 
-后续计划为更多国内 Provider 提供命名化的一等支持。
+后续计划为更多国内 Provider 提供独立命名的原生支持。
 
 ## 许可证
 
