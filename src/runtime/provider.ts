@@ -1,6 +1,7 @@
 import vscode from 'vscode';
 import { logger } from '../logger';
 import { LlmChatProvider } from '../provider';
+import type { VisionDescriber } from '../provider/vision';
 
 export async function registerProvider(
 	context: vscode.ExtensionContext,
@@ -24,6 +25,13 @@ export async function registerProvider(
 	provider.refreshModelPicker();
 
 	return provider;
+}
+
+/** Expose the vision describer getter for the image read tool. */
+export function getVisionDescriberGetter(
+	provider: LlmChatProvider,
+): () => Promise<VisionDescriber | undefined> {
+	return () => provider.getVisionDescriber();
 }
 
 async function activateCopilotChat(): Promise<void> {

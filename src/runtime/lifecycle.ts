@@ -5,7 +5,8 @@ import { LlmChatProvider } from '../provider';
 import { registerActionUrls } from './actions';
 import { registerCommands } from './commands';
 import { initializeDiagnostics } from './diagnostics';
-import { registerProvider } from './provider';
+import { getVisionDescriberGetter, registerProvider } from './provider';
+import { createImageReadTool } from './tools';
 import { showWelcomeIfNeeded } from './welcome';
 
 let activeProvider: LlmChatProvider | undefined;
@@ -18,6 +19,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 	try {
 		const provider = await registerProvider(context);
 		activeProvider = provider;
+
+		// Register the image-read language model tool.
+		context.subscriptions.push(
+			vscode.lm.registerTool(
+				'cllms_readImage',
+				createImageReadTool(getVisionDescriberGetter(provider)),
+			),
+		);
 
 		void showWelcomeIfNeeded(context, provider).catch((error) => {
 			logger.warn(t('extension.welcomeFailed'), error);

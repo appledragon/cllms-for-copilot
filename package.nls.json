@@ -72,5 +72,8 @@
   "cllms.config.hunyuan.modelIdOverrides.hunyuan-t1.description": "API model ID for Hunyuan T1",
   "cllms.config.hunyuan.modelIdOverrides.hunyuan-a13b.description": "API model ID for Hunyuan A13B",
   "cllms.config.visionModel.description": "Compatibility setting managed by [Configure Vision Proxy](command:cllms.setVisionModel). Stores the selected VS Code vision model when that source is active.",
-  "cllms.config.visionPrompt.description": "Prompt sent to the vision proxy model when describing image attachments before forwarding them to the model.\n\n[Configure Vision Proxy](command:cllms.setVisionModel)"
+  "cllms.config.visionPrompt.description": "Prompt sent to the vision proxy model when describing image attachments before forwarding them to the model.\n\n[Configure Vision Proxy](command:cllms.setVisionModel)",
+  "cllms.tool.readImage.description": "Read and describe an image file from the workspace using the vision proxy.",
+  "cllms.tool.readImage.inputSchema.filePath.description": "Path to the image file, relative to the workspace root.",
+  "cllms.tool.readImage.inputSchema.prompt.description": "Optional specific question or prompt about the image."
 }

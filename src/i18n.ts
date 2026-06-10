@@ -287,6 +287,17 @@ const zh: Translations = {
 	'sessionCost.reset': '清零',
 	'sessionCost.resetDone': '已清零 CLLMs 会话费用。',
 
+	// Image Read Tool
+	'tool.readImage.error.missingPath': '必需参数 filePath 未提供或为空。',
+	'tool.readImage.error.notFound': '未找到图片文件：{0}',
+	'tool.readImage.error.readFailed': '无法读取图片文件：{0}',
+	'tool.readImage.error.emptyFile': '图片文件为空：{0}',
+	'tool.readImage.error.unsupportedFormat': '不支持的图片格式：{0}',
+	'tool.readImage.error.noVisionProxy': '视觉代理未配置或不可用。请使用命令 "CLLMs: 配置视觉代理" 设置视觉代理。',
+	'tool.readImage.error.emptyResponse': '视觉代理对 {0} 返回了空响应。',
+	'tool.readImage.error.describeFailed': '无法描述图片 {0}：{1}',
+	'tool.readImage.cancelled': '图片读取已取消。',
+
 	// Extension
 	'extension.activateFailed': 'CLLMs 激活失败，请运行 "CLLMs: 显示日志" 查看详情。',
 	'extension.deactivateFailed': 'CLLMs 停用异常',
@@ -608,6 +619,17 @@ const en: Translations = {
 	'sessionCost.lineItem': '{0}: {1} ({2} requests, {3} in / {4} out tokens)',
 	'sessionCost.reset': 'Reset',
 	'sessionCost.resetDone': 'CLLMs session cost reset.',
+
+	// Image Read Tool
+	'tool.readImage.error.missingPath': 'Required parameter filePath is missing or empty.',
+	'tool.readImage.error.notFound': 'Image file not found: {0}',
+	'tool.readImage.error.readFailed': 'Failed to read image file: {0}',
+	'tool.readImage.error.emptyFile': 'Image file is empty: {0}',
+	'tool.readImage.error.unsupportedFormat': 'Unsupported image format: {0}',
+	'tool.readImage.error.noVisionProxy': 'Vision proxy is not configured or unavailable. Use "CLLMs: Configure Vision Proxy" to set one up.',
+	'tool.readImage.error.emptyResponse': 'Vision proxy returned an empty response for {0}.',
+	'tool.readImage.error.describeFailed': 'Failed to describe image {0}: {1}',
+	'tool.readImage.cancelled': 'Image reading was cancelled.',
 
 	// Extension
 	'extension.activateFailed': 'CLLMs failed to activate. Run "CLLMs: Show Logs" for details.',

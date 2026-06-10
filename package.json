@@ -53,6 +53,26 @@
         "displayName": "CLLMs (Qwen · GLM · MiniMax · MiMo · Kimi · Hunyuan)"
       }
     ],
+    "languageModelTools": [
+      {
+        "name": "cllms_readImage",
+        "description": "%cllms.tool.readImage.description%",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "filePath": {
+              "type": "string",
+              "description": "%cllms.tool.readImage.inputSchema.filePath.description%"
+            },
+            "prompt": {
+              "type": "string",
+              "description": "%cllms.tool.readImage.inputSchema.prompt.description%"
+            }
+          },
+          "required": ["filePath"]
+        }
+      }
+    ],
     "commands": [
       {
         "command": "cllms.setApiKey",

@@ -73,6 +73,12 @@ class LanguageModelToolResultPart {
   }
 }
 
+class LanguageModelToolResult {
+  constructor(content) {
+    this.content = content;
+  }
+}
+
 class LanguageModelChatMessage {
   constructor(role, content) {
     this.role = role;
@@ -366,10 +372,18 @@ const vscodeStub = {
       state.languageModelProviders.set(vendor, provider);
       return createDisposable(() => state.languageModelProviders.delete(vendor));
     },
+    registerTool: (name, tool) => {
+      if (!state.lmTools) {
+        state.lmTools = new Map();
+      }
+      state.lmTools.set(name, tool);
+      return createDisposable(() => state.lmTools.delete(name));
+    },
     selectChatModels: async (selector) => {
       state.selectChatModelsCalls.push(selector);
       return [];
     },
+    tools: [],
   },
   extensions: {
     getExtension: (id) => ({
@@ -391,6 +405,7 @@ const vscodeStub = {
   LanguageModelDataPart,
   LanguageModelToolCallPart,
   LanguageModelToolResultPart,
+  LanguageModelToolResult,
   LanguageModelChatMessage,
   LanguageModelChatMessageRole,
   LanguageModelChatToolMode,

@@ -17,6 +17,7 @@ import { streamChatCompletion } from './stream';
 import { estimateTokenCount } from './tokens';
 import { processToolFlow } from './tools/flow';
 import { createVisionService } from './vision';
+import type { VisionDescriber } from './vision';
 
 /**
  * CLLMs Chat Provider — implements vscode.LanguageModelChatProvider so
@@ -178,6 +179,11 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 
 	async setVisionModel(): Promise<void> {
 		await this.vision.openConfiguration();
+	}
+
+	/** Expose the vision describer getter for tool use (e.g. image reading). */
+	async getVisionDescriber(): Promise<VisionDescriber | undefined> {
+		return this.vision.get();
 	}
 
 	/** Validate a provider's key + endpoint and discover its model list. */
