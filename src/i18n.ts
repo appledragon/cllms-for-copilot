@@ -252,10 +252,14 @@ const zh: Translations = {
 	'connection.noKey': '{0} 尚未配置 API Key，请先运行 "CLLMs: 设置 API Key"。',
 	'connection.testing': '正在测试与 {0} 的连接…',
 	'connection.success': '{0}：连接正常，发现 {1} 个可用模型。',
-	'connection.successNoList': '{0}：连接正常。该端点未返回模型列表。',
+	'connection.successNoList':
+		'{0}：连接正常。该端点未返回模型列表；如果后续聊天失败，可用这个服务商发起一次轻量 chat completion 来进一步验证聊天端点。',
 	'connection.successStale':
-		'{0}：连接正常（{1} 个模型），但以下已配置的模型 ID 未在端点中找到：{2}。如端点使用不同的模型名称，请更新 modelIdOverrides。',
+		'{0}：连接正常（{1} 个模型），但以下已配置的模型 ID 未在端点中找到：{2}。括号内为使用该 API 模型 ID 的内置模型；如端点使用不同的模型名称，请更新 modelIdOverrides。',
 	'connection.failed': '{0}：连接失败。{1}',
+	'connection.action.openSettings': '打开设置',
+	'connection.action.openApiKeyPage': '打开 API Key 页面',
+	'connection.action.showLogs': '显示日志',
 
 	// Session cost
 	'sessionCost.statusBarTooltip': 'CLLMs 本次会话费用（点击查看明细）',
@@ -546,10 +550,14 @@ const en: Translations = {
 	'connection.noKey': 'No API key configured for {0}. Run "CLLMs: Set API Key" first.',
 	'connection.testing': 'Testing connection to {0}…',
 	'connection.success': '{0}: connection OK — {1} models available.',
-	'connection.successNoList': '{0}: connection OK. The endpoint did not return a model list.',
+	'connection.successNoList':
+		'{0}: connection OK. The endpoint did not return a model list; if chat fails later, try one lightweight chat completion with this provider to verify the chat endpoint.',
 	'connection.successStale':
-		'{0}: connection OK ({1} models), but these configured model IDs were not found: {2}. Update modelIdOverrides if the endpoint uses different names.',
+		'{0}: connection OK ({1} models), but these configured model IDs were not found: {2}. Model names in parentheses use that API model ID; update modelIdOverrides if the endpoint uses different names.',
 	'connection.failed': '{0}: connection failed. {1}',
+	'connection.action.openSettings': 'Open Settings',
+	'connection.action.openApiKeyPage': 'Open API Key Page',
+	'connection.action.showLogs': 'Show Logs',
 
 	// Session cost
 	'sessionCost.statusBarTooltip': 'CLLMs session cost — click for details',
