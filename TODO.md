@@ -20,23 +20,23 @@
 
 ## P0: 发布前必须处理
 
-### 1. 补齐 VS Code 扩展集成测试
+### ~~1. 补齐 VS Code 扩展集成测试~~
 
-状态：已完成。已通过 `test/runtime-integration.test.ts` 和扩展后的 `test/vscode-shim.cjs` 覆盖激活、命令、SecretStorage、配置迁移、模型 provider 注册和停用清理。
+~~状态：已完成。已通过 `test/runtime-integration.test.ts` 和扩展后的 `test/vscode-shim.cjs` 覆盖激活、命令、SecretStorage、配置迁移、模型 provider 注册和停用清理。~~
 
-背景：现有测试集中在纯函数，缺少对扩展激活、命令注册、SecretStorage、配置迁移、模型 provider 注册的集成验证。`activate()` 中的 `initializeDiagnostics`、`registerCommands`、`registerActionUrls`、`registerProvider` 是用户启动路径，一旦 VS Code API 变化，纯单测不容易发现。
+~~背景：现有测试集中在纯函数，缺少对扩展激活、命令注册、SecretStorage、配置迁移、模型 provider 注册的集成验证。`activate()` 中的 `initializeDiagnostics`、`registerCommands`、`registerActionUrls`、`registerProvider` 是用户启动路径，一旦 VS Code API 变化，纯单测不容易发现。~~
 
-建议：
+~~建议：~~
 
-- 引入 VS Code extension test runner 或在现有 `node:test` shim 上补充更完整的 VS Code 行为模拟。
-- 覆盖 `activate()` 成功路径、注册命令列表、`deactivate()` 清理 provider、`migrateLegacyDebugSetting()`。
-- 增加 `cllms.setApiKey` / `clearApiKey` / `testConnection` / `showSessionCost` 的命令级测试。
+~~- 引入 VS Code extension test runner 或在现有 `node:test` shim 上补充更完整的 VS Code 行为模拟。~~
+~~- 覆盖 `activate()` 成功路径、注册命令列表、`deactivate()` 清理 provider、`migrateLegacyDebugSetting()`。~~
+~~- 增加 `cllms.setApiKey` / `clearApiKey` / `testConnection` / `showSessionCost` 的命令级测试。~~
 
-验收标准：
+~~验收标准：~~
 
-- 新增集成测试能在 CI 中运行。
-- 模拟至少一个 provider 有 key、一个 provider 无 key 的场景。
-- `npm run lint && npm run format:check && npm run compile && npm test` 通过。
+~~- 新增集成测试能在 CI 中运行。~~
+~~- 模拟至少一个 provider 有 key、一个 provider 无 key 的场景。~~
+~~- `npm run lint && npm run format:check && npm run compile && npm test` 通过。~~
 
 ### 2. 增强 HTTP/SSE 流式客户端测试
 
@@ -101,22 +101,22 @@
 - 新增或删除模型时，遗漏 i18n / package setting / docs 能被测试捕获。
 - `docs/adding-a-model.md` 不再出现“内置五个服务商”等过期描述。
 
-### 6. 改进连接测试反馈
+### ~~6. 改进连接测试反馈~~
 
-状态：已完成。连接测试结果现在会为失败、stale override 和空模型列表提供更明确的摘要、可点击修复动作，并按 API model ID 分组展示缺失 override。
+~~状态：已完成。连接测试结果现在会为失败、stale override 和空模型列表提供更明确的摘要、可点击修复动作，并按 API model ID 分组展示缺失 override。~~
 
-背景：`runConnectionTest()` 通过 `/models` 校验 key、endpoint 和 model override。当前反馈是信息/警告弹窗，无法展开查看具体缺失模型、endpoint、provider、下一步操作。
+~~背景：`runConnectionTest()` 通过 `/models` 校验 key、endpoint 和 model override。当前反馈是信息/警告弹窗，无法展开查看具体缺失模型、endpoint、provider、下一步操作。~~
 
-建议：
+~~建议：~~
 
-- 在失败和 stale override 场景提供“打开设置”“打开 API key 页面”“显示日志”操作。
-- 把 stale override 按 provider 内置模型名和实际 API model id 分组展示。
-- 当 `/models` 不返回列表时，提示用户可以通过一次轻量 chat completion 做可选验证。
+~~- 在失败和 stale override 场景提供"打开设置""打开 API key 页面""显示日志"操作。~~
+~~- 把 stale override 按 provider 内置模型名和实际 API model id 分组展示。~~
+~~- 当 `/models` 不返回列表时，提示用户可以通过一次轻量 chat completion 做可选验证。~~
 
-验收标准：
+~~验收标准：~~
 
-- 用户能从错误消息直接跳转到修复入口。
-- 单测覆盖 stale override 去重、空 model list 和错误摘要。
+~~- 用户能从错误消息直接跳转到修复入口。~~
+~~- 单测覆盖 stale override 去重、空 model list 和错误摘要。~~
 
 ### 7. 成本统计增加可解释性
 
