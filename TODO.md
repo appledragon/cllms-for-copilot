@@ -16,7 +16,7 @@
 - 诊断、请求 dump、replay marker 和缓存追踪：`src/provider/debug/`、`src/provider/replay/`
 - 成本估算与币种展示：`src/provider/pricing/`
 
-当前测试主要覆盖纯函数和协议层逻辑，包括 registry、消息转换、retry、SSE、routing classifier、token 估算、session cost、replay marker、网络错误分类等。CI 已配置 `npm run lint`、`npm run format:check`、`npm run compile`、`npm run test` 和 VSIX 打包。
+当前测试覆盖纯函数、协议层逻辑和注册一致性检查，包括 registry、registry-consistency（i18n / package.json / docs 同步）、消息转换、retry、SSE、routing classifier、token 估算、session cost、replay marker、网络错误分类、集成测试等。CI 已配置 `npm run lint`、`npm run format:check`、`npm run compile`、`npm run test` 和 VSIX 打包。
 
 ## P0: 发布前必须处理
 
@@ -86,20 +86,22 @@
 - 所有可配置字段都有成功和失败测试。
 - 图片不会在 text-only 模型路径中意外透传给目标模型。
 
-### 5. 建立“新增服务商/模型”的自动一致性检查
+### ~~5. 建立"新增服务商/模型"的自动一致性检查~~
 
-背景：新增 provider/model 需要同时修改 `src/consts.ts`、`src/i18n.ts`、`package.json`、`package.nls*.json`、README、CHANGELOG 和测试。已有 `docs/adding-a-model.md` 说明流程，但缺少自动检查。
+~~状态：已完成。通过 `test/registry-consistency.test.ts` 覆盖：i18n 中英文 detail/tooltip（104 条）、package.json provider 设置（29 条）、package.nls 中英文 modelIdOverrides 描述（52 条）、docs/adding-a-model.md provider 列表与 PROVIDERS 一致性（11 条）。同时补齐了 8 个国际站模型的缺失 i18n 翻译和 docs 中混元 provider 的引用。~~
 
-建议：
+~~背景：新增 provider/model 需要同时修改 `src/consts.ts`、`src/i18n.ts`、`package.json`、`package.nls*.json`、README、CHANGELOG 和测试。已有 `docs/adding-a-model.md` 说明流程，但缺少自动检查。~~
 
-- 增加一个 registry consistency test，检查每个 `MODELS` 条目都有中英文 detail/tooltip。
-- 检查每个 provider 的 baseUrl、modelIdOverrides、SecretStorage key、error action link、README 表格是否同步。
-- 检查 `docs/adding-a-model.md` 的 provider 列表与实际 `PROVIDERS` 一致，避免文档滞后。
+~~建议：~~
 
-验收标准：
+~~- 增加一个 registry consistency test，检查每个 `MODELS` 条目都有中英文 detail/tooltip。~~
+~~- 检查每个 provider 的 baseUrl、modelIdOverrides、SecretStorage key、error action link、README 表格是否同步。~~
+~~- 检查 `docs/adding-a-model.md` 的 provider 列表与实际 `PROVIDERS` 一致，避免文档滞后。~~
 
-- 新增或删除模型时，遗漏 i18n / package setting / docs 能被测试捕获。
-- `docs/adding-a-model.md` 不再出现“内置五个服务商”等过期描述。
+~~验收标准：~~
+
+~~- 新增或删除模型时，遗漏 i18n / package setting / docs 能被测试捕获。~~
+~~- `docs/adding-a-model.md` 不再出现"内置五个服务商"等过期描述。~~
 
 ### ~~6. 改进连接测试反馈~~
 

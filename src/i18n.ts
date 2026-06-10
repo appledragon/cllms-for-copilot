@@ -27,6 +27,14 @@ const zh: Translations = {
 	'model.qwen3-max.tooltip': 'Qwen3 旗舰模型，面向广泛世界知识与复杂任务（默认不开启思考模式）。',
 	'model.qwen3-vl-plus.detail': '原生视觉模型',
 	'model.qwen3-vl-plus.tooltip': '支持原生图片输入的 Qwen3-VL 模型，可直接理解图片。',
+	'model.qwen3-coder-plus-intl.detail': '智能编码与工具调用（国际站）',
+	'model.qwen3-coder-plus-intl.tooltip': '面向 Agent 编程与工具调用的 Qwen3 Coder 模型（国际站），擅长大型重构。',
+	'model.qwen-plus-intl.detail': '均衡，支持混合思考（国际站）',
+	'model.qwen-plus-intl.tooltip': '日常均衡使用的 Qwen Plus 模型（国际站），支持开关思考模式。',
+	'model.qwen3-max-intl.detail': '旗舰模型（国际站）',
+	'model.qwen3-max-intl.tooltip': 'Qwen3 旗舰模型（国际站），面向广泛世界知识与复杂任务（默认不开启思考模式）。',
+	'model.qwen3-vl-plus-intl.detail': '原生视觉模型（国际站）',
+	'model.qwen3-vl-plus-intl.tooltip': '支持原生图片输入的 Qwen3-VL 模型（国际站），可直接理解图片。',
 	'model.glm-4.6.detail': '旗舰编码与 Agent',
 	'model.glm-4.6.tooltip': 'z.ai GLM-4.6 旗舰模型，200K 上下文，擅长编码与 Agent，支持思考模式与工具调用。',
 	'model.glm-4.5-air.detail': '轻量快速',
@@ -37,6 +45,10 @@ const zh: Translations = {
 	'model.MiniMax-M3.tooltip': 'MiniMax-M3 旗舰模型，最高 1M 上下文，擅长 Agent 推理、编码与长上下文，支持思考模式与工具调用。',
 	'model.MiniMax-M2.7.detail': '快速编码与 Agent',
 	'model.MiniMax-M2.7.tooltip': 'MiniMax-M2.7 模型，编码与 Agent 能力强、推理速度更快（思考模式默认开启）。',
+	'model.MiniMax-M3-intl.detail': '旗舰 Agent 与长上下文（国际站）',
+	'model.MiniMax-M3-intl.tooltip': 'MiniMax-M3 旗舰模型（国际站），最高 1M 上下文，擅长 Agent 推理、编码与长上下文，支持思考模式与工具调用。',
+	'model.MiniMax-M2.7-intl.detail': '快速编码与 Agent（国际站）',
+	'model.MiniMax-M2.7-intl.tooltip': 'MiniMax-M2.7 模型（国际站），编码与 Agent 能力强、推理速度更快（思考模式默认开启）。',
 	'model.mimo-v2.5-pro.detail': '旗舰推理与编码',
 	'model.mimo-v2.5-pro.tooltip':
 		'小米 MiMo V2.5 Pro 旗舰混合推理模型，最高 1M 上下文，擅长复杂推理与编码，支持思考模式与工具调用。',
@@ -52,6 +64,12 @@ const zh: Translations = {
 	'model.kimi-k2.5.detail': '多模态，灵活思考',
 	'model.kimi-k2.5.tooltip':
 		'Moonshot Kimi K2.5 原生多模态模型，256K 上下文，支持原生图片输入、可开关的思考模式与工具调用。',
+	'model.kimi-k2.6-intl.detail': '旗舰多模态与 Agent（国际站）',
+	'model.kimi-k2.6-intl.tooltip':
+		'Moonshot Kimi K2.6 旗舰原生多模态混合推理模型（国际站），256K 上下文，支持原生图片输入、思考模式（默认开启）与工具调用。',
+	'model.kimi-k2.5-intl.detail': '多模态，灵活思考（国际站）',
+	'model.kimi-k2.5-intl.tooltip':
+		'Moonshot Kimi K2.5 原生多模态模型（国际站），256K 上下文，支持原生图片输入、可开关的思考模式与工具调用。',
 	'model.hunyuan-2.0-think.detail': '旗舰深度思考与编码',
 	'model.hunyuan-2.0-think.tooltip':
 		'腾讯混元 HY 2.0 Think 旗舰模型，128K 上下文，擅长编码与深度推理，支持思考模式与工具调用。',
@@ -291,6 +309,18 @@ const en: Translations = {
 	'model.qwen3-vl-plus.detail': 'Native vision model',
 	'model.qwen3-vl-plus.tooltip':
 		'Qwen3-VL model with native image input — understands images directly.',
+	'model.qwen3-coder-plus-intl.detail': 'Agentic coding & tool use (Intl)',
+	'model.qwen3-coder-plus-intl.tooltip':
+		'Qwen3 Coder model for agentic programming and tool calling (international). Excels at large-scale refactoring.',
+	'model.qwen-plus-intl.detail': 'Balanced, hybrid thinking (Intl)',
+	'model.qwen-plus-intl.tooltip':
+		'Qwen Plus model for everyday balanced use (international), with toggleable thinking mode.',
+	'model.qwen3-max-intl.detail': 'Flagship model (Intl)',
+	'model.qwen3-max-intl.tooltip':
+		'Flagship Qwen3 model for broad world knowledge and complex tasks (international, thinking off by default).',
+	'model.qwen3-vl-plus-intl.detail': 'Native vision model (Intl)',
+	'model.qwen3-vl-plus-intl.tooltip':
+		'Qwen3-VL model with native image input (international) — understands images directly.',
 	'model.glm-4.6.detail': 'Flagship coding & agents',
 	'model.glm-4.6.tooltip':
 		'z.ai GLM-4.6 flagship with a 200K context — strong at coding and agents, with thinking mode and tool calling.',
@@ -306,6 +336,12 @@ const en: Translations = {
 	'model.MiniMax-M2.7.detail': 'Fast coding & agents',
 	'model.MiniMax-M2.7.tooltip':
 		'MiniMax-M2.7 model with strong coding and agent skills and faster inference (thinking on by default).',
+	'model.MiniMax-M3-intl.detail': 'Flagship agentic & long context (Intl)',
+	'model.MiniMax-M3-intl.tooltip':
+		'MiniMax-M3 flagship (international) with up to 1M context — strong at agentic reasoning, coding, and long-context tasks, with thinking mode and tool calling.',
+	'model.MiniMax-M2.7-intl.detail': 'Fast coding & agents (Intl)',
+	'model.MiniMax-M2.7-intl.tooltip':
+		'MiniMax-M2.7 model (international) with strong coding and agent skills and faster inference (thinking on by default).',
 	'model.mimo-v2.5-pro.detail': 'Flagship reasoning & coding',
 	'model.mimo-v2.5-pro.tooltip':
 		'Xiaomi MiMo V2.5 Pro flagship hybrid-reasoning model with up to 1M context — strong at complex reasoning and coding, with thinking mode and tool calling.',
@@ -321,6 +357,12 @@ const en: Translations = {
 	'model.kimi-k2.5.detail': 'Multimodal, flexible thinking',
 	'model.kimi-k2.5.tooltip':
 		'Moonshot Kimi K2.5 native-multimodal model with a 256K context — native image input, toggleable thinking mode, and tool calling.',
+	'model.kimi-k2.6-intl.detail': 'Flagship multimodal & agents (Intl)',
+	'model.kimi-k2.6-intl.tooltip':
+		'Moonshot Kimi K2.6 flagship native-multimodal hybrid-reasoning model (international) with a 256K context — native image input, thinking mode (on by default), and tool calling.',
+	'model.kimi-k2.5-intl.detail': 'Multimodal, flexible thinking (Intl)',
+	'model.kimi-k2.5-intl.tooltip':
+		'Moonshot Kimi K2.5 native-multimodal model (international) with a 256K context — native image input, toggleable thinking mode, and tool calling.',
 	'model.hunyuan-2.0-think.detail': 'Flagship deep-thinking & coding',
 	'model.hunyuan-2.0-think.tooltip':
 		'Tencent Hunyuan HY 2.0 Think flagship model with a 128K context — strong at coding and deep reasoning, with thinking mode and tool calling.',

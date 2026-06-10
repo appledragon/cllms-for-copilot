@@ -5,7 +5,7 @@
 This guide explains how to add a new model to CLLMs for Copilot Chat. There are
 two cases:
 
-- **A.** Add a model to an **existing provider** (Qwen, z.ai/GLM, MiniMax, Xiaomi MiMo, or Moonshot Kimi).
+- **A.** Add a model to an **existing provider** (Qwen, z.ai/GLM, MiniMax, Xiaomi MiMo, Moonshot Kimi, or Tencent Hunyuan).
 - **B.** Add a model under a **brand-new provider** (a different vendor).
 
 Most of the time you want case **A**, which is just two required edits.
@@ -33,7 +33,7 @@ entries, GLM models in the z.ai block, etc.
 {
   id: 'qwen3-coder-flash',          // API model id sent to the provider (overridable, see step 3)
   name: 'Qwen3 Coder Flash',        // display name in the Copilot model picker
-  provider: 'qwen',                 // ProviderId — MUST exist in PROVIDERS ('qwen' | 'zai' | 'minimax' | 'xiaomi' | 'moonshot')
+  provider: 'qwen',                 // ProviderId — MUST exist in PROVIDERS ('qwen' | 'qwen-intl' | 'zai' | 'minimax' | 'minimax-intl' | 'xiaomi' | 'moonshot' | 'moonshot-intl' | 'hunyuan')
   family: 'qwen',                   // grouping metadata shown by Copilot
   version: 'qwen3',
   detail: 'Fast agentic coding',    // fallback short description (i18n in step 2 overrides this)
@@ -91,9 +91,9 @@ from step 1 and shows no tooltip.
 
 This lets users point the model at a compatible third-party / self-hosted
 endpoint. Add an entry to the matching provider's `modelIdOverrides` setting
-(`cllms.modelIdOverrides` for Qwen, `cllms.zai.modelIdOverrides`,
-`cllms.minimax.modelIdOverrides`, `cllms.xiaomi.modelIdOverrides`,
-`cllms.moonshot.modelIdOverrides`):
+(`cllms.modelIdOverrides` for Qwen, `cllms.qwenIntl.modelIdOverrides` for Qwen International, `cllms.zai.modelIdOverrides`,
+`cllms.minimax.modelIdOverrides`, `cllms.minimaxIntl.modelIdOverrides`, `cllms.xiaomi.modelIdOverrides`,
+`cllms.moonshot.modelIdOverrides`, `cllms.moonshotIntl.modelIdOverrides`, `cllms.hunyuan.modelIdOverrides`):
 
 ```jsonc
 // package.json → contributes.configuration.properties["cllms.modelIdOverrides"]
@@ -150,7 +150,7 @@ If the model belongs to a vendor not yet supported, first register the
 **provider**, then add the model with steps A1–A5.
 
 1. **`src/types.ts`**
-   - Add the id to `ProviderId` (e.g. `'qwen' | 'zai' | 'minimax' | 'xiaomi' | 'moonshot' | 'newco'`).
+   - Add the id to `ProviderId` (e.g. `'qwen' | 'qwen-intl' | 'zai' | 'minimax' | 'minimax-intl' | 'xiaomi' | 'moonshot' | 'moonshot-intl' | 'hunyuan' | 'newco'`).
    - If the vendor needs a different thinking format, add a value to
      `ThinkingStyle` and extend `LlmRequest` if a new field is required. If the
      vendor reuses an existing wire format, reuse that `thinkingStyle` instead
@@ -171,7 +171,7 @@ If the model belongs to a vendor not yet supported, first register the
    descriptions.
 7. Add the models (steps **A1–A5**) with `provider: '<id>'`.
 
-The registry test `ships the five built-in providers` (and the
+The registry test `ships the built-in providers` (and the
 `Object.keys(PROVIDERS)` assertions) will need updating to include the new
 provider.
 

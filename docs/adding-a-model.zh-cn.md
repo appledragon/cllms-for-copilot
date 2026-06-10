@@ -4,7 +4,7 @@
 
 本文介绍如何为 CLLMs for Copilot Chat 新增一个模型。分两种情况：
 
-- **A.** 给**已有 Provider**（Qwen、z.ai/GLM、MiniMax、小米 MiMo、Moonshot Kimi）新增模型。
+- **A.** 给**已有 Provider**（Qwen、z.ai/GLM、MiniMax、小米 MiMo、Moonshot Kimi、腾讯混元）新增模型。
 - **B.** 新增一个**全新 Provider**（不同厂商）下的模型。
 
 大多数情况属于 **A**，只需两处必改。
@@ -32,7 +32,7 @@ z.ai 区块里，依此类推。
 {
   id: 'qwen3-coder-flash',          // 发送给服务商的 API 模型 id（可被覆盖，见步骤 3）
   name: 'Qwen3 Coder Flash',        // 在 Copilot 模型选择器中显示的名称
-  provider: 'qwen',                 // ProviderId —— 必须存在于 PROVIDERS（'qwen' | 'zai' | 'minimax' | 'xiaomi' | 'moonshot'）
+  provider: 'qwen',                 // ProviderId —— 必须存在于 PROVIDERS（'qwen' | 'qwen-intl' | 'zai' | 'minimax' | 'minimax-intl' | 'xiaomi' | 'moonshot' | 'moonshot-intl' | 'hunyuan'）
   family: 'qwen',                   // Copilot 用于分组的元数据
   version: 'qwen3',
   detail: 'Fast agentic coding',    // 兜底简介（步骤 2 的 i18n 会覆盖它）
@@ -87,8 +87,8 @@ z.ai 区块里，依此类推。
 ### 步骤 3 — 暴露模型 ID 覆盖项（推荐，`package.json`）
 
 这让用户能把模型指向兼容的第三方 / 自托管端点。在对应 Provider 的
-`modelIdOverrides` 设置里新增条目（Qwen 用 `cllms.modelIdOverrides`，
-其余为 `cllms.zai.modelIdOverrides`、`cllms.minimax.modelIdOverrides`、`cllms.xiaomi.modelIdOverrides`、`cllms.moonshot.modelIdOverrides`）：
+`modelIdOverrides` 设置里新增条目（Qwen 用 `cllms.modelIdOverrides`，Qwen 国际站用 `cllms.qwenIntl.modelIdOverrides`，
+其余为 `cllms.zai.modelIdOverrides`、`cllms.minimax.modelIdOverrides`、`cllms.minimaxIntl.modelIdOverrides`、`cllms.xiaomi.modelIdOverrides`、`cllms.moonshot.modelIdOverrides`、`cllms.moonshotIntl.modelIdOverrides`、`cllms.hunyuan.modelIdOverrides`）：
 
 ```jsonc
 // package.json → contributes.configuration.properties["cllms.modelIdOverrides"]
@@ -142,7 +142,7 @@ npm test          # node:test 单元测试
 如果模型属于尚未支持的厂商，先注册 **Provider**，再按 A1–A5 新增模型。
 
 1. **`src/types.ts`**
-   - 把 id 加入 `ProviderId`（如 `'qwen' | 'zai' | 'minimax' | 'xiaomi' | 'moonshot' | 'newco'`）。
+   - 把 id 加到 `ProviderId`（例：`'qwen' | 'qwen-intl' | 'zai' | 'minimax' | 'minimax-intl' | 'xiaomi' | 'moonshot' | 'moonshot-intl' | 'hunyuan' | 'newco'`）。
    - 若该厂商的思考格式不同，给 `ThinkingStyle` 增加一个取值；若需要新字段，
      再扩展 `LlmRequest`。若该厂商复用了已有的传输格式，则直接复用对应的
      `thinkingStyle`（如小米 MiMo 与 Moonshot Kimi 都复用 `glm` 的 `thinking: { type }`）。
@@ -160,7 +160,7 @@ npm test          # node:test 单元测试
    `cllms.<id>.modelIdOverrides` 设置，以及对应的 `package.nls*.json` 描述。
 7. 以 `provider: '<id>'` 新增模型（步骤 **A1–A5**）。
 
-测试 `ships the five built-in providers`（以及 `Object.keys(PROVIDERS)` 相关断言）
+测试 `ships the built-in providers`（以及 `Object.keys(PROVIDERS)` 相关断言）
 需要更新以包含新的 Provider。
 
 > 实例参考：**小米 MiMo** 与 **Moonshot Kimi** Provider 正是按以上步骤新增的——
