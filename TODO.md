@@ -38,20 +38,22 @@
 ~~- 模拟至少一个 provider 有 key、一个 provider 无 key 的场景。~~
 ~~- `npm run lint && npm run format:check && npm run compile && npm test` 通过。~~
 
-### 2. 增强 HTTP/SSE 流式客户端测试
+### ~~2. 增强 HTTP/SSE 流式客户端测试~~
 
-背景：`src/client/core.ts` 负责真实网络请求、SSE 解析、idle timeout、取消和 retry。当前 retry 与 SSE parser 有单测，但 `LlmClient.streamChatCompletion()` 的端到端行为仍缺少覆盖。
+~~状态：已完成。通过 `test/streaming.test.ts`（28 个用例）覆盖：成功流、HTTP 401/429/503/5xx 错误处理、Retry-After 遵从、网络异常（ECONNRESET/ETIMEDOUT/ENOTFOUND/CERT_HAS_EXPIRED）的重试/不重试分类、首个可见输出（onContent/onThinking/onToolCall）后不重试的不变量、usage chunk 单独触发重试、tool call delta 聚合与多索引并发、[DONE] 前后边界（无内容、无空格、后置忽略、flush 路径）、取消请求（流中取消、重试间取消）、回调非重复（onContent/onThinking/onToolCall 只调一次）、请求体包含 stream_options.include_usage 及 Authorization/Content-Type 头。~~
 
-建议：
+~~背景：`src/client/core.ts` 负责真实网络请求、SSE 解析、idle timeout、取消和 retry。当前 retry 与 SSE parser 有单测，但 `LlmClient.streamChatCompletion()` 的端到端行为仍缺少覆盖。~~
 
-- 用 mock `fetch` 覆盖成功流、HTTP 401/429/5xx、网络异常、idle timeout、取消请求。
-- 验证“首个可见输出后不重试”的不变量，避免重复输出。
-- 覆盖 tool call delta 聚合、usage chunk 上报、`[DONE]` 前后边界情况。
+~~建议：~~
 
-验收标准：
+~~- 用 mock `fetch` 覆盖成功流、HTTP 401/429/5xx、网络异常、idle timeout、取消请求。~~
+~~- 验证"首个可见输出后不重试"的不变量，避免重复输出。~~
+~~- 覆盖 tool call delta 聚合、usage chunk 上报、`[DONE]` 前后边界情况。~~
 
-- `maxRetries`、`Retry-After`、输出后失败、取消请求都有稳定测试。
-- 中途失败不会重复调用 `onContent` / `onThinking` / `onToolCall`。
+~~验收标准：~~
+
+~~- `maxRetries`、`Retry-After`、输出后失败、取消请求都有稳定测试。~~
+~~- 中途失败不会重复调用 `onContent` / `onThinking` / `onToolCall`。~~
 
 ### 3. 明确 verbose debug 的隐私防护与清理策略
 
