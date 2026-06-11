@@ -41,6 +41,7 @@
   "cllms.config.qwenIntl.modelIdOverrides.qwen3-vl-plus-intl.description": "Qwen3-VL Plus (Intl) 的 API 模型 ID。",
   "cllms.config.zai.baseUrl.description": "z.ai（智谱 GLM）API 基础 URL（OpenAI 兼容模式），默认使用通用端点 https://api.z.ai/api/paas/v4。如果使用 GLM Coding Plan 订阅，请改为 https://api.z.ai/api/coding/paas/v4。",
   "cllms.config.zai.modelIdOverrides.description": "覆盖各 z.ai（GLM）模型实际使用的 API 模型 ID，默认使用官方 z.ai ID，仅在对接不同兼容端点或模型名称时需要修改。",
+  "cllms.config.zai.modelIdOverrides.glm-5.1.description": "GLM-5.1 的 API 模型 ID。",
   "cllms.config.zai.modelIdOverrides.glm-4.6.description": "GLM-4.6 的 API 模型 ID。",
   "cllms.config.zai.modelIdOverrides.glm-4.5-air.description": "GLM-4.5-Air 的 API 模型 ID。",
   "cllms.config.zai.modelIdOverrides.glm-4.5v.description": "GLM-4.5V 的 API 模型 ID。",

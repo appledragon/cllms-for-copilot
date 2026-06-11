@@ -35,6 +35,8 @@ const zh: Translations = {
 	'model.qwen3-max-intl.tooltip': 'Qwen3 旗舰模型（国际站），面向广泛世界知识与复杂任务（默认不开启思考模式）。',
 	'model.qwen3-vl-plus-intl.detail': '原生视觉模型（国际站）',
 	'model.qwen3-vl-plus-intl.tooltip': '支持原生图片输入的 Qwen3-VL 模型（国际站），可直接理解图片。',
+	'model.glm-5.1.detail': '旗舰长程编码与 Agent',
+	'model.glm-5.1.tooltip': 'z.ai GLM-5.1 旗舰模型，200K 上下文，支持长达 8 小时的自主编码与 Agent，擅长复杂工程优化与长程任务，支持思考模式与工具调用。',
 	'model.glm-4.6.detail': '旗舰编码与 Agent',
 	'model.glm-4.6.tooltip': 'z.ai GLM-4.6 旗舰模型，200K 上下文，擅长编码与 Agent，支持思考模式与工具调用。',
 	'model.glm-4.5-air.detail': '轻量快速',
@@ -332,6 +334,9 @@ const en: Translations = {
 	'model.qwen3-vl-plus-intl.detail': 'Native vision model (Intl)',
 	'model.qwen3-vl-plus-intl.tooltip':
 		'Qwen3-VL model with native image input (international) — understands images directly.',
+	'model.glm-5.1.detail': 'Flagship long-horizon coding & agents',
+	'model.glm-5.1.tooltip':
+		'z.ai GLM-5.1 flagship with a 200K context — supports up to 8 hours of autonomous coding and agentic work, excels at complex engineering optimization and long-horizon tasks, with thinking mode and tool calling.',
 	'model.glm-4.6.detail': 'Flagship coding & agents',
 	'model.glm-4.6.tooltip':
 		'z.ai GLM-4.6 flagship with a 200K context — strong at coding and agents, with thinking mode and tool calling.',

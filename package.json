@@ -247,6 +247,7 @@
         "cllms.zai.modelIdOverrides": {
           "type": "object",
           "default": {
+            "glm-5.1": "glm-5.1",
             "glm-4.6": "glm-4.6",
             "glm-4.5-air": "glm-4.5-air",
             "glm-4.5v": "glm-4.5v"
@@ -254,6 +255,10 @@
           "markdownDescription": "%cllms.config.zai.modelIdOverrides.description%",
           "additionalProperties": false,
           "properties": {
+            "glm-5.1": {
+              "type": "string",
+              "description": "%cllms.config.zai.modelIdOverrides.glm-5.1.description%"
+            },
             "glm-4.6": {
               "type": "string",
               "description": "%cllms.config.zai.modelIdOverrides.glm-4.6.description%"
