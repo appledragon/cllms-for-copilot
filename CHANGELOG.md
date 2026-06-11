@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.4
+
+- Update README (en/zh-cn) to document the new GLM-5.1 model.
+
 ## 0.1.3
 
 - Add **GLM-5.1** model — z.ai's latest flagship with 200K context, up to 128K output tokens, and long-horizon autonomous coding capability (up to 8 hours of sustained agent work). Supports thinking mode, tool calling, and MCP. Pricing: $1.4 / $0.26 (cached) input, $4.4 output per 1M tokens.

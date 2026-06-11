@@ -48,6 +48,7 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 
 | 模型 | 适用场景 |
 |---|---|
+| **GLM-5.1** | 旗舰长程编码与 Agent，200K 上下文，支持 8 小时自主编码 |
 | **GLM-4.6** | 旗舰编码与 Agent，200K 上下文 |
 | **GLM-4.5-Air** | 轻量、更快、成本更低 |
 | **GLM-4.5V** | 原生视觉（图片输入） |
@@ -95,7 +96,7 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 |---|---|---|
 | Qwen（DashScope 国内） | ✅ 已测试 | Qwen3 Coder Plus、Qwen Plus、Qwen3 Max、Qwen3-VL Plus — 全部验证通过。 |
 | Qwen（DashScope International） | ⚠️ 未测试 | API 兼容性应与国内端点一致。欢迎提供测试 token 或测试反馈！ |
-| z.ai（智谱 GLM） | ✅ 已测试 | GLM-4.6、GLM-4.5-Air、GLM-4.5V — 全部验证通过。 |
+| z.ai（智谱 GLM） | ✅ 已测试 | GLM-5.1、GLM-4.6、GLM-4.5-Air、GLM-4.5V — 全部验证通过。 |
 | MiniMax（国内） | ✅ 已测试 | MiniMax-M3、MiniMax-M2.7 — 全部验证通过。 |
 | MiniMax（International） | ⚠️ 未测试 | API 兼容性应与国内端点一致。欢迎提供测试 token 或测试反馈！ |
 | 小米 MiMo | ✅ 已测试 | MiMo V2.5 Pro、MiMo V2.5（Omni）、MiMo V2 Flash — 全部验证通过。 |

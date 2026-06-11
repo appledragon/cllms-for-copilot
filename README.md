@@ -50,6 +50,7 @@ Six providers ship out of the box. Each model has its own API key and endpoint, 
 
 | Model | Best For |
 |---|---|
+| **GLM-5.1** | Flagship long-horizon coding & agents, 200K context, up to 8h autonomous work |
 | **GLM-4.6** | Flagship coding & agents, 200K context |
 | **GLM-4.5-Air** | Lightweight, faster, lower cost |
 | **GLM-4.5V** | Native vision (image input) |
@@ -97,7 +98,7 @@ Want to add your own model? See [Adding a new model](./docs/adding-a-model.md) f
 |---|---|---|
 | Qwen (DashScope China) | ✅ Tested | Qwen3 Coder Plus, Qwen Plus, Qwen3 Max, Qwen3-VL Plus — all verified. |
 | Qwen (DashScope International) | ⚠️ Untested | API compatibility should match the domestic endpoint. Test tokens or test reports welcome! |
-| z.ai (Zhipu GLM) | ✅ Tested | GLM-4.6, GLM-4.5-Air, GLM-4.5V — all verified. |
+| z.ai (Zhipu GLM) | ✅ Tested | GLM-5.1, GLM-4.6, GLM-4.5-Air, GLM-4.5V — all verified. |
 | MiniMax (China) | ✅ Tested | MiniMax-M3, MiniMax-M2.7 — all verified. |
 | MiniMax (International) | ⚠️ Untested | API compatibility should match the domestic endpoint. Test tokens or test reports welcome! |
 | Xiaomi MiMo | ✅ Tested | MiMo V2.5 Pro, MiMo V2.5 (Omni), MiMo V2 Flash — all verified. |
