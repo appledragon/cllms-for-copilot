@@ -74,6 +74,7 @@ Six providers ship out of the box. Each model has its own API key and endpoint, 
 
 | Model | Best For |
 |---|---|
+| **Kimi K2.7** | Latest flagship native-multimodal agents & coding, 256K context |
 | **Kimi K2.6** | Flagship native-multimodal agents & coding, 256K context |
 | **Kimi K2.5** | Multimodal default with toggleable thinking |
 
@@ -102,7 +103,7 @@ Want to add your own model? See [Adding a new model](./docs/adding-a-model.md) f
 | MiniMax (China) | ✅ Tested | MiniMax-M3, MiniMax-M2.7 — all verified. |
 | MiniMax (International) | ⚠️ Untested | API compatibility should match the domestic endpoint. Test tokens or test reports welcome! |
 | Xiaomi MiMo | ✅ Tested | MiMo V2.5 Pro, MiMo V2.5 (Omni), MiMo V2 Flash — all verified. |
-| Moonshot (Kimi China) | ✅ Tested | Kimi K2.6, Kimi K2.5 — all verified. |
+| Moonshot (Kimi China) | ✅ Tested | Kimi K2.7, Kimi K2.6, Kimi K2.5 — all verified. |
 | Moonshot (Kimi International) | ⚠️ Untested | API compatibility should match the domestic endpoint. Test tokens or test reports welcome! |
 | Tencent Hunyuan (混元) | ✅ Tested | Standard OpenAI-compatible API — all verified. |
 
@@ -196,11 +197,11 @@ MiMo is a hybrid-reasoning family: thinking is on by default and sent in the sam
 Moonshot Kimi is just as straightforward:
 
 1. Run **`CLLMs: Set API Key`** and pick **Moonshot (Kimi)**. Create a key in the [Moonshot console](https://platform.moonshot.ai/console/api-keys).
-2. Open the Copilot Chat model picker — **Kimi K2.6** and **Kimi K2.5** appear alongside the others.
+2. Open the Copilot Chat model picker — **Kimi K2.7**, **Kimi K2.6**, and **Kimi K2.5** appear alongside the others.
 
-Kimi K2.6 / K2.5 are native-multimodal hybrid-reasoning models (256K context): thinking is on by default and sent in the GLM-style `thinking: { type: "enabled" | "disabled" }`, with reasoning streamed through `reasoning_content`. Tool calling works, and both models accept native image input. The default endpoint is the international `https://api.moonshot.ai/v1` — set `cllms.moonshot.baseUrl` to `https://api.moonshot.cn/v1` for mainland China.
+Kimi K2.7 / K2.6 / K2.5 are native-multimodal hybrid-reasoning models (256K context): thinking is on by default and sent in the GLM-style `thinking: { type: "enabled" | "disabled" }`, with reasoning streamed through `reasoning_content`. Tool calling works, and all models accept native image input. The default endpoint is the international `https://api.moonshot.ai/v1` — set `cllms.moonshot.baseUrl` to `https://api.moonshot.cn/v1` for mainland China.
 
-> Note: Moonshot keys are **region-specific** — an international (`platform.moonshot.ai`) key only works against `api.moonshot.ai`, and a mainland-China (`platform.moonshot.cn`) key only works against `api.moonshot.cn`. The legacy `kimi-k2-*` series (incl. `kimi-k2-thinking`) was retired on 2026-05-25; use K2.6 / K2.5.
+> Note: Moonshot keys are **region-specific** — an international (`platform.moonshot.ai`) key only works against `api.moonshot.ai`, and a mainland-China (`platform.moonshot.cn`) key only works against `api.moonshot.cn`. The legacy `kimi-k2-*` series (incl. `kimi-k2-thinking`) was retired on 2026-05-25; use K2.7 / K2.6 / K2.5.
 
 ## Using Tencent Hunyuan (混元)
 

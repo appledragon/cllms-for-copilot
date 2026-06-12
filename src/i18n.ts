@@ -60,12 +60,18 @@ const zh: Translations = {
 	'model.mimo-v2-flash.detail': '快速、低成本',
 	'model.mimo-v2-flash.tooltip':
 		'小米 MiMo V2 Flash 模型，响应更快、成本更低，支持思考模式与工具调用。',
+	'model.kimi-k2.7.detail': '最新旗舰多模态与 Agent',
+	'model.kimi-k2.7.tooltip':
+		'Moonshot Kimi K2.7 最新旗舰原生多模态混合推理模型，256K 上下文，支持原生图片输入、思考模式（默认开启）与工具调用。',
 	'model.kimi-k2.6.detail': '旗舰多模态与 Agent',
 	'model.kimi-k2.6.tooltip':
 		'Moonshot Kimi K2.6 旗舰原生多模态混合推理模型，256K 上下文，支持原生图片输入、思考模式（默认开启）与工具调用。',
 	'model.kimi-k2.5.detail': '多模态，灵活思考',
 	'model.kimi-k2.5.tooltip':
 		'Moonshot Kimi K2.5 原生多模态模型，256K 上下文，支持原生图片输入、可开关的思考模式与工具调用。',
+	'model.kimi-k2.7-intl.detail': '最新旗舰多模态与 Agent（国际站）',
+	'model.kimi-k2.7-intl.tooltip':
+		'Moonshot Kimi K2.7 最新旗舰原生多模态混合推理模型（国际站），256K 上下文，支持原生图片输入、思考模式（默认开启）与工具调用。',
 	'model.kimi-k2.6-intl.detail': '旗舰多模态与 Agent（国际站）',
 	'model.kimi-k2.6-intl.tooltip':
 		'Moonshot Kimi K2.6 旗舰原生多模态混合推理模型（国际站），256K 上下文，支持原生图片输入、思考模式（默认开启）与工具调用。',
@@ -367,12 +373,18 @@ const en: Translations = {
 	'model.mimo-v2-flash.detail': 'Fast & low cost',
 	'model.mimo-v2-flash.tooltip':
 		'Xiaomi MiMo V2 Flash model with faster responses and lower cost, plus thinking mode and tool calling.',
+	'model.kimi-k2.7.detail': 'Latest flagship multimodal & agents',
+	'model.kimi-k2.7.tooltip':
+		'Moonshot Kimi K2.7 latest flagship native-multimodal hybrid-reasoning model with a 256K context — native image input, thinking mode (on by default), and tool calling.',
 	'model.kimi-k2.6.detail': 'Flagship multimodal & agents',
 	'model.kimi-k2.6.tooltip':
 		'Moonshot Kimi K2.6 flagship native-multimodal hybrid-reasoning model with a 256K context — native image input, thinking mode (on by default), and tool calling.',
 	'model.kimi-k2.5.detail': 'Multimodal, flexible thinking',
 	'model.kimi-k2.5.tooltip':
 		'Moonshot Kimi K2.5 native-multimodal model with a 256K context — native image input, toggleable thinking mode, and tool calling.',
+	'model.kimi-k2.7-intl.detail': 'Latest flagship multimodal & agents (Intl)',
+	'model.kimi-k2.7-intl.tooltip':
+		'Moonshot Kimi K2.7 latest flagship native-multimodal hybrid-reasoning model (international) with a 256K context — native image input, thinking mode (on by default), and tool calling.',
 	'model.kimi-k2.6-intl.detail': 'Flagship multimodal & agents (Intl)',
 	'model.kimi-k2.6-intl.tooltip':
 		'Moonshot Kimi K2.6 flagship native-multimodal hybrid-reasoning model (international) with a 256K context — native image input, thinking mode (on by default), and tool calling.',

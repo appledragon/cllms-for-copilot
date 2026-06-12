@@ -128,7 +128,7 @@ describe('model registry', () => {
 
 	it('exposes the Moonshot Kimi models on the moonshot provider with native vision', () => {
 		const moonshotIds = MODELS.filter((m) => m.provider === 'moonshot').map((m) => m.id).sort();
-		assert.deepEqual(moonshotIds, ['kimi-k2.5', 'kimi-k2.6']);
+		assert.deepEqual(moonshotIds, ['kimi-k2.5', 'kimi-k2.6', 'kimi-k2.7']);
 		for (const model of MODELS.filter((m) => m.provider === 'moonshot')) {
 			assert.equal(model.capabilities.thinking, true, `${model.id} should be a thinking model`);
 			assert.equal(model.capabilities.imageInput, true, `${model.id} is natively multimodal`);
@@ -141,10 +141,13 @@ describe('model registry', () => {
 			'MiniMax-M3',
 			'MiniMax-M3-intl',
 			'glm-4.5v',
+			'glm-5v-turbo',
 			'kimi-k2.5',
 			'kimi-k2.5-intl',
 			'kimi-k2.6',
 			'kimi-k2.6-intl',
+			'kimi-k2.7',
+			'kimi-k2.7-intl',
 			'mimo-v2.5',
 			'qwen3-vl-plus',
 			'qwen3-vl-plus-intl',

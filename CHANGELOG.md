@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5
+
+- Add **Kimi K2.7** model — Moonshot's latest flagship native-multimodal hybrid-reasoning model with a 256K context, native image input, thinking mode (on by default), and tool calling. Available on both the domestic (`api.moonshot.cn`) and international (`api.moonshot.ai`) endpoints.
+
 ## 0.1.4
 
 - Update README (en/zh-cn) to document the new GLM-5.1 model.

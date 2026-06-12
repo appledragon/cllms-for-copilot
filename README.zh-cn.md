@@ -72,6 +72,7 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 
 | 模型 | 适用场景 |
 |---|---|
+| **Kimi K2.7** | 最新旗舰原生多模态、Agent 与编码，256K 上下文 |
 | **Kimi K2.6** | 旗舰原生多模态、Agent 与编码，256K 上下文 |
 | **Kimi K2.5** | 多模态默认模型，思考可开关 |
 
@@ -100,7 +101,7 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 | MiniMax（国内） | ✅ 已测试 | MiniMax-M3、MiniMax-M2.7 — 全部验证通过。 |
 | MiniMax（International） | ⚠️ 未测试 | API 兼容性应与国内端点一致。欢迎提供测试 token 或测试反馈！ |
 | 小米 MiMo | ✅ 已测试 | MiMo V2.5 Pro、MiMo V2.5（Omni）、MiMo V2 Flash — 全部验证通过。 |
-| Moonshot（Kimi 国内） | ✅ 已测试 | Kimi K2.6、Kimi K2.5 — 全部验证通过。 |
+| Moonshot（Kimi 国内） | ✅ 已测试 | Kimi K2.7、Kimi K2.6、Kimi K2.5 — 全部验证通过。 |
 | Moonshot（Kimi International） | ⚠️ 未测试 | API 兼容性应与国内端点一致。欢迎提供测试 token 或测试反馈！ |
 | 腾讯混元 | ✅ 已测试 | 标准 OpenAI 兼容 API——全部验证通过。 |
 
@@ -194,11 +195,11 @@ MiMo 是混合推理模型家族：思考模式默认开启，并以与 GLM 相�
 Moonshot Kimi 也开箱即用：
 
 1. 运行 **`CLLMs: 设置 API Key`** 并选择 **Moonshot（Kimi）**。在 [Moonshot 控制台](https://platform.moonshot.ai/console/api-keys) 创建密钥。
-2. 打开 Copilot Chat 模型选择器——**Kimi K2.6** 与 **Kimi K2.5** 会和其他模型一起出现。
+2. 打开 Copilot Chat 模型选择器——**Kimi K2.7**、**Kimi K2.6** 与 **Kimi K2.5** 会和其他模型一起出现。
 
-Kimi K2.6 / K2.5 是原生多模态混合推理模型（256K 上下文）：思考模式默认开启，以 GLM 风格的 `thinking: { type: "enabled" | "disabled" }` 发送，推理内容通过 `reasoning_content` 流式返回。支持工具调用，且两个模型都支持原生图片输入。默认端点为国际站 `https://api.moonshot.ai/v1`——中国大陆可将 `cllms.moonshot.baseUrl` 设为 `https://api.moonshot.cn/v1`。
+Kimi K2.7 / K2.6 / K2.5 是原生多模态混合推理模型（256K 上下文）：思考模式默认开启，以 GLM 风格的 `thinking: { type: "enabled" | "disabled" }` 发送，推理内容通过 `reasoning_content` 流式返回。支持工具调用，且所有模型都支持原生图片输入。默认端点为国际站 `https://api.moonshot.ai/v1`——中国大陆可将 `cllms.moonshot.baseUrl` 设为 `https://api.moonshot.cn/v1`。
 
-> 注意：Moonshot 密钥**按区域区分**——国际站（`platform.moonshot.ai`）密钥仅能用于 `api.moonshot.ai`，中国大陆（`platform.moonshot.cn`）密钥仅能用于 `api.moonshot.cn`。旧的 `kimi-k2-*` 系列（含 `kimi-k2-thinking`）已于 2026-05-25 下线，请使用 K2.6 / K2.5。
+> 注意：Moonshot 密钥**按区域区分**——国际站（`platform.moonshot.ai`）密钥仅能用于 `api.moonshot.ai`，中国大陆（`platform.moonshot.cn`）密钥仅能用于 `api.moonshot.cn`。旧的 `kimi-k2-*` 系列（含 `kimi-k2-thinking`）已于 2026-05-25 下线，请使用 K2.7 / K2.6 / K2.5。
 
 ## 使用腾讯混元
 

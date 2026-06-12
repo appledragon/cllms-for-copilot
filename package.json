@@ -3,7 +3,7 @@
   "displayName": "CLLMs for Copilot Chat",
   "description": "Pick Qwen, GLM (z.ai), MiniMax, Xiaomi MiMo, Moonshot Kimi, and Tencent Hunyuan models from the Copilot Chat model picker. Vision, thinking mode, agent tools — zero config, BYOK.",
   "icon": "resources/icon.png",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "publisher": "CuiLiAn",
   "license": "MIT",
   "repository": {
@@ -423,12 +423,17 @@
         "cllms.moonshot.modelIdOverrides": {
           "type": "object",
           "default": {
+            "kimi-k2.7": "kimi-k2.7",
             "kimi-k2.6": "kimi-k2.6",
             "kimi-k2.5": "kimi-k2.5"
           },
           "markdownDescription": "%cllms.config.moonshot.modelIdOverrides.description%",
           "additionalProperties": false,
           "properties": {
+            "kimi-k2.7": {
+              "type": "string",
+              "description": "%cllms.config.moonshot.modelIdOverrides.kimi-k2.7.description%"
+            },
             "kimi-k2.6": {
               "type": "string",
               "description": "%cllms.config.moonshot.modelIdOverrides.kimi-k2.6.description%"
@@ -447,12 +452,17 @@
         "cllms.moonshotIntl.modelIdOverrides": {
           "type": "object",
           "default": {
+            "kimi-k2.7-intl": "kimi-k2.7",
             "kimi-k2.6-intl": "kimi-k2.6",
             "kimi-k2.5-intl": "kimi-k2.5"
           },
           "markdownDescription": "%cllms.config.moonshotIntl.modelIdOverrides.description%",
           "additionalProperties": false,
           "properties": {
+            "kimi-k2.7-intl": {
+              "type": "string",
+              "description": "%cllms.config.moonshotIntl.modelIdOverrides.kimi-k2.7-intl.description%"
+            },
             "kimi-k2.6-intl": {
               "type": "string",
               "description": "%cllms.config.moonshotIntl.modelIdOverrides.kimi-k2.6-intl.description%"

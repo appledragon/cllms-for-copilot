@@ -169,7 +169,7 @@ export const PROVIDERS: Readonly<Record<ProviderId, ProviderDefinition>> = {
 		apiKeySetting: 'moonshot.apiKey',
 		modelIdOverridesSetting: 'moonshot.modelIdOverrides',
 		officialHost: 'api.moonshot.cn',
-		// Kimi K2.6/K2.5 use the same `thinking: { type: 'enabled' | 'disabled' }`
+		// Kimi K2.7/K2.6/K2.5 use the same `thinking: { type: 'enabled' | 'disabled' }`
 		// wire format as GLM (thinking on by default); reasoning streams in
 		// `reasoning_content`.
 		thinkingStyle: 'glm',
@@ -954,13 +954,34 @@ export const MODELS: ModelDefinition[] = [
 	},
 
 	// ---- Moonshot (Kimi) ----
-	// Kimi K2.6 / K2.5 are native-multimodal hybrid-reasoning models on the
+	// Kimi K2.7 / K2.6 / K2.5 are native-multimodal hybrid-reasoning models on the
 	// official open platform (international `api.moonshot.ai`; mainland China
 	// `api.moonshot.cn`). Thinking is on by default and toggled with the
 	// GLM-style `thinking: { type: 'enabled' | 'disabled' }`, with reasoning in
 	// `reasoning_content`. The deprecated `kimi-k2-*` series was retired on
 	// 2026-05-25. USD = official per-1M-token pricing; CNY is an approximate
 	// conversion that only drives the picker cost hints.
+	{
+		id: 'kimi-k2.7',
+		name: 'Kimi K2.7',
+		provider: 'moonshot',
+		family: 'kimi',
+		version: 'kimi-k2.7',
+		detail: 'Latest flagship multimodal & agents',
+		maxInputTokens: 262144,
+		maxOutputTokens: 131072,
+		capabilities: {
+			toolCalling: LLM_TOOLS_LIMIT,
+			imageInput: true,
+			thinking: true,
+		},
+		requiresThinkingParam: false,
+		pricing: {
+			USD: { cacheHitInput: 0.2, cacheMissInput: 1.2, output: 5 },
+			CNY: { cacheHitInput: 1.5, cacheMissInput: 8.5, output: 36 },
+		},
+		priceCategory: 'high',
+	},
 	{
 		id: 'kimi-k2.6',
 		name: 'Kimi K2.6',
@@ -1007,6 +1028,27 @@ export const MODELS: ModelDefinition[] = [
 	// ---- Moonshot (Kimi International) ----
 	// Models are identical to the domestic Kimi lineup but connect to the
 	// international endpoint with a separate API key.
+	{
+		id: 'kimi-k2.7-intl',
+		name: 'Kimi K2.7 (Intl)',
+		provider: 'moonshot-intl',
+		family: 'kimi',
+		version: 'kimi-k2.7',
+		detail: 'Latest flagship multimodal & agents',
+		maxInputTokens: 262144,
+		maxOutputTokens: 131072,
+		capabilities: {
+			toolCalling: LLM_TOOLS_LIMIT,
+			imageInput: true,
+			thinking: true,
+		},
+		requiresThinkingParam: false,
+		pricing: {
+			USD: { cacheHitInput: 0.2, cacheMissInput: 1.2, output: 5 },
+			CNY: { cacheHitInput: 1.5, cacheMissInput: 8.5, output: 36 },
+		},
+		priceCategory: 'high',
+	},
 	{
 		id: 'kimi-k2.6-intl',
 		name: 'Kimi K2.6 (Intl)',
