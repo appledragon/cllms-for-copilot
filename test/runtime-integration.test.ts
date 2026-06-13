@@ -303,6 +303,6 @@ describe("runtime integration", () => {
     await deactivate();
 
     assert.deepEqual(await provideModelInfo(provider), []);
-    assert.deepEqual(shim.__state.selectChatModelsCalls, [{ vendor: "cllms" }]);
+    assert.deepEqual(shim.__state.selectChatModelsCalls, []);
   });
 });

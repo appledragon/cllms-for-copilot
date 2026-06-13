@@ -164,17 +164,6 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 	async prepareForDeactivate(): Promise<void> {
 		this.isActive = false;
 		this.onDidChangeLanguageModelChatInformationEmitter.fire();
-
-		// Force the host to re-pull `provideLanguageModelChatInformation` synchronously
-		// before the extension unloads. With `isActive = false` we now return [],
-		// which makes Copilot Chat drop CLLMs models from the picker immediately
-		// instead of leaving stale entries behind after deactivate. The returned
-		// model list itself is unused — we only call this for its side effect.
-		try {
-			await vscode.lm.selectChatModels({ vendor: 'cllms' });
-		} catch (error) {
-			logger.warn('Failed to refresh CLLMs models during deactivate', error);
-		}
 	}
 
 	async setVisionModel(): Promise<void> {
