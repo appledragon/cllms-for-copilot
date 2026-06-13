@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.8
+
+- Fix model picker not showing models: restore `displayName` on `languageModelChatProviders` contribution point (removed in 0.1.6 caused Copilot Chat to ignore the provider on recent VS Code versions).
+- Fix `Tool "cllms_readImage" was not contributed` error by wrapping tool registration in try-catch for graceful fallback when the contribution point hasn't loaded yet.
+
+## 0.1.7
+
+- Fix "Canceled: Canceled" warning during extension deactivation by removing the unnecessary `selectChatModels` call that always fails when the extension host is shutting down.
+
 ## 0.1.6
 
 - Fix Kimi K2.7 API model ID: use the correct `kimi-k2.7-code` instead of `kimi-k2.7` (which returned 404 "Not found the model kimi-k2.7 or Permission denied").

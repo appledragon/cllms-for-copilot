@@ -21,12 +21,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 		activeProvider = provider;
 
 		// Register the image-read language model tool.
-		context.subscriptions.push(
-			vscode.lm.registerTool(
-				'cllms_readImage',
-				createImageReadTool(getVisionDescriberGetter(provider)),
-			),
-		);
+		// Wrapped in try-catch because the tool contribution may not be
+		// available yet on first activation in some VS Code versions.
+		try {
+			context.subscriptions.push(
+				vscode.lm.registerTool(
+					'cllms_readImage',
+					createImageReadTool(getVisionDescriberGetter(provider)),
+				),
+			);
+		} catch (error) {
+			logger.warn('Failed to register cllms_readImage tool', error);
+		}
 
 		void showWelcomeIfNeeded(context, provider).catch((error) => {
 			logger.warn(t('extension.welcomeFailed'), error);
