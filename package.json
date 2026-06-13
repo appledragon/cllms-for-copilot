@@ -3,7 +3,7 @@
   "displayName": "CLLMs for Copilot Chat",
   "description": "Pick Qwen, GLM (z.ai), MiniMax, Xiaomi MiMo, Moonshot Kimi, and Tencent Hunyuan models from the Copilot Chat model picker. Vision, thinking mode, agent tools — zero config, BYOK.",
   "icon": "resources/icon.png",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "publisher": "CuiLiAn",
   "license": "MIT",
   "repository": {
@@ -49,8 +49,7 @@
   "contributes": {
     "languageModelChatProviders": [
       {
-        "vendor": "cllms",
-        "displayName": "CLLMs (Qwen · GLM · MiniMax · MiMo · Kimi · Hunyuan)"
+        "vendor": "cllms"
       }
     ],
     "languageModelTools": [
@@ -423,7 +422,7 @@
         "cllms.moonshot.modelIdOverrides": {
           "type": "object",
           "default": {
-            "kimi-k2.7": "kimi-k2.7",
+            "kimi-k2.7": "kimi-k2.7-code",
             "kimi-k2.6": "kimi-k2.6",
             "kimi-k2.5": "kimi-k2.5"
           },
@@ -452,7 +451,7 @@
         "cllms.moonshotIntl.modelIdOverrides": {
           "type": "object",
           "default": {
-            "kimi-k2.7-intl": "kimi-k2.7",
+            "kimi-k2.7-intl": "kimi-k2.7-code",
             "kimi-k2.6-intl": "kimi-k2.6",
             "kimi-k2.5-intl": "kimi-k2.5"
           },

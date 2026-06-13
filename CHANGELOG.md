@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.6
+
+- Fix Kimi K2.7 API model ID: use the correct `kimi-k2.7-code` instead of `kimi-k2.7` (which returned 404 "Not found the model kimi-k2.7 or Permission denied").
+- Remove `displayName` from `languageModelChatProviders` contribution point.
+
 ## 0.1.5
 
 - Add **Kimi K2.7** model — Moonshot's latest flagship native-multimodal hybrid-reasoning model with a 256K context, native image input, thinking mode (on by default), and tool calling. Available on both the domestic (`api.moonshot.cn`) and international (`api.moonshot.ai`) endpoints.
