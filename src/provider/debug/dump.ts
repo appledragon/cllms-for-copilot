@@ -8,8 +8,8 @@ import { logger } from '../../logger';
 import type { LlmRequest } from '../../types';
 import { llmContentToText } from '../convert';
 import {
-	classifyLlmRequest,
-	classifyProviderRequest,
+	classifyLlmRequestDetailed,
+	classifyProviderRequestDetailed,
 	formatModelFields,
 	formatRequestLogLine,
 	type RequestKind,
@@ -54,6 +54,8 @@ interface DumpContext {
 	timestamp: string;
 	basename: string;
 	requestKind: RequestKind;
+	/** Privacy-safe explanation of why the request was classified as requestKind. */
+	requestKindReason: string;
 }
 
 interface ProviderInputDumpPaths {
@@ -102,18 +104,18 @@ export interface DumpProviderInputOptions {
 export function dumpProviderInput(options: DumpProviderInputOptions): void {
 	if (!getRequestDumpEnabled()) return;
 
-	const requestKind =
-		options.requestKind ??
-		classifyProviderRequest({
-			messages: options.messages,
-			tools: options.requestOptions.tools,
-		});
+	const classification = classifyProviderRequestDetailed({
+		messages: options.messages,
+		tools: options.requestOptions.tools,
+	});
+	const requestKind = options.requestKind ?? classification.kind;
 	const context = createDumpContext(
 		options.globalStorageUri,
 		options.segment,
 		'qwen-provider-input',
 		(providerInputDumpCounter += 1),
 		requestKind,
+		classification.reason,
 	);
 	const paths = createProviderInputDumpPaths(context);
 	const toolSummary = summarizeTools(options.requestOptions.tools);
@@ -133,12 +135,13 @@ export function dumpProviderInput(options: DumpProviderInputOptions): void {
 					vscodeModelId: options.modelInfo.id,
 				},
 				requestKind,
+				requestKindReason: context.requestKindReason,
 				requestOptions: options.requestOptions,
 				messages: options.messages,
 				toolSummary,
 			}),
 		);
-		logProviderInputDump(options, paths, toolSummary, requestKind);
+		logProviderInputDump(options, paths, toolSummary, requestKind, context.requestKindReason);
 	});
 }
 
@@ -160,18 +163,18 @@ export function dumpLlmRequest(
 ): void {
 	if (!getRequestDumpEnabled()) return;
 
-	const requestKind =
-		options.requestKind ??
-		classifyLlmRequest({
-			request,
-			inputMessages: options.inputMessages,
-		});
+	const classification = classifyLlmRequestDetailed({
+		request,
+		inputMessages: options.inputMessages,
+	});
+	const requestKind = options.requestKind ?? classification.kind;
 	const context = createDumpContext(
 		options.globalStorageUri,
 		options.segment,
 		'qwen-request',
 		(dumpCounter += 1),
 		requestKind,
+		classification.reason,
 	);
 	const msg0 = request.messages[0];
 	const paths = createRequestDumpPaths(context, Boolean(msg0));
@@ -208,12 +211,13 @@ export function dumpLlmRequest(
 					apiModelId: request.model === options.vscodeModelId ? undefined : request.model,
 				},
 				requestKind,
+				requestKindReason: context.requestKindReason,
 				requestOptions: options.requestOptions,
 				messages: options.inputMessages,
 				toolSummary,
 			}),
 		);
-		logRequestDump(request, options, paths, requestJson.length, requestKind);
+		logRequestDump(request, options, paths, requestJson.length, requestKind, context.requestKindReason);
 	});
 }
 
@@ -229,6 +233,7 @@ function createDumpContext(
 	prefix: string,
 	seq: number,
 	requestKind: RequestKind,
+	requestKindReason: string,
 ): DumpContext {
 	const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 	return {
@@ -236,6 +241,7 @@ function createDumpContext(
 		timestamp,
 		basename: `${prefix}-${timestamp}-${String(seq).padStart(4, '0')}`,
 		requestKind,
+		requestKindReason,
 	};
 }
 
@@ -263,6 +269,7 @@ function createDumpObservation(options: {
 	paths: ProviderInputDumpPaths | RequestDumpPaths;
 	model: object;
 	requestKind: RequestKind;
+	requestKindReason: string;
 	requestOptions: vscode.ProvideLanguageModelChatResponseOptions;
 	messages: readonly vscode.LanguageModelChatRequestMessage[];
 	toolSummary: ToolSummary;
@@ -275,6 +282,7 @@ function createDumpObservation(options: {
 		paths: options.paths,
 		model: options.model,
 		requestKind: options.requestKind,
+		requestKindReason: options.requestKindReason,
 		options: summarizeRequestOptions(options.requestOptions),
 		hostSettings: summarizeHostSettings(),
 		systemPromptSummary: summarizeVscodeSystemPrompt(options.messages),
@@ -359,6 +367,7 @@ function createDumpSnapshot(options: {
 		basename: options.context.basename,
 		segment: options.segment,
 		requestKind: options.requestKind,
+		requestKindReason: options.context.requestKindReason,
 		model: options.model,
 		options: summarizeRequestOptions(options.requestOptions),
 		hostSettings: summarizeHostSettings(),
@@ -396,12 +405,13 @@ function logProviderInputDump(
 	paths: ProviderInputDumpPaths,
 	toolSummary: ToolSummary,
 	requestKind: RequestKind,
+	requestKindReason: string,
 ): void {
 	const systemPromptSummary = summarizeVscodeSystemPrompt(options.messages);
 	logger.debug(
 		formatRequestLogLine(
 			requestKind,
-			`providerInputDump written: ${formatDumpSegment(options.segment)}` +
+			`providerInputDump written: classifyReason=${requestKindReason} ${formatDumpSegment(options.segment)}` +
 				` ${formatModelFields(options.modelInfo.id)}` +
 				` input=${formatFileUri(paths.providerInput)} ` +
 				`(${options.messages.length} msgs, ${toolSummary.toolCount} tools, ` +
@@ -420,12 +430,13 @@ function logRequestDump(
 	paths: RequestDumpPaths,
 	requestJsonLength: number,
 	requestKind: RequestKind,
+	requestKindReason: string,
 ): void {
 	const systemPromptSummary = summarizeLlmSystemPrompt(request.messages);
 	logger.debug(
 		formatRequestLogLine(
 			requestKind,
-			`requestDump written: ${formatDumpSegment(options.segment)}` +
+			`requestDump written: classifyReason=${requestKindReason} ${formatDumpSegment(options.segment)}` +
 				` ${formatModelFields(options.vscodeModelId, request.model)}` +
 				` request=${formatFileUri(paths.request)} ` +
 				`input=${formatFileUri(paths.input)} resolved=${formatFileUri(paths.resolved)} ` +

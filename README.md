@@ -150,6 +150,8 @@ Run these from the Command Palette (`Cmd/Ctrl+Shift+P`):
 | `CLLMs: Show Logs` | Open the diagnostic output channel |
 | `CLLMs: Open Request Dumps Folder` | Open the verbose request-dump folder (debug mode) |
 
+> **Note on session cost** — `Show Session Cost` is an **approximation for the current session only**. It is estimated from the `usage` each provider streams back (cached input is billed at the cache-hit tier), is not a substitute for your provider's official billing, and resets when the display currency changes. Requests for models without configured pricing are counted separately as "excluded for lack of pricing" rather than folded into the total, so the figure never looks more complete than it is.
+
 Example `settings.json` override for compatible API proxies:
 
 ```json

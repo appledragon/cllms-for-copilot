@@ -188,18 +188,26 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 			return;
 		}
 
-		const detail = summary.items
-			.map((item) =>
-				t(
-					'sessionCost.lineItem',
-					item.modelName,
-					formatSessionCost(item.cost, summary.currency),
-					item.requests,
-					item.promptTokens,
-					item.completionTokens,
-				),
-			)
-			.join('\n');
+		const lineItems = summary.items.map((item) =>
+			t(
+				'sessionCost.lineItem',
+				item.modelName,
+				formatSessionCost(item.cost, summary.currency),
+				item.requests,
+				item.promptTokens,
+				item.completionTokens,
+				item.cachedPromptTokens,
+			),
+		);
+
+		const notes = [t('sessionCost.approximateNote')];
+		if (summary.unbilledRequests > 0) {
+			notes.push(t('sessionCost.unbilledNote', summary.unbilledRequests, summary.unbilledModelCount));
+		}
+
+		const detail = [lineItems.join('\n'), notes.join('\n')]
+			.filter((section) => section.length > 0)
+			.join('\n\n');
 
 		const choice = await vscode.window.showInformationMessage(
 			t('sessionCost.summaryTitle', formatSessionCost(summary.totalCost, summary.currency)),

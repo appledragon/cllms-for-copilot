@@ -5,6 +5,8 @@ export interface SessionCostLineItem {
 	readonly modelName: string;
 	readonly requests: number;
 	readonly promptTokens: number;
+	/** Portion of promptTokens billed at the cheaper cache-hit tier. */
+	readonly cachedPromptTokens: number;
 	readonly completionTokens: number;
 	readonly cost: number;
 }
@@ -13,12 +15,19 @@ export interface SessionCostSummary {
 	readonly currency: PricingCurrency;
 	readonly totalCost: number;
 	readonly items: readonly SessionCostLineItem[];
+	/** Requests whose cost was estimated (model had pricing in the active currency). */
+	readonly billedRequests: number;
+	/** Requests excluded from the total because the model lacked pricing. */
+	readonly unbilledRequests: number;
+	/** Distinct models excluded from the total for lack of pricing. */
+	readonly unbilledModelCount: number;
 }
 
 interface MutableEntry {
 	modelName: string;
 	requests: number;
 	promptTokens: number;
+	cachedPromptTokens: number;
 	completionTokens: number;
 	cost: number;
 }
@@ -33,15 +42,14 @@ const TOKENS_PER_PRICING_UNIT = 1_000_000;
  */
 export class SessionCostTracker {
 	private readonly entries = new Map<string, MutableEntry>();
+	/** Models seen with usage but no pricing in the active currency. */
+	private readonly unbilledModelIds = new Set<string>();
+	private unbilledRequests = 0;
 	private currency: PricingCurrency | undefined;
 	private totalCost = 0;
 
 	record(model: ModelDefinition, usage: LlmUsage, currency: PricingCurrency | undefined): void {
 		if (!currency) {
-			return;
-		}
-		const pricing = model.pricing?.[currency];
-		if (!pricing) {
 			return;
 		}
 
@@ -51,6 +59,15 @@ export class SessionCostTracker {
 			this.reset();
 		}
 		this.currency = currency;
+
+		const pricing = model.pricing?.[currency];
+		if (!pricing) {
+			// Keep the cost total honest: this request is real but cannot be
+			// priced, so record it as unbilled instead of silently dropping it.
+			this.unbilledRequests += 1;
+			this.unbilledModelIds.add(model.id);
+			return;
+		}
 
 		const cachedTokens = Math.max(0, usage.prompt_tokens_details?.cached_tokens ?? 0);
 		const nonCachedPromptTokens = Math.max(0, usage.prompt_tokens - cachedTokens);
@@ -64,17 +81,20 @@ export class SessionCostTracker {
 			modelName: model.name,
 			requests: 0,
 			promptTokens: 0,
+			cachedPromptTokens: 0,
 			completionTokens: 0,
 			cost: 0,
 		};
 		entry.requests += 1;
 		entry.promptTokens += usage.prompt_tokens;
+		entry.cachedPromptTokens += cachedTokens;
 		entry.completionTokens += usage.completion_tokens;
 		entry.cost += cost;
 		this.entries.set(model.id, entry);
 		this.totalCost += cost;
 	}
 
+	/** True when no priced usage has accrued (unbilled-only usage still reads empty). */
 	isEmpty(): boolean {
 		return this.entries.size === 0;
 	}
@@ -88,7 +108,7 @@ export class SessionCostTracker {
 	}
 
 	getSummary(): SessionCostSummary | undefined {
-		if (!this.currency || this.entries.size === 0) {
+		if (!this.currency || (this.entries.size === 0 && this.unbilledRequests === 0)) {
 			return undefined;
 		}
 		const items = [...this.entries.entries()]
@@ -97,15 +117,26 @@ export class SessionCostTracker {
 				modelName: entry.modelName,
 				requests: entry.requests,
 				promptTokens: entry.promptTokens,
+				cachedPromptTokens: entry.cachedPromptTokens,
 				completionTokens: entry.completionTokens,
 				cost: entry.cost,
 			}))
 			.sort((a, b) => b.cost - a.cost);
-		return { currency: this.currency, totalCost: this.totalCost, items };
+		const billedRequests = items.reduce((sum, item) => sum + item.requests, 0);
+		return {
+			currency: this.currency,
+			totalCost: this.totalCost,
+			items,
+			billedRequests,
+			unbilledRequests: this.unbilledRequests,
+			unbilledModelCount: this.unbilledModelIds.size,
+		};
 	}
 
 	reset(): void {
 		this.entries.clear();
+		this.unbilledModelIds.clear();
+		this.unbilledRequests = 0;
 		this.totalCost = 0;
 	}
 }

@@ -288,10 +288,13 @@ const zh: Translations = {
 	'connection.action.showLogs': '显示日志',
 
 	// Session cost
-	'sessionCost.statusBarTooltip': 'CLLMs 本次会话费用（点击查看明细）',
+	'sessionCost.statusBarTooltip': 'CLLMs 本次会话费用（近似，点击查看明细）',
 	'sessionCost.empty': '本次会话尚未记录任何 CLLMs 用量。',
-	'sessionCost.summaryTitle': 'CLLMs 本次会话费用：{0}',
-	'sessionCost.lineItem': '{0}：{1}（{2} 次请求，输入 {3} / 输出 {4} tokens）',
+	'sessionCost.summaryTitle': 'CLLMs 本次会话费用（近似）：{0}',
+	'sessionCost.lineItem': '{0}：{1}（{2} 次请求，输入 {3} / 输出 {4} tokens，其中命中缓存 {5}）',
+	'sessionCost.approximateNote':
+		'仅为近似值，且只统计当前会话：基于服务商返回的 usage 估算，命中缓存的输入按缓存命中价计费。',
+	'sessionCost.unbilledNote': '另有 {0} 次请求（{1} 个模型）因缺少定价未纳入估算。',
 	'sessionCost.reset': '清零',
 	'sessionCost.resetDone': '已清零 CLLMs 会话费用。',
 
@@ -630,10 +633,14 @@ const en: Translations = {
 	'connection.action.showLogs': 'Show Logs',
 
 	// Session cost
-	'sessionCost.statusBarTooltip': 'CLLMs session cost — click for details',
+	'sessionCost.statusBarTooltip': 'CLLMs session cost (approximate) — click for details',
 	'sessionCost.empty': 'No CLLMs usage recorded this session yet.',
-	'sessionCost.summaryTitle': 'CLLMs session cost: {0}',
-	'sessionCost.lineItem': '{0}: {1} ({2} requests, {3} in / {4} out tokens)',
+	'sessionCost.summaryTitle': 'CLLMs session cost (approximate): {0}',
+	'sessionCost.lineItem': '{0}: {1} ({2} requests, {3} in / {4} out tokens, {5} cached in)',
+	'sessionCost.approximateNote':
+		'Approximate and for this session only: estimated from provider-reported usage, with cached input billed at the cache-hit rate.',
+	'sessionCost.unbilledNote':
+		'{0} more request(s) across {1} model(s) are excluded for lack of pricing.',
 	'sessionCost.reset': 'Reset',
 	'sessionCost.resetDone': 'CLLMs session cost reset.',
 

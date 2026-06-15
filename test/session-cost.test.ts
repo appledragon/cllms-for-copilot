@@ -60,6 +60,71 @@ describe('SessionCostTracker', () => {
 		assert.equal(summary?.currency, 'USD');
 		assert.equal(summary?.items.length, 1);
 		assert.equal(summary?.items[0].requests, 1);
+		// The cached portion of the prompt is surfaced for cache hit/miss insight.
+		assert.equal(summary?.items[0].cachedPromptTokens, 400_000);
+		assert.equal(summary?.billedRequests, 1);
+		assert.equal(summary?.unbilledRequests, 0);
+		assert.equal(summary?.unbilledModelCount, 0);
+	});
+
+	it('aggregates cached prompt tokens across requests for the same model', () => {
+		const tracker = new SessionCostTracker();
+		const m = model('qwen3-coder-plus');
+		tracker.record(
+			m,
+			usage({ prompt_tokens: 1000, prompt_tokens_details: { cached_tokens: 600 }, total_tokens: 1000 }),
+			'USD',
+		);
+		tracker.record(
+			m,
+			usage({ prompt_tokens: 1000, prompt_tokens_details: { cached_tokens: 400 }, total_tokens: 1000 }),
+			'USD',
+		);
+		const summary = tracker.getSummary();
+		assert.equal(summary?.items[0].promptTokens, 2000);
+		assert.equal(summary?.items[0].cachedPromptTokens, 1000);
+	});
+
+	it('distinguishes billed from unbilled (no-pricing) requests', () => {
+		const tracker = new SessionCostTracker();
+		tracker.record(model('priced'), usage({ prompt_tokens: 1_000_000, total_tokens: 1_000_000 }), 'USD');
+		tracker.record(model('free-1', { pricing: undefined }), usage({ prompt_tokens: 500 }), 'USD');
+		tracker.record(model('free-2', { pricing: undefined }), usage({ prompt_tokens: 500 }), 'USD');
+		tracker.record(model('free-1', { pricing: undefined }), usage({ prompt_tokens: 500 }), 'USD');
+
+		const summary = tracker.getSummary();
+		assert.equal(summary?.billedRequests, 1);
+		assert.equal(summary?.unbilledRequests, 3);
+		// Two distinct unpriced models, even though one was seen twice.
+		assert.equal(summary?.unbilledModelCount, 2);
+		// Unbilled usage must never inflate the priced total ($1M input @ $1).
+		assert.ok(Math.abs((summary?.totalCost ?? 0) - 1) < 1e-9);
+	});
+
+	it('summarizes unbilled-only usage instead of silently dropping it', () => {
+		const tracker = new SessionCostTracker();
+		tracker.record(model('free', { pricing: undefined }), usage({ prompt_tokens: 1000 }), 'USD');
+		// No priced usage → still "empty" for status-bar / total purposes ...
+		assert.equal(tracker.isEmpty(), true);
+		assert.equal(tracker.getTotalCost(), 0);
+		// ... but the summary still surfaces the excluded requests.
+		const summary = tracker.getSummary();
+		assert.equal(summary?.items.length, 0);
+		assert.equal(summary?.billedRequests, 0);
+		assert.equal(summary?.unbilledRequests, 1);
+		assert.equal(summary?.unbilledModelCount, 1);
+		assert.equal(summary?.currency, 'USD');
+	});
+
+	it('clears unbilled counters when the display currency changes', () => {
+		const tracker = new SessionCostTracker();
+		tracker.record(model('free', { pricing: undefined }), usage({ prompt_tokens: 1000 }), 'USD');
+		tracker.record(model('m'), usage({ prompt_tokens: 1_000_000, total_tokens: 1_000_000 }), 'CNY');
+		const summary = tracker.getSummary();
+		assert.equal(summary?.currency, 'CNY');
+		assert.equal(summary?.unbilledRequests, 0);
+		assert.equal(summary?.unbilledModelCount, 0);
+		assert.equal(summary?.billedRequests, 1);
 	});
 
 	it('aggregates repeated usage for the same model', () => {

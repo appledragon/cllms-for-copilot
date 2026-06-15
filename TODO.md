@@ -70,6 +70,23 @@
 - 新增单测覆盖 dump 路径、字段过滤和清理逻辑。
 - README/中文 README 同步说明保留策略和用户如何删除 dump。
 
+### 11. 补齐新增模型的 i18n 与 registry 覆盖（当前 `npm test` 红）
+
+背景：`src/consts.ts` 的 `MODELS` 已新增多个模型（如 `qwen3.7-max`、`qwen3.7-plus`、`qwen3.6-flash` 及 -intl 变体，`glm-5`、`glm-5-turbo`、`glm-4.7`、`glm-4.7-flashx`、`glm-5v-turbo`，`MiniMax-M2.5`、`MiniMax-M2.5-intl`，`hunyuan-2.0-instruct`），但缺少对应的中英文 detail/tooltip 与 registry 期望，导致 `test/registry-consistency.test.ts`、`test/registry.test.ts` 合计 57 个用例失败。这其实是任务 5 的一致性测试在按预期拦截“模型注册表与 i18n / registry 失步”。
+
+建议：
+
+- 为每个新模型补齐 `src/i18n.ts` 中英文 `model.<id>.detail` / `model.<id>.tooltip`。
+- 补齐 `package.json` / `package.nls*.json` 的 modelIdOverrides 与描述，并更新 `test/registry.test.ts` 的 provider→模型期望（含 native vision 标记）。
+- 同步 README / README.zh-cn 的模型表与 CHANGELOG。
+
+验收标准：
+
+- `npm test` 中 registry 与 i18n 覆盖用例全部通过。
+- 新模型在 picker 中有正确的中英文文案与能力标记。
+
+> 注：本项需要各新模型的权威元数据（文案、能力、native vision、定价），不应臆造，故未随本次任务 7、8 一并实现。
+
 ## P1: 高价值改进
 
 ### 4. 完善视觉代理配置与协议测试
@@ -122,37 +139,41 @@
 ~~- 用户能从错误消息直接跳转到修复入口。~~
 ~~- 单测覆盖 stale override 去重、空 model list 和错误摘要。~~
 
-### 7. 成本统计增加可解释性
+### ~~7. 成本统计增加可解释性~~
 
-背景：session cost 使用 streamed usage 和 provider pricing 估算，并在币种切换时 reset。用户看到状态栏金额时，可能不清楚缓存命中、输入/输出 token、币种来源。
+~~状态：已完成。`SessionCostTracker` 现在按模型累计 cached input tokens，并区分已计费 / 未计费（无定价）请求：`getSummary()` 暴露 `billedRequests`、`unbilledRequests`、`unbilledModelCount`，且即便只有未计费用量也会返回摘要（不再被静默丢弃）。`showSessionCost()` 明细新增每个模型的命中缓存输入量，并追加两条说明——“近似、仅当前会话、命中缓存按缓存命中价计费”，以及“另有 N 次请求（M 个模型）因缺少定价未纳入估算”。状态栏 tooltip 与汇总标题均标注“近似 / approximate”。README 中英文新增成本估算限制说明。`test/session-cost.test.ts` 新增 cached token 累加、已计费/未计费区分、未计费-only 摘要、币种切换清零等用例。~~
 
-建议：
+~~背景：session cost 使用 streamed usage 和 provider pricing 估算，并在币种切换时 reset。用户看到状态栏金额时，可能不清楚缓存命中、输入/输出 token、币种来源。~~
 
-- `showSessionCost()` 详情中加入 cached input tokens、cache hit/miss 成本说明。
-- 对没有 pricing 的模型记录“未纳入估算”的请求数，避免用户误以为总价完整。
-- README 增加成本估算限制说明：仅近似、仅当前会话、依赖 provider 返回 usage。
+~~建议：~~
 
-验收标准：
+~~- `showSessionCost()` 详情中加入 cached input tokens、cache hit/miss 成本说明。~~
+~~- 对没有 pricing 的模型记录“未纳入估算”的请求数，避免用户误以为总价完整。~~
+~~- README 增加成本估算限制说明：仅近似、仅当前会话、依赖 provider 返回 usage。~~
 
-- `SessionCostTracker` 能区分已计费和未计费请求。
-- UI 文案中明确“approximate / 近似”。
+~~验收标准：~~
+
+~~- `SessionCostTracker` 能区分已计费和未计费请求。~~
+~~- UI 文案中明确“approximate / 近似”。~~
 
 ## P2: 可持续维护
 
-### 8. 提升 routing classifier 可维护性
+### ~~8. 提升 routing classifier 可维护性~~
 
-背景：`src/provider/routing/classifier.ts` 通过 prompt 前缀、tool name 和 latest user text 判断请求类型，并基于类型关闭轻量后台任务的 thinking。当前实现可读，但未来 VS Code/Copilot prompt 变化会导致分类失效。
+~~状态：已完成。`src/provider/routing/classifier.ts` 改为单一有序的带注释规则表 `CLASSIFICATION_RULES`，每条规则含 `kind`、`source`（来源：哪个 VS Code/Copilot 功能产生该信号）、`purpose`（预期用途，主要是是否强制关闭 thinking）和 `match`（命中时返回隐私安全的原因标签，如 `tool:manage_todo_list`、`systemPrompt:main-agent`、`fallback:has-tools`，绝不含 prompt 原文）。分类返回新增 `RequestClassification`（kind + reason + source），通过 `classifyProviderRequestDetailed` / `classifyLlmRequestDetailed` 暴露；命中原因已写入 debug dump 的 observation/snapshot 元数据（`requestKindReason`）与 dump 日志行（`classifyReason=...`）。`test/classifier.test.ts` 新增命中原因断言与未知前缀样本测试，确认未识别 prompt 一律落到保留 thinking 的 fallback（background/main-agent），不会被误判为强制关闭 thinking 的轻量类型。~~
 
-建议：
+~~背景：`src/provider/routing/classifier.ts` 通过 prompt 前缀、tool name 和 latest user text 判断请求类型，并基于类型关闭轻量后台任务的 thinking。当前实现可读，但未来 VS Code/Copilot prompt 变化会导致分类失效。~~
 
-- 把 magic prefix 集中成带注释的数据表，包含来源和预期用途。
-- 在 debug metadata 中记录 classifier 命中原因，便于诊断误判。
-- 增加未知前缀样本测试，确认 fallback 行为不会误关 thinking。
+~~建议：~~
 
-验收标准：
+~~- 把 magic prefix 集中成带注释的数据表，包含来源和预期用途。~~
+~~- 在 debug metadata 中记录 classifier 命中原因，便于诊断误判。~~
+~~- 增加未知前缀样本测试，确认 fallback 行为不会误关 thinking。~~
 
-- 新增 request kind 时只需改一处表结构。
-- 诊断日志能说明请求被归类为某种 kind 的原因。
+~~验收标准：~~
+
+~~- 新增 request kind 时只需改一处表结构。~~
+~~- 诊断日志能说明请求被归类为某种 kind 的原因。~~
 
 ### 9. 梳理本地化和 Marketplace 文档一致性
 
@@ -183,6 +204,20 @@
 
 - 发布前能按矩阵完成最小手工回归。
 - 未验证能力有明确状态，而不是散落在 README 表格中。
+
+### 12. 让 `format:check` 结果可复现
+
+背景：本地 `npm run format:check`（`oxfmt --check src/ test/`）对所有文件（包括未改动文件）都报告格式问题，并提示 “No config found, using defaults”。说明仓库未固定 oxfmt 配置，不同 oxfmt 版本的默认风格会判定整库需要重排，导致 format:check 在本地不可复现，也无法用于增量校验。
+
+建议：
+
+- 通过 `oxfmt --init` 增加并提交与仓库现状一致的 oxfmt 配置文件。
+- 在 package.json 固定 oxfmt 版本（当前 `^0.47.0`，可收紧为精确版本并与 CI 对齐）。
+- 在贡献指南 / 发布清单中明确“提交前先 `npm run format`”。
+
+验收标准：
+
+- 干净工作区运行 `npm run format:check` 不再报告未改动文件的格式问题。
 
 ## 安全与隐私复核卡
 
