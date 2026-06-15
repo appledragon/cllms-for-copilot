@@ -133,6 +133,16 @@ npm run lint      # oxlint
 npm test          # node:test 单元测试
 ```
 
+上面的测试均为离线测试。若要针对**真实**服务商做端到端冒烟测试（连通性、流式
++ 用量、思考、工具调用、视觉），设置对应的 API Key 后运行：
+
+```bash
+ZAI_API_KEY=xxx npm run test:providers glm   # 或：node scripts/test-providers.mjs <provider>
+```
+
+完整参数见 `scripts/test-providers.mjs` 文件头（`--model`、`--only`、`--image`、
+`--json` 等）。
+
 可顺带更新 `README.md`、`README.zh-cn.md` 和 `CHANGELOG.md`。
 
 ---

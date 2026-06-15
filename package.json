@@ -561,7 +561,8 @@
     "test": "npm run clean:test && tsc -p tsconfig.test.json && node --require ./test/vscode-shim.cjs --test \"out-test/test/**/*.test.js\"",
     "package": "vsce package --readme-path dist/README.marketplace.md -o dist/",
     "login": "vsce login CuiLiAn",
-    "check-models": "node scripts/check-new-models.mjs"
+    "check-models": "node scripts/check-new-models.mjs",
+    "test:providers": "node scripts/test-providers.mjs"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",

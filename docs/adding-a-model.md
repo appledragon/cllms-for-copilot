@@ -140,6 +140,17 @@ npm run lint      # oxlint
 npm test          # node:test unit tests
 ```
 
+The tests above are offline. To smoke-test against the **live** provider
+(connectivity, streaming + usage, thinking, tool calling, vision), set the
+provider's API key and run:
+
+```bash
+ZAI_API_KEY=xxx npm run test:providers glm   # or: node scripts/test-providers.mjs <provider>
+```
+
+See the header of `scripts/test-providers.mjs` for all flags (`--model`,
+`--only`, `--image`, `--json`, …).
+
 Optionally update `README.md`, `README.zh-cn.md`, and `CHANGELOG.md`.
 
 ---
