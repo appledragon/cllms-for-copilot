@@ -24,7 +24,7 @@ async function openApiKeyPage(): Promise<void> {
 			? providers[0]
 			: (
 					await vscode.window.showQuickPick(
-						providers.map((p) => ({ label: p.name, provider: p })),
+						providers.map((p) => ({ label: `$(link-external) ${p.name}`, provider: p })),
 						{ title: t('auth.selectProviderSet'), placeHolder: t('auth.selectProviderPlaceholder') },
 					)
 				)?.provider;

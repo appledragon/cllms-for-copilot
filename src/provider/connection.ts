@@ -28,8 +28,11 @@ type ApiModelIdResolver = (provider: ProviderDefinition, vscodeModelId: string) 
  * `modelIdOverrides` so users learn early when an override points at a model the
  * endpoint does not expose.
  */
-export async function runConnectionTest(authManager: AuthManager): Promise<void> {
-	const provider = await pickProvider(authManager);
+export async function runConnectionTest(
+	authManager: AuthManager,
+	presetProvider?: ProviderDefinition,
+): Promise<void> {
+	const provider = presetProvider ?? (await pickProvider(authManager));
 	if (!provider) {
 		return;
 	}

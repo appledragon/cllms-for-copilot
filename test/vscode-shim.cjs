@@ -177,6 +177,8 @@ const state = {
   errorMessages: [],
   outputChannels: [],
   statusBarItems: [],
+  inputBoxes: [],
+  quickPicks: [],
   uriHandlers: [],
   languageModelProviders: new Map(),
   selectChatModelsCalls: [],
@@ -283,6 +285,106 @@ function createStatusBarItem(alignment, priority) {
   return item;
 }
 
+function createInputBox() {
+  const acceptEmitter = new EventEmitter();
+  const hideEmitter = new EventEmitter();
+  const buttonEmitter = new EventEmitter();
+  const changeEmitter = new EventEmitter();
+  const input = {
+    value: "",
+    placeholder: undefined,
+    prompt: undefined,
+    title: undefined,
+    password: false,
+    ignoreFocusOut: false,
+    buttons: [],
+    validationMessage: undefined,
+    busy: false,
+    enabled: true,
+    visible: false,
+    onDidAccept: acceptEmitter.event,
+    onDidHide: hideEmitter.event,
+    onDidTriggerButton: buttonEmitter.event,
+    onDidChangeValue: changeEmitter.event,
+    show() {
+      this.visible = true;
+      // Simulate the user: type the configured value and accept, or dismiss.
+      queueMicrotask(() => {
+        if (state.inputBoxResult !== undefined) {
+          this.value = state.inputBoxResult;
+          changeEmitter.fire(this.value);
+          acceptEmitter.fire();
+        } else {
+          hideEmitter.fire();
+        }
+      });
+    },
+    hide() {
+      this.visible = false;
+      hideEmitter.fire();
+    },
+    dispose() {
+      acceptEmitter.dispose();
+      hideEmitter.dispose();
+      buttonEmitter.dispose();
+      changeEmitter.dispose();
+    },
+    __acceptEmitter: acceptEmitter,
+    __buttonEmitter: buttonEmitter,
+  };
+  state.inputBoxes.push(input);
+  return input;
+}
+
+function createQuickPick() {
+  const acceptEmitter = new EventEmitter();
+  const hideEmitter = new EventEmitter();
+  const itemButtonEmitter = new EventEmitter();
+  const activeEmitter = new EventEmitter();
+  const quickPick = {
+    items: [],
+    value: "",
+    placeholder: undefined,
+    title: undefined,
+    ignoreFocusOut: false,
+    busy: false,
+    selectedItems: [],
+    activeItems: [],
+    visible: false,
+    onDidAccept: acceptEmitter.event,
+    onDidHide: hideEmitter.event,
+    onDidTriggerItemButton: itemButtonEmitter.event,
+    onDidChangeActive: activeEmitter.event,
+    show() {
+      this.visible = true;
+      // Simulate the user: pick the configured result (or the first item).
+      queueMicrotask(() => {
+        const chosen = state.quickPickResult ?? this.items[0];
+        if (chosen !== undefined) {
+          this.selectedItems = [chosen];
+          this.activeItems = [chosen];
+          acceptEmitter.fire();
+        } else {
+          hideEmitter.fire();
+        }
+      });
+    },
+    hide() {
+      this.visible = false;
+      hideEmitter.fire();
+    },
+    dispose() {
+      acceptEmitter.dispose();
+      hideEmitter.dispose();
+      itemButtonEmitter.dispose();
+      activeEmitter.dispose();
+    },
+    __itemButtonEmitter: itemButtonEmitter,
+  };
+  state.quickPicks.push(quickPick);
+  return quickPick;
+}
+
 function resetState() {
   state.commands.clear();
   state.executedCommands.length = 0;
@@ -295,6 +397,8 @@ function resetState() {
   state.errorMessages.length = 0;
   state.outputChannels.length = 0;
   state.statusBarItems.length = 0;
+  state.inputBoxes.length = 0;
+  state.quickPicks.length = 0;
   state.uriHandlers.length = 0;
   state.languageModelProviders.clear();
   state.selectChatModelsCalls.length = 0;
@@ -329,6 +433,8 @@ const vscodeStub = {
   window: {
     createOutputChannel,
     createStatusBarItem,
+    createInputBox,
+    createQuickPick,
     showInformationMessage: async (message, ...items) => {
       state.infoMessages.push({ message, items });
       return state.messageResult;

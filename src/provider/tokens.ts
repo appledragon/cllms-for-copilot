@@ -112,6 +112,16 @@ function isLanguageModelThinkingPart(part: unknown): part is vscode.LanguageMode
 	);
 }
 
+/**
+ * Per-message character totals, keyed by the message object. Copilot calls
+ * `provideTokenCount` repeatedly while budgeting context, often re-counting the
+ * same (immutable) request messages. The character total is independent of the
+ * adaptive `charsPerToken` ratio, so we cache chars here and divide by the
+ * current ratio per call. A WeakMap keeps this tied to message lifetimes with
+ * no manual eviction.
+ */
+const messageCharCache = new WeakMap<object, number>();
+
 export function estimateTokenCount(
 	text: string | vscode.LanguageModelChatRequestMessage,
 	charsPerToken: number,
@@ -124,9 +134,16 @@ export function estimateTokenCount(
 		return 1;
 	}
 
-	let totalChars = 0;
-	for (const part of text.content) {
-		totalChars += estimatePartChars(part);
+	const cached = messageCharCache.get(text);
+	let totalChars: number;
+	if (cached !== undefined) {
+		totalChars = cached;
+	} else {
+		totalChars = 0;
+		for (const part of text.content) {
+			totalChars += estimatePartChars(part);
+		}
+		messageCharCache.set(text, totalChars);
 	}
 	return Math.max(1, Math.ceil(totalChars / charsPerToken));
 }

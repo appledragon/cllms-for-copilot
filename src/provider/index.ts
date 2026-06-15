@@ -73,6 +73,9 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 			// Settings-based fallback API key + base URL changes (any provider).
 			vscode.workspace.onDidChangeConfiguration((e) => {
 				if (e.affectsConfiguration('cllms')) {
+					// A settings-fallback API key may have changed; drop all cached
+					// key-presence so the picker re-reads the latest state.
+					this.authManager.invalidatePresence();
 					this.invalidateCurrencyAndRefreshModels();
 				}
 			}),
@@ -81,6 +84,7 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 			// window's model picker so the warning state stays in sync.
 			context.secrets.onDidChange((e) => {
 				if (providerSecretKeys.has(e.key)) {
+					this.authManager.invalidatePresence(e.key);
 					this.invalidateCurrencyAndRefreshModels();
 				}
 			}),
@@ -97,6 +101,28 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 		const saved = await this.authManager.promptForApiKey(provider);
 		if (saved) {
 			this.invalidateCurrencyAndRefreshModels();
+			void this.notifyApiKeySaved(provider).catch((error) =>
+				logger.warn('Failed to present API key follow-up actions', error),
+			);
+		}
+	}
+
+	/**
+	 * After a key is saved, offer the next useful step instead of a dead-end toast:
+	 * verify the key with a connection test, or jump straight into chat.
+	 */
+	private async notifyApiKeySaved(provider: ProviderDefinition): Promise<void> {
+		const testAction = t('auth.savedAction.testConnection');
+		const openChatAction = t('auth.savedAction.openChat');
+		const choice = await vscode.window.showInformationMessage(
+			t('auth.savedFor', provider.name),
+			testAction,
+			openChatAction,
+		);
+		if (choice === testAction) {
+			await this.testConnection(provider.id);
+		} else if (choice === openChatAction) {
+			await openCopilotChat();
 		}
 	}
 
@@ -135,16 +161,21 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 		const configured = await Promise.all(
 			providers.map((provider) => this.authManager.hasApiKey(provider)),
 		);
-		const items = providers.map((provider, index) => ({
-			label: provider.name,
+		const items: ProviderQuickPickItem[] = providers.map((provider, index) => ({
+			label: `$(${configured[index] ? 'check' : 'warning'}) ${provider.name}`,
 			description: configured[index] ? t('auth.providerConfigured') : t('auth.providerNotConfigured'),
 			provider,
+			buttons: [
+				{
+					iconPath: new vscode.ThemeIcon('link-external'),
+					tooltip: t('auth.openApiKeyPage', provider.name),
+				},
+			],
 		}));
 
-		const picked = await vscode.window.showQuickPick(items, {
+		const picked = await pickProviderQuickPick(items, {
 			title: intent === 'set' ? t('auth.selectProviderSet') : t('auth.selectProviderClear'),
 			placeHolder: t('auth.selectProviderPlaceholder'),
-			ignoreFocusOut: true,
 		});
 		return picked?.provider;
 	}
@@ -176,8 +207,9 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 	}
 
 	/** Validate a provider's key + endpoint and discover its model list. */
-	async testConnection(): Promise<void> {
-		await runConnectionTest(this.authManager);
+	async testConnection(providerId?: ProviderId): Promise<void> {
+		const provider = providerId ? PROVIDERS[providerId] : undefined;
+		await runConnectionTest(this.authManager, provider);
 	}
 
 	/** Show the accumulated session cost breakdown with a reset action. */
@@ -339,4 +371,67 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 function joinInitialResponseNotices(...notices: (string | undefined)[]): string | undefined {
 	const joined = notices.filter((notice) => notice && notice.trim().length > 0).join('\n');
 	return joined || undefined;
+}
+
+interface ProviderQuickPickItem extends vscode.QuickPickItem {
+	readonly provider: ProviderDefinition;
+}
+
+/**
+ * Provider picker with a per-item "open API key page" button. Uses the
+ * `createQuickPick` API (rather than `showQuickPick`) so item buttons can be
+ * handled without dismissing the picker.
+ */
+function pickProviderQuickPick(
+	items: readonly ProviderQuickPickItem[],
+	options: { title: string; placeHolder: string },
+): Promise<ProviderQuickPickItem | undefined> {
+	return new Promise<ProviderQuickPickItem | undefined>((resolve) => {
+		const quickPick = vscode.window.createQuickPick<ProviderQuickPickItem>();
+		quickPick.title = options.title;
+		quickPick.placeholder = options.placeHolder;
+		quickPick.ignoreFocusOut = true;
+		quickPick.items = items as ProviderQuickPickItem[];
+
+		let settled = false;
+		const settle = (value: ProviderQuickPickItem | undefined): void => {
+			if (settled) {
+				return;
+			}
+			settled = true;
+			resolve(value);
+			quickPick.dispose();
+		};
+
+		quickPick.onDidTriggerItemButton((event) => {
+			void vscode.env.openExternal(
+				vscode.Uri.parse(event.item.provider.externalUrls.apiKeys),
+			);
+		});
+		quickPick.onDidAccept(() => settle(quickPick.selectedItems[0]));
+		quickPick.onDidHide(() => settle(undefined));
+		quickPick.show();
+	});
+}
+
+/**
+ * Best-effort "open the chat view" used as a post-setup next step. The exact
+ * command id has varied across VS Code / Copilot Chat versions, so try the
+ * known ones in order and stop at the first that resolves.
+ */
+async function openCopilotChat(): Promise<void> {
+	const candidates = [
+		'workbench.action.chat.open',
+		'workbench.panel.chat.view.copilot.focus',
+		'workbench.action.chat.openInSidebar',
+	];
+	for (const command of candidates) {
+		try {
+			await vscode.commands.executeCommand(command);
+			return;
+		} catch {
+			// Command unavailable in this host; try the next candidate.
+		}
+	}
+	logger.warn('Could not open Copilot Chat: no known chat command is available');
 }

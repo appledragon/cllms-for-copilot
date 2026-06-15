@@ -104,6 +104,10 @@ const zh: Translations = {
 	'auth.selectProviderPlaceholder': '选择服务商',
 	'auth.providerConfigured': '已配置',
 	'auth.providerNotConfigured': '未配置',
+	'auth.inputTitle': '设置 {0} API Key',
+	'auth.openApiKeyPage': '打开 {0} 的 API Key 页面',
+	'auth.savedAction.testConnection': '测试连接',
+	'auth.savedAction.openChat': '打开聊天',
 
 	// Thinking Effort — short labels for model picker dropdown
 	'status.thinking': '思考模式',
@@ -421,6 +425,10 @@ const en: Translations = {
 	'auth.selectProviderPlaceholder': 'Select a provider',
 	'auth.providerConfigured': 'configured',
 	'auth.providerNotConfigured': 'not configured',
+	'auth.inputTitle': 'Set {0} API key',
+	'auth.openApiKeyPage': 'Open {0} API key page',
+	'auth.savedAction.testConnection': 'Test Connection',
+	'auth.savedAction.openChat': 'Open Chat',
 
 	// Thinking Effort
 	'status.thinking': 'Thinking Effort',

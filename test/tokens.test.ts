@@ -46,4 +46,33 @@ describe('estimateTokenCount', () => {
 		assert.equal(estimateTokenCount(message(undefined), 4), 1);
 		assert.equal(estimateTokenCount(message('not-an-array'), 4), 1);
 	});
+
+	it('reuses the cached character total for the same message object', () => {
+		const content = [new vscode.LanguageModelTextPart('abcd')]; // 4 chars
+		const msg = message(content);
+		assert.equal(estimateTokenCount(msg, 1), 4); // computes + caches 4 chars
+
+		// Mutate the underlying content after the first call. Because the total is
+		// cached by message identity, the result must stay 4 (no recompute).
+		content.push(new vscode.LanguageModelTextPart('efghij')); // 10 if recomputed
+		assert.equal(estimateTokenCount(msg, 1), 4);
+	});
+
+	it('divides the cached character total by the current charsPerToken ratio', () => {
+		const msg = message([
+			new vscode.LanguageModelTextPart('abcd'),
+			new vscode.LanguageModelTextPart('efgh'),
+		]); // 8 chars total
+		assert.equal(estimateTokenCount(msg, 4), 2); // ceil(8/4)
+		assert.equal(estimateTokenCount(msg, 4), 2); // served from cache, same result
+		assert.equal(estimateTokenCount(msg, 2), 4); // ceil(8/2): ratio applied to cached chars
+		assert.equal(estimateTokenCount(msg, 8), 1); // ceil(8/8)
+	});
+
+	it('counts distinct message objects independently', () => {
+		const longMsg = message([new vscode.LanguageModelTextPart('abcdef')]); // 6 chars
+		const shortMsg = message([new vscode.LanguageModelTextPart('abc')]); // 3 chars
+		assert.equal(estimateTokenCount(longMsg, 3), 2); // ceil(6/3)
+		assert.equal(estimateTokenCount(shortMsg, 3), 1); // ceil(3/3)
+	});
 });
