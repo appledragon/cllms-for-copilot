@@ -89,21 +89,23 @@
 
 ## P1: 高价值改进
 
-### 4. 完善视觉代理配置与协议测试
+### ~~4. 完善视觉代理配置与协议测试~~
 
-背景：视觉代理支持 VS Code LM、OpenAI Chat Completions、OpenAI Responses、Anthropic Messages，并允许 custom headers / extra body。该区域既复杂又靠近用户输入和外部 HTTP。
+~~状态：已完成。新增 `test/vision-config.test.ts`、`test/vision-protocols.test.ts`、`test/vision-resolve.test.ts` 共 56 个用例：配置层覆盖 `normalizeVisionProxyConfig` 的成功/失败（非对象、非法 provider family、非法 apiType、缺失 url/modelId、非法 url、`extraBody` 覆盖受保护字段 `model`/`messages`/`input`/`stream`）、`normalizeCustomHeaders`（空/非法 header 名、非字符串值、CRLF 注入防护、trim 与大小写去重）、`validateVisionEndpointUrl`（http/https vs ftp/file/畸形）、`normalizeVisionProxySource`；协议层为 `openAIChat` / `openAIResponses` / `anthropicMessages` 三个 adapter 增加 `createBody` 请求体快照（确定性 base64）、`parseResponse` 成功与 unsupported/empty 失败、`extraBody` 不能覆盖 `model`/`messages`/`input` 的守卫、`getVisionProviderAdapter` 选择与 `createProviderHeaders`（bearer vs `x-api-key`、自定义 header 大小写覆盖）；`resolveImageMessages` 覆盖无图直通、native vision 直通、当前图片描述、无视觉代理 fallback、当前图片失败、marker replay、历史图片省略，并在每条 text-only 路径断言图片不会透传给目标模型。`tsc` 编译通过、56 个新用例全部通过，全量 `npm test` 失败数维持在任务 11 记录的 57 个既有 i18n/registry 用例，无新增回归。~~
 
-建议：
+~~背景：视觉代理支持 VS Code LM、OpenAI Chat Completions、OpenAI Responses、Anthropic Messages，并允许 custom headers / extra body。该区域既复杂又靠近用户输入和外部 HTTP。~~
 
-- 为 `src/provider/vision/sources/endpoint/config.ts` 增加更多 schema/边界测试。
-- 覆盖非法 URL、非法 header 名、非字符串 header 值、`extraBody` 覆盖受保护字段等场景。
-- 为三个 endpoint protocol provider 增加请求体快照测试，避免 provider 格式漂移。
-- 为 `resolveImageMessages()` 增加多轮图片、marker replay、当前图片失败、无视觉代理 fallback 的测试。
+~~建议：~~
 
-验收标准：
+~~- 为 `src/provider/vision/sources/endpoint/config.ts` 增加更多 schema/边界测试。~~
+~~- 覆盖非法 URL、非法 header 名、非字符串 header 值、`extraBody` 覆盖受保护字段等场景。~~
+~~- 为三个 endpoint protocol provider 增加请求体快照测试，避免 provider 格式漂移。~~
+~~- 为 `resolveImageMessages()` 增加多轮图片、marker replay、当前图片失败、无视觉代理 fallback 的测试。~~
 
-- 所有可配置字段都有成功和失败测试。
-- 图片不会在 text-only 模型路径中意外透传给目标模型。
+~~验收标准：~~
+
+~~- 所有可配置字段都有成功和失败测试。~~
+~~- 图片不会在 text-only 模型路径中意外透传给目标模型。~~
 
 ### ~~5. 建立"新增服务商/模型"的自动一致性检查~~
 
