@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.9
+
+- Add **GLM-5.2** model — z.ai's latest flagship with 1M context, 128K output tokens, open-source SOTA coding capability, and project-scale engineering context support. Supports deep thinking mode, tool calling, and MCP. Pricing: ¥8 / ¥2 (cached) input, ¥28 output per 1M tokens.
+
 ## 0.1.8
 
 - Fix model picker not showing models: restore `displayName` on `languageModelChatProviders` contribution point (removed in 0.1.6 caused Copilot Chat to ignore the provider on recent VS Code versions).

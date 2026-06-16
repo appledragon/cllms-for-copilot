@@ -555,6 +555,27 @@ export const MODELS: ModelDefinition[] = [
 	// approximate conversions and only drive the picker's cost hints. GLM uses
 	// `thinking: { type: 'enabled' | 'disabled' }` (handled via provider style).
 	{
+		id: 'glm-5.2',
+		name: 'GLM-5.2',
+		provider: 'zai',
+		family: 'glm',
+		version: 'glm-5.2',
+		detail: 'Latest flagship, 1M context, open-source SOTA coding',
+		maxInputTokens: 1000000,
+		maxOutputTokens: 128000,
+		capabilities: {
+			toolCalling: LLM_TOOLS_LIMIT,
+			imageInput: false,
+			thinking: true,
+		},
+		requiresThinkingParam: false,
+		pricing: {
+			USD: { cacheHitInput: 0.28, cacheMissInput: 1.1, output: 3.9 },
+			CNY: { cacheHitInput: 2, cacheMissInput: 8, output: 28 },
+		},
+		priceCategory: 'high',
+	},
+	{
 		id: 'glm-5.1',
 		name: 'GLM-5.1',
 		provider: 'zai',
