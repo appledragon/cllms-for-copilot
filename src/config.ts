@@ -5,6 +5,18 @@ import type { ProviderDefinition } from './types';
 
 export type DebugMode = 'minimal' | 'metadata' | 'verbose';
 
+/**
+ * How much marker-replayed `reasoning_content` to re-send on later turns.
+ *
+ *  - `all` (default): replay reasoning_content for every assistant turn, which
+ *    keeps thinking tool-call histories complete (required by Qwen) and the
+ *    request prefix byte-stable.
+ *  - `latest-tool-loop`: only replay reasoning_content for assistant turns at or
+ *    after the most recent human user message (the in-flight tool-call loop), and
+ *    drop it from older turns to save input tokens on long sessions.
+ */
+export type ReasoningReplayScope = 'all' | 'latest-tool-loop';
+
 /** Upper bound for the user-configurable retry count. */
 const MAX_CONFIGURABLE_RETRIES = 5;
 
@@ -39,6 +51,29 @@ export function getMaxTokens(): number | undefined {
 	const config = vscode.workspace.getConfiguration(CONFIG_SECTION);
 	const value = config.get<number>('maxTokens', 0);
 	return value > 0 ? value : undefined;
+}
+
+/**
+ * Output-token cap applied only to one-shot utility/helper requests (chat
+ * titles, commit messages, etc.). Returns `undefined` when set to 0 (no cap).
+ * Combined with {@link getMaxTokens} by taking the smaller of the two.
+ */
+export function getUtilityMaxOutputTokens(): number | undefined {
+	const config = vscode.workspace.getConfiguration(CONFIG_SECTION);
+	const value = config.get<number>('utility.maxOutputTokens', 0);
+	return Number.isFinite(value) && value > 0 ? Math.floor(value) : undefined;
+}
+
+/**
+ * Optional cheaper API model ID to use for utility/helper requests on a given
+ * provider, keyed by {@link ProviderDefinition.id}. Off by default (empty map);
+ * when set, utility-tier requests are routed to this model on the same
+ * provider/key instead of the user-selected one.
+ */
+export function getUtilityModelIdOverride(provider: ProviderDefinition): string | undefined {
+	const config = vscode.workspace.getConfiguration(CONFIG_SECTION);
+	const map = config.get<Record<string, string>>('utility.modelIdByProvider');
+	return map?.[provider.id]?.trim() || undefined;
 }
 
 /**
@@ -85,6 +120,44 @@ export function getRequestDumpEnabled(): boolean {
 export function getStabilizeToolListEnabled(): boolean {
 	const config = vscode.workspace.getConfiguration(CONFIG_SECTION);
 	return config.get<boolean>('experimental.stabilizeToolList', false);
+}
+
+/**
+ * Sort the request `tools` array by name so VS Code/Copilot reordering the
+ * enabled tools between turns does not invalidate the provider's context-cache
+ * prefix. Experimental and off by default.
+ */
+export function getSortToolsForCacheEnabled(): boolean {
+	const config = vscode.workspace.getConfiguration(CONFIG_SECTION);
+	return config.get<boolean>('experimental.sortToolsForCache', false);
+}
+
+/** Resolve the configured marker-replayed reasoning_content scope. */
+export function getReplayReasoningScope(): ReasoningReplayScope {
+	const config = vscode.workspace.getConfiguration(CONFIG_SECTION);
+	const value = config.get<string>('experimental.replayReasoningScope', 'all');
+	return value === 'latest-tool-loop' ? 'latest-tool-loop' : 'all';
+}
+
+const DEFAULT_VISION_PROXY_TIMEOUT_MS = 30_000;
+const MIN_VISION_PROXY_TIMEOUT_MS = 1_000;
+const MAX_VISION_PROXY_TIMEOUT_MS = 120_000;
+
+/**
+ * Per-request timeout (ms) for the API-endpoint vision proxy. Clamped to a sane
+ * range so a slow endpoint cannot stall the whole chat indefinitely, while fast
+ * endpoints can be configured to fail quicker.
+ */
+export function getVisionProxyTimeoutMs(): number {
+	const config = vscode.workspace.getConfiguration(CONFIG_SECTION);
+	const value = config.get<number>('visionProxy.timeoutMs', DEFAULT_VISION_PROXY_TIMEOUT_MS);
+	if (!Number.isFinite(value) || value <= 0) {
+		return DEFAULT_VISION_PROXY_TIMEOUT_MS;
+	}
+	return Math.min(
+		MAX_VISION_PROXY_TIMEOUT_MS,
+		Math.max(MIN_VISION_PROXY_TIMEOUT_MS, Math.floor(value)),
+	);
 }
 
 /**

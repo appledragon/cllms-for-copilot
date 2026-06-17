@@ -69,7 +69,7 @@ export interface CacheDiagnosticsRun {
 
 export type ReplayMarkerReportStatus = 'reported' | 'failed' | 'skipped';
 
-export type ReplayMarkerReportTrigger = 'done';
+export type ReplayMarkerReportTrigger = 'done' | 'cancelled' | 'stream-error';
 
 export interface ReplayMarkerReportInfo {
 	status: ReplayMarkerReportStatus;
@@ -77,7 +77,7 @@ export interface ReplayMarkerReportInfo {
 	markerBytes?: number;
 	visionTextChars?: number;
 	reasoningTextChars?: number;
-	reason?: 'cancelled' | 'stream-error' | 'no-replay-data';
+	reason?: 'no-replay-data';
 	error?: unknown;
 }
 
@@ -282,7 +282,7 @@ class DefaultCacheDiagnosticsRecorder implements CacheDiagnosticsRecorder {
 					` thinkingEffort=${options.thinkingEffort}` +
 					` maxTokens=${options.maxTokens ?? 'api-default'}` +
 					` inputMessages=${options.inputMessages.length}` +
-					` qwenMessages=${options.request.messages.length}`,
+					` llmMessages=${options.request.messages.length}`,
 			),
 		);
 		const hostPromptTrace = summarizeHostPromptTrace(options.inputMessages);

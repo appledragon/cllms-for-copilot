@@ -1,3 +1,4 @@
+import type { RequestCostTier } from '../routing';
 import type { LlmUsage, ModelDefinition, PricingCurrency } from '../../types';
 
 export interface SessionCostLineItem {
@@ -21,6 +22,14 @@ export interface SessionCostSummary {
 	readonly unbilledRequests: number;
 	/** Distinct models excluded from the total for lack of pricing. */
 	readonly unbilledModelCount: number;
+	/** Prompt tokens across every request this session (billed and unbilled). */
+	readonly totalPromptTokens: number;
+	/** Cached prompt tokens across every request this session (billed and unbilled). */
+	readonly totalCachedPromptTokens: number;
+	/** Billed cost attributed to lightweight utility/helper requests. */
+	readonly utilityCost: number;
+	/** Billed cost attributed to user-facing/agent (non-utility) requests. */
+	readonly agentCost: number;
 }
 
 interface MutableEntry {
@@ -45,10 +54,21 @@ export class SessionCostTracker {
 	/** Models seen with usage but no pricing in the active currency. */
 	private readonly unbilledModelIds = new Set<string>();
 	private unbilledRequests = 0;
+	/** Session-wide cache health, accumulated for billed and unbilled requests. */
+	private totalPromptTokens = 0;
+	private totalCachedPromptTokens = 0;
+	/** Billed cost split by request cost tier, to surface utility overhead. */
+	private utilityCost = 0;
+	private agentCost = 0;
 	private currency: PricingCurrency | undefined;
 	private totalCost = 0;
 
-	record(model: ModelDefinition, usage: LlmUsage, currency: PricingCurrency | undefined): void {
+	record(
+		model: ModelDefinition,
+		usage: LlmUsage,
+		currency: PricingCurrency | undefined,
+		costTier: RequestCostTier = 'agent',
+	): void {
 		if (!currency) {
 			return;
 		}
@@ -59,6 +79,14 @@ export class SessionCostTracker {
 			this.reset();
 		}
 		this.currency = currency;
+
+		// Cache health spans the whole session, including requests we cannot price.
+		const cacheHealthCachedTokens = Math.max(0, usage.prompt_tokens_details?.cached_tokens ?? 0);
+		this.totalPromptTokens += Math.max(0, usage.prompt_tokens);
+		this.totalCachedPromptTokens += Math.min(
+			Math.max(0, usage.prompt_tokens),
+			cacheHealthCachedTokens,
+		);
 
 		const pricing = model.pricing?.[currency];
 		if (!pricing) {
@@ -92,6 +120,11 @@ export class SessionCostTracker {
 		entry.cost += cost;
 		this.entries.set(model.id, entry);
 		this.totalCost += cost;
+		if (costTier === 'utility') {
+			this.utilityCost += cost;
+		} else {
+			this.agentCost += cost;
+		}
 	}
 
 	/** True when no priced usage has accrued (unbilled-only usage still reads empty). */
@@ -130,6 +163,10 @@ export class SessionCostTracker {
 			billedRequests,
 			unbilledRequests: this.unbilledRequests,
 			unbilledModelCount: this.unbilledModelIds.size,
+			totalPromptTokens: this.totalPromptTokens,
+			totalCachedPromptTokens: this.totalCachedPromptTokens,
+			utilityCost: this.utilityCost,
+			agentCost: this.agentCost,
 		};
 	}
 
@@ -137,6 +174,10 @@ export class SessionCostTracker {
 		this.entries.clear();
 		this.unbilledModelIds.clear();
 		this.unbilledRequests = 0;
+		this.totalPromptTokens = 0;
+		this.totalCachedPromptTokens = 0;
+		this.utilityCost = 0;
+		this.agentCost = 0;
 		this.totalCost = 0;
 	}
 }

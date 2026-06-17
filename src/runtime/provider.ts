@@ -3,17 +3,17 @@ import { logger } from '../logger';
 import { LlmChatProvider } from '../provider';
 import type { VisionDescriber } from '../provider/vision';
 
-export async function registerProvider(
-	context: vscode.ExtensionContext,
-): Promise<LlmChatProvider> {
+export async function registerProvider(context: vscode.ExtensionContext): Promise<LlmChatProvider> {
 	const provider = new LlmChatProvider(context);
 
 	context.subscriptions.push(
+		vscode.commands.registerCommand('cllms.setupProvider', () => provider.setupProvider()),
+		vscode.commands.registerCommand('cllms.openProviderSettings', () =>
+			provider.openProviderSettings(),
+		),
 		vscode.commands.registerCommand('cllms.setApiKey', () => provider.configureApiKey()),
 		vscode.commands.registerCommand('cllms.clearApiKey', () => provider.clearApiKey()),
-		vscode.commands.registerCommand('cllms.setVisionModel', () =>
-			provider.setVisionModel(),
-		),
+		vscode.commands.registerCommand('cllms.setVisionModel', () => provider.setVisionModel()),
 		vscode.commands.registerCommand('cllms.testConnection', () => provider.testConnection()),
 		vscode.commands.registerCommand('cllms.showSessionCost', () => provider.showSessionCost()),
 		vscode.lm.registerLanguageModelChatProvider('cllms', provider),

@@ -70,22 +70,24 @@
 - 新增单测覆盖 dump 路径、字段过滤和清理逻辑。
 - README/中文 README 同步说明保留策略和用户如何删除 dump。
 
-### 11. 补齐新增模型的 i18n 与 registry 覆盖（当前 `npm test` 红）
+### ~~11. 补齐新增模型的 i18n 与 registry 覆盖~~
 
-背景：`src/consts.ts` 的 `MODELS` 已新增多个模型（如 `qwen3.7-max`、`qwen3.7-plus`、`qwen3.6-flash` 及 -intl 变体，`glm-5`、`glm-5-turbo`、`glm-4.7`、`glm-4.7-flashx`、`glm-5v-turbo`，`MiniMax-M2.5`、`MiniMax-M2.5-intl`，`hunyuan-2.0-instruct`），但缺少对应的中英文 detail/tooltip 与 registry 期望，导致 `test/registry-consistency.test.ts`、`test/registry.test.ts` 合计 57 个用例失败。这其实是任务 5 的一致性测试在按预期拦截“模型注册表与 i18n / registry 失步”。
+~~状态：已完成。所有新增模型（`qwen3.7-max`/`qwen3.7-plus`/`qwen3.6-flash` 及 -intl 变体、`glm-5`/`glm-5-turbo`/`glm-4.7`/`glm-4.7-flashx`/`glm-5v-turbo`、`MiniMax-M2.5`/`MiniMax-M2.5-intl`、`hunyuan-2.0-instruct`）已补齐 `src/i18n.ts` 中英文 `detail`/`tooltip`、`package.json` / `package.nls*.json` 的 modelIdOverrides 描述，并更新 `test/registry.test.ts` 的 provider→模型期望（含 `glm-5v-turbo` 的 native vision 标记）。`test/registry-consistency.test.ts` 与 `test/registry.test.ts` 全部转绿，`npm test` 通过。README / README.zh-cn 的模型表与各 provider 使用说明、CHANGELOG（`## Unreleased`）已同步上述模型；Testing Status 表格在对应 provider 备注中把新模型标注为“已启用、待单独验证”，未谎称已验证。~~
 
-建议：
+~~背景：`src/consts.ts` 的 `MODELS` 已新增多个模型（如 `qwen3.7-max`、`qwen3.7-plus`、`qwen3.6-flash` 及 -intl 变体，`glm-5`、`glm-5-turbo`、`glm-4.7`、`glm-4.7-flashx`、`glm-5v-turbo`，`MiniMax-M2.5`、`MiniMax-M2.5-intl`，`hunyuan-2.0-instruct`），但缺少对应的中英文 detail/tooltip 与 registry 期望，导致 `test/registry-consistency.test.ts`、`test/registry.test.ts` 合计 57 个用例失败。这其实是任务 5 的一致性测试在按预期拦截“模型注册表与 i18n / registry 失步”。~~
 
-- 为每个新模型补齐 `src/i18n.ts` 中英文 `model.<id>.detail` / `model.<id>.tooltip`。
-- 补齐 `package.json` / `package.nls*.json` 的 modelIdOverrides 与描述，并更新 `test/registry.test.ts` 的 provider→模型期望（含 native vision 标记）。
-- 同步 README / README.zh-cn 的模型表与 CHANGELOG。
+~~建议：~~
 
-验收标准：
+~~- 为每个新模型补齐 `src/i18n.ts` 中英文 `model.<id>.detail` / `model.<id>.tooltip`。~~
+~~- 补齐 `package.json` / `package.nls*.json` 的 modelIdOverrides 与描述，并更新 `test/registry.test.ts` 的 provider→模型期望（含 native vision 标记）。~~
+~~- 同步 README / README.zh-cn 的模型表与 CHANGELOG。~~
 
-- `npm test` 中 registry 与 i18n 覆盖用例全部通过。
-- 新模型在 picker 中有正确的中英文文案与能力标记。
+~~验收标准：~~
 
-> 注：本项需要各新模型的权威元数据（文案、能力、native vision、定价），不应臆造，故未随本次任务 7、8 一并实现。
+~~- `npm test` 中 registry 与 i18n 覆盖用例全部通过。~~
+~~- 新模型在 picker 中有正确的中英文文案与能力标记。~~
+
+~~> 注：本项需要各新模型的权威元数据（文案、能力、native vision、定价），不应臆造，故未随本次任务 7、8 一并实现。~~
 
 ## P1: 高价值改进
 

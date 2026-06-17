@@ -1,11 +1,7 @@
 import vscode from 'vscode';
 import { REPLAY_MARKER_MIME } from './consts';
 import { parseReplayMarkerData } from './parse';
-import type {
-	LocatedReplayMarker,
-	ReplayMarkerMetadata,
-	ReplayMarkerParseResult,
-} from './types';
+import type { LocatedReplayMarker, ReplayMarkerMetadata, ReplayMarkerParseResult } from './types';
 
 export function findFirstReplayMarker(
 	message: vscode.LanguageModelChatRequestMessage,

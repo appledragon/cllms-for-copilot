@@ -17,6 +17,8 @@ interface VscodeShim {
     languageModelProviders: Map<string, vscode.LanguageModelChatProvider>;
     selectChatModelsCalls: unknown[];
     activatedExtensions: string[];
+    treeDataProviders: Map<string, unknown>;
+    treeViews: Array<{ viewId: string }>;
   };
   __reset(): void;
   __setConfiguration(
@@ -169,18 +171,36 @@ describe("runtime integration", () => {
     for (const command of [
       "cllms.showLogs",
       "cllms.openRequestDumpsFolder",
+      "cllms.copyDiagnosticReport",
       "cllms.getApiKey",
       "cllms.openSettings",
+      "cllms.openProviderSettings",
+      "cllms.setupProvider",
       "cllms.setApiKey",
       "cllms.clearApiKey",
       "cllms.setVisionModel",
       "cllms.testConnection",
       "cllms.showSessionCost",
+      "cllms.openWalkthrough",
+      "cllms.providers.refresh",
+      "cllms.providers.setupProvider",
+      "cllms.providers.setApiKey",
+      "cllms.providers.clearApiKey",
+      "cllms.providers.testConnection",
+      "cllms.providers.openApiKeyPage",
+      "cllms.providers.openUsagePage",
+      "cllms.providers.openStatusPage",
+      "cllms.providers.openSettings",
     ]) {
       assert.ok(shim.__state.commands.has(command), `${command} should be registered`);
     }
     assert.equal(shim.__state.uriHandlers.length, 1);
     assert.equal(shim.__state.languageModelProviders.has("cllms"), true);
+    assert.equal(shim.__state.treeDataProviders.has("cllms.providers"), true);
+    assert.ok(
+      shim.__state.treeViews.some((view) => view.viewId === "cllms.providers"),
+      "cllms.providers tree view should be created",
+    );
     assert.deepEqual(shim.__state.activatedExtensions, ["github.copilot-chat"]);
     assert.equal(
       vscode.workspace.getConfiguration("cllms").inspect<boolean>("debug")?.globalValue,

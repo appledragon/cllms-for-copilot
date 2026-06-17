@@ -6,6 +6,7 @@ import { registerActionUrls } from './actions';
 import { registerCommands } from './commands';
 import { initializeDiagnostics } from './diagnostics';
 import { getVisionDescriberGetter, registerProvider } from './provider';
+import { registerProvidersView } from './providersView';
 import { createImageReadTool } from './tools';
 import { showWelcomeIfNeeded } from './welcome';
 
@@ -19,6 +20,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 	try {
 		const provider = await registerProvider(context);
 		activeProvider = provider;
+
+		registerProvidersView(context, provider);
 
 		// Register the image-read language model tool.
 		// Wrapped in try-catch because the tool contribution may not be

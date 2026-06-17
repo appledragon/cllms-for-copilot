@@ -54,12 +54,22 @@ interface ClassifierInput {
 	toolNames: readonly string[];
 }
 
+/**
+ * Cost tier of a request kind:
+ *  - `utility`: lightweight VS Code/Copilot auxiliary work (titles, commit
+ *    messages, todo bookkeeping). Safe to run cheaper/smaller and to cap output.
+ *  - `agent`: user-facing or unrecognized work. Never throttle or downgrade it.
+ */
+export type RequestCostTier = 'utility' | 'agent';
+
 interface ClassificationRule {
 	readonly kind: RequestKind;
 	/** Which VS Code / Copilot feature emits this signature. */
 	readonly source: string;
 	/** Why we classify it this way (and what behavior it drives). */
 	readonly purpose: string;
+	/** Cost tier — the single source of truth for utility cost-control routing. */
+	readonly costTier: RequestCostTier;
 	/** Returns a short match reason when the rule applies, else undefined. */
 	readonly match: (input: ClassifierInput) => string | undefined;
 }
@@ -71,6 +81,8 @@ export interface RequestClassification {
 	readonly reason: string;
 	/** Provenance annotation of the matched rule, when one matched. */
 	readonly source?: string;
+	/** Cost tier driving utility cost-control routing. */
+	readonly costTier: RequestCostTier;
 }
 
 /**
@@ -82,6 +94,7 @@ const CLASSIFICATION_RULES: readonly ClassificationRule[] = [
 		kind: 'terminal-steering',
 		source: 'VS Code terminal auto-reply injected as the latest user turn after a command finishes',
 		purpose: 'Real follow-up work — keep thinking enabled.',
+		costTier: 'agent',
 		match: ({ latestUserText }) =>
 			TERMINAL_NOTIFICATION_PATTERN.test(latestUserText)
 				? 'latestUser:terminal-notification'
@@ -89,8 +102,10 @@ const CLASSIFICATION_RULES: readonly ClassificationRule[] = [
 	},
 	{
 		kind: 'todo-tracker',
-		source: 'Copilot background todo tracker (manage_todo_list tool / "background task tracker" prompt)',
+		source:
+			'Copilot background todo tracker (manage_todo_list tool / "background task tracker" prompt)',
 		purpose: 'Lightweight bookkeeping — force thinking off to save latency and cost.',
+		costTier: 'utility',
 		match: ({ toolNames, firstText }) => {
 			if (isOnlyTool(toolNames, 'manage_todo_list')) return 'tool:manage_todo_list';
 			if (firstText.startsWith(TODO_TRACKER_PREFIX)) return 'systemPrompt:todo-tracker';
@@ -101,6 +116,7 @@ const CLASSIFICATION_RULES: readonly ClassificationRule[] = [
 		kind: 'prompt-categorizer',
 		source: 'Copilot prompt categorizer (categorize_prompt tool / "expert classifier" prompt)',
 		purpose: 'Lightweight classification — force thinking off.',
+		costTier: 'utility',
 		match: ({ toolNames, firstText }) => {
 			if (isOnlyTool(toolNames, 'categorize_prompt')) return 'tool:categorize_prompt';
 			if (firstText.startsWith(PROMPT_CATEGORIZER_PREFIX)) return 'systemPrompt:prompt-categorizer';
@@ -111,6 +127,7 @@ const CLASSIFICATION_RULES: readonly ClassificationRule[] = [
 		kind: 'settings-resolver',
 		source: 'VS Code settings assistant ("returning settings" prompt)',
 		purpose: 'Lightweight settings lookup — force thinking off.',
+		costTier: 'utility',
 		match: ({ firstText }) =>
 			firstText.startsWith(SETTINGS_RESOLVER_PREFIX) ? 'systemPrompt:settings-resolver' : undefined,
 	},
@@ -118,6 +135,7 @@ const CLASSIFICATION_RULES: readonly ClassificationRule[] = [
 		kind: 'chat-title',
 		source: 'Copilot chat title generator ("ultra-compact / pithy titles" prompts)',
 		purpose: 'One-shot title — force thinking off.',
+		costTier: 'utility',
 		match: ({ firstText }) =>
 			startsWithAny(firstText, CHAT_TITLE_PREFIXES) ? 'systemPrompt:chat-title' : undefined,
 	},
@@ -125,6 +143,7 @@ const CLASSIFICATION_RULES: readonly ClassificationRule[] = [
 		kind: 'inline-progress-message',
 		source: 'Copilot inline progress message generator',
 		purpose: 'One-shot status line — force thinking off.',
+		costTier: 'utility',
 		match: ({ firstText }) =>
 			firstText.startsWith(INLINE_PROGRESS_MESSAGE_PREFIX)
 				? 'systemPrompt:inline-progress-message'
@@ -134,6 +153,7 @@ const CLASSIFICATION_RULES: readonly ClassificationRule[] = [
 		kind: 'git-branch-name',
 		source: 'Copilot git branch name generator',
 		purpose: 'One-shot suggestion — force thinking off.',
+		costTier: 'utility',
 		match: ({ firstText }) =>
 			firstText.startsWith(GIT_BRANCH_NAME_PREFIX) ? 'systemPrompt:git-branch-name' : undefined,
 	},
@@ -141,20 +161,27 @@ const CLASSIFICATION_RULES: readonly ClassificationRule[] = [
 		kind: 'git-commit-message',
 		source: 'Copilot git commit message generator',
 		purpose: 'One-shot suggestion — force thinking off.',
+		costTier: 'utility',
 		match: ({ firstText }) =>
-			firstText.startsWith(GIT_COMMIT_MESSAGE_PREFIX) ? 'systemPrompt:git-commit-message' : undefined,
+			firstText.startsWith(GIT_COMMIT_MESSAGE_PREFIX)
+				? 'systemPrompt:git-commit-message'
+				: undefined,
 	},
 	{
 		kind: 'rename-suggestions',
 		source: 'Copilot symbol rename suggester ("distinguished software engineer" prompt)',
 		purpose: 'One-shot suggestion — force thinking off.',
+		costTier: 'utility',
 		match: ({ firstText }) =>
-			firstText.startsWith(RENAME_SUGGESTIONS_PREFIX) ? 'systemPrompt:rename-suggestions' : undefined,
+			firstText.startsWith(RENAME_SUGGESTIONS_PREFIX)
+				? 'systemPrompt:rename-suggestions'
+				: undefined,
 	},
 	{
 		kind: 'main-agent',
 		source: 'Primary Copilot agent loop (main system prompt, or <skills>/<agents> sections)',
 		purpose: 'User-facing agent turn — keep thinking enabled.',
+		costTier: 'agent',
 		match: ({ firstText }) => {
 			if (firstText.startsWith(MAIN_AGENT_PREFIX)) return 'systemPrompt:main-agent';
 			if (firstText.includes('<skills>')) return 'systemPrompt:skills-tag';
@@ -165,7 +192,9 @@ const CLASSIFICATION_RULES: readonly ClassificationRule[] = [
 	{
 		kind: 'background',
 		source: 'Fallback: unrecognized request that still carries tools or a non-empty system prompt',
-		purpose: 'Unknown auxiliary work — keep thinking enabled so a real agent turn is never throttled.',
+		purpose:
+			'Unknown auxiliary work — keep thinking enabled so a real agent turn is never throttled.',
+		costTier: 'agent',
 		match: ({ toolNames, firstText }) => {
 			if (toolNames.length > 0) return 'fallback:has-tools';
 			if (firstText.length > 0) return 'fallback:non-empty-prompt';
@@ -178,7 +207,35 @@ const CLASSIFICATION_RULES: readonly ClassificationRule[] = [
 const UNKNOWN_CLASSIFICATION: RequestClassification = {
 	kind: 'unknown',
 	reason: 'fallback:empty-request',
+	costTier: 'agent',
 };
+
+/**
+ * Request kinds whose work is lightweight enough to route to a cheaper model or
+ * cap output for. Derived from the rule table so {@link CLASSIFICATION_RULES}
+ * stays the single source of truth for cost-control routing.
+ */
+const UTILITY_REQUEST_KINDS = new Set<RequestKind>(
+	CLASSIFICATION_RULES.filter((rule) => rule.costTier === 'utility').map((rule) => rule.kind),
+);
+
+/** True when a request kind is lightweight utility/helper work (cost tier `utility`). */
+export function isUtilityRequestKind(kind: RequestKind): boolean {
+	return UTILITY_REQUEST_KINDS.has(kind);
+}
+
+/**
+ * True when classification did not match a known signature and fell back to the
+ * generic background/unknown handling. A rising rate of these usually means a
+ * VS Code/Copilot prompt changed and a rule needs updating.
+ */
+export function isFallbackClassification(classification: RequestClassification): boolean {
+	return (
+		classification.kind === 'unknown' ||
+		classification.kind === 'background' ||
+		classification.reason.startsWith('fallback:')
+	);
+}
 
 /**
  * RequestKinds whose work is lightweight enough to run without thinking. Kept as
@@ -242,8 +299,9 @@ export function classifyLlmRequestDetailed(input: {
 }): RequestClassification {
 	return classifyRequest({
 		firstText:
-			(input.request.messages[0] ? llmContentToText(input.request.messages[0].content) : undefined) ??
-			(input.inputMessages ? getFirstVscodeText(input.inputMessages) : ''),
+			(input.request.messages[0]
+				? llmContentToText(input.request.messages[0].content)
+				: undefined) ?? (input.inputMessages ? getFirstVscodeText(input.inputMessages) : ''),
 		latestUserText:
 			(input.inputMessages ? getLatestVscodeUserText(input.inputMessages) : '') ||
 			getLatestLlmUserText(input.request),
@@ -260,7 +318,7 @@ function classifyRequest(input: ClassifierInput): RequestClassification {
 	for (const rule of CLASSIFICATION_RULES) {
 		const reason = rule.match(normalized);
 		if (reason !== undefined) {
-			return { kind: rule.kind, reason, source: rule.source };
+			return { kind: rule.kind, reason, source: rule.source, costTier: rule.costTier };
 		}
 	}
 	return UNKNOWN_CLASSIFICATION;
@@ -317,4 +375,56 @@ function getLatestLlmUserText(request: LlmRequest): string {
 		}
 	}
 	return '';
+}
+
+export interface ClassificationStatsSummary {
+	readonly total: number;
+	readonly fallback: number;
+	/** Share of requests that fell back to background/unknown handling (0-100). */
+	readonly fallbackRate: number;
+	readonly byKind: ReadonlyMap<RequestKind, number>;
+}
+
+/**
+ * Session-scoped counter of classification outcomes. A rising fallback rate is
+ * an early signal that a VS Code/Copilot prompt changed and a rule in
+ * {@link CLASSIFICATION_RULES} no longer matches.
+ */
+export class ClassificationStats {
+	private total = 0;
+	private fallback = 0;
+	private readonly byKind = new Map<RequestKind, number>();
+
+	record(classification: RequestClassification): void {
+		this.total += 1;
+		this.byKind.set(classification.kind, (this.byKind.get(classification.kind) ?? 0) + 1);
+		if (isFallbackClassification(classification)) {
+			this.fallback += 1;
+		}
+	}
+
+	getSummary(): ClassificationStatsSummary {
+		return {
+			total: this.total,
+			fallback: this.fallback,
+			fallbackRate: this.total > 0 ? (this.fallback / this.total) * 100 : 0,
+			byKind: new Map(this.byKind),
+		};
+	}
+
+	/** Concise one-line summary for debug logs, annotated with the latest outcome. */
+	format(latest: RequestClassification): string {
+		const summary = this.getSummary();
+		return (
+			`[classifier] kind=${latest.kind} reason=${latest.reason}` +
+			` costTier=${latest.costTier}` +
+			` fallbackRate=${summary.fallbackRate.toFixed(0)}% (${summary.fallback}/${summary.total})`
+		);
+	}
+
+	reset(): void {
+		this.total = 0;
+		this.fallback = 0;
+		this.byKind.clear();
+	}
 }

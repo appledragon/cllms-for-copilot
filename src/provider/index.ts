@@ -1,6 +1,6 @@
 import vscode from 'vscode';
 import { AuthManager } from '../auth';
-import { getStabilizeToolListEnabled } from '../config';
+import { getDebugLoggingEnabled, getStabilizeToolListEnabled } from '../config';
 import { MODELS, PROVIDERS } from '../consts';
 import { t } from '../i18n';
 import { logger } from '../logger';
@@ -9,9 +9,16 @@ import { runConnectionTest } from './connection';
 import { createCacheDiagnosticsRecorder, dumpProviderInput } from './debug';
 import { toChatInfo } from './models';
 import { BalanceCurrencyResolver } from './pricing/currency';
-import { formatSessionCost, SessionCostTracker } from './pricing/session';
+import { formatSessionCost, SessionCostTracker, type SessionCostSummary } from './pricing/session';
 import { prepareChatRequest } from './request';
-import { classifyProviderRequest } from './routing';
+import {
+	ClassificationStats,
+	classifyProviderRequestDetailed,
+	formatRequestLogLine,
+	isUtilityRequestKind,
+	type RequestCostTier,
+	type RequestKind,
+} from './routing';
 import { resolveConversationSegment } from './segment';
 import { streamChatCompletion } from './stream';
 import { estimateTokenCount } from './tokens';
@@ -33,6 +40,9 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 		this.onDidChangeLanguageModelChatInformationEmitter.event;
 
 	private readonly cacheDiagnostics = createCacheDiagnosticsRecorder();
+
+	/** Session-scoped classifier outcome stats for prompt-drift visibility. */
+	private readonly classificationStats = new ClassificationStats();
 
 	/** Vision proxy: internal bridge + VS Code LM fallback. */
 	private readonly vision: ReturnType<typeof createVisionService>;
@@ -107,6 +117,49 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 		}
 	}
 
+	/** Guided setup: open the provider console, store a key, verify, then open chat. */
+	async setupProvider(providerId?: ProviderId): Promise<void> {
+		const provider = await this.resolveProvider(providerId, 'setup');
+		if (!provider) {
+			return;
+		}
+
+		const openKeyPageAction = t('setup.action.openApiKeyPage');
+		const enterKeyAction = t('setup.action.enterApiKey');
+		const firstChoice = await vscode.window.showInformationMessage(
+			t('setup.start', provider.name),
+			openKeyPageAction,
+			enterKeyAction,
+		);
+		if (!firstChoice) {
+			return;
+		}
+		if (firstChoice === openKeyPageAction) {
+			await vscode.env.openExternal(vscode.Uri.parse(provider.externalUrls.apiKeys));
+		}
+
+		const saved = await this.authManager.promptForApiKey(provider);
+		if (!saved) {
+			return;
+		}
+
+		this.invalidateCurrencyAndRefreshModels();
+		await this.testConnection(provider.id);
+
+		const openChatAction = t('auth.savedAction.openChat');
+		const openSettingsAction = t('connection.action.openSettings');
+		const finalChoice = await vscode.window.showInformationMessage(
+			t('setup.done', provider.name),
+			openChatAction,
+			openSettingsAction,
+		);
+		if (finalChoice === openChatAction) {
+			await openCopilotChat();
+		} else if (finalChoice === openSettingsAction) {
+			await openProviderSettings(provider);
+		}
+	}
+
 	/**
 	 * After a key is saved, offer the next useful step instead of a dead-end toast:
 	 * verify the key with a connection test, or jump straight into chat.
@@ -136,6 +189,14 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 		vscode.window.showInformationMessage(t('auth.removedFor', provider.name));
 	}
 
+	async openProviderSettings(providerId?: ProviderId): Promise<void> {
+		const provider = await this.resolveProvider(providerId, 'settings');
+		if (!provider) {
+			return;
+		}
+		await openProviderSettings(provider);
+	}
+
 	/** True when at least one provider has an API key configured. */
 	async hasApiKey(): Promise<boolean> {
 		const results = await Promise.all(
@@ -145,13 +206,27 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 	}
 
 	/**
+	 * Snapshot of per-provider API-key presence for the providers view. Returns
+	 * booleans only — the secret value is never exposed. Pairs with
+	 * {@link onDidChangeLanguageModelChatInformation}, which fires whenever a key
+	 * or relevant setting changes so the view can re-query this state.
+	 */
+	async getProviderKeyStates(): Promise<Map<ProviderId, boolean>> {
+		const providers = Object.values(PROVIDERS);
+		const states = await Promise.all(
+			providers.map((provider) => this.authManager.hasApiKey(provider)),
+		);
+		return new Map(providers.map((provider, index) => [provider.id, states[index]]));
+	}
+
+	/**
 	 * Resolve the provider to act on. When an ID is supplied (e.g. from a
 	 * provider-scoped command) it is used directly; otherwise the user picks
 	 * from a quick pick that shows each provider's current key status.
 	 */
 	private async resolveProvider(
 		providerId: ProviderId | undefined,
-		intent: 'set' | 'clear',
+		intent: 'set' | 'clear' | 'setup' | 'settings',
 	): Promise<ProviderDefinition | undefined> {
 		if (providerId && PROVIDERS[providerId]) {
 			return PROVIDERS[providerId];
@@ -163,7 +238,9 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 		);
 		const items: ProviderQuickPickItem[] = providers.map((provider, index) => ({
 			label: `$(${configured[index] ? 'check' : 'warning'}) ${provider.name}`,
-			description: configured[index] ? t('auth.providerConfigured') : t('auth.providerNotConfigured'),
+			description: configured[index]
+				? t('auth.providerConfigured')
+				: t('auth.providerNotConfigured'),
 			provider,
 			buttons: [
 				{
@@ -174,7 +251,14 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 		}));
 
 		const picked = await pickProviderQuickPick(items, {
-			title: intent === 'set' ? t('auth.selectProviderSet') : t('auth.selectProviderClear'),
+			title:
+				intent === 'set'
+					? t('auth.selectProviderSet')
+					: intent === 'setup'
+						? t('setup.selectProvider')
+						: intent === 'settings'
+							? t('settings.selectProvider')
+							: t('auth.selectProviderClear'),
 			placeHolder: t('auth.selectProviderPlaceholder'),
 		});
 		return picked?.provider;
@@ -233,8 +317,23 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 		);
 
 		const notes = [t('sessionCost.approximateNote')];
+		const cacheHitRate = getSessionCacheHitRate(summary);
+		if (cacheHitRate !== undefined) {
+			notes.push(t('sessionCost.cacheHealthNote', cacheHitRate.toFixed(0)));
+		}
+		if (summary.utilityCost > 0) {
+			notes.push(
+				t(
+					'sessionCost.tierSplitNote',
+					formatSessionCost(summary.utilityCost, summary.currency),
+					formatSessionCost(summary.agentCost, summary.currency),
+				),
+			);
+		}
 		if (summary.unbilledRequests > 0) {
-			notes.push(t('sessionCost.unbilledNote', summary.unbilledRequests, summary.unbilledModelCount));
+			notes.push(
+				t('sessionCost.unbilledNote', summary.unbilledRequests, summary.unbilledModelCount),
+			);
 		}
 
 		const detail = [lineItems.join('\n'), notes.join('\n')]
@@ -253,12 +352,18 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 		}
 	}
 
-	private recordSessionUsage(modelId: string, usage: LlmUsage): void {
+	private recordSessionUsage(modelId: string, usage: LlmUsage, requestKind: RequestKind): void {
 		const model = MODELS.find((m) => m.id === modelId);
 		if (!model) {
 			return;
 		}
-		this.sessionCost.record(model, usage, this.balanceCurrencyResolver.getDisplayCurrency());
+		const costTier: RequestCostTier = isUtilityRequestKind(requestKind) ? 'utility' : 'agent';
+		this.sessionCost.record(
+			model,
+			usage,
+			this.balanceCurrencyResolver.getDisplayCurrency(),
+			costTier,
+		);
 		this.updateSessionCostStatusBar();
 	}
 
@@ -306,10 +411,17 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 		token: vscode.CancellationToken,
 	): Promise<void> {
 		const segment = resolveConversationSegment(messages);
-		const requestKind = classifyProviderRequest({
+		const classification = classifyProviderRequestDetailed({
 			messages,
 			tools: options.tools,
 		});
+		const requestKind = classification.kind;
+		this.classificationStats.record(classification);
+		if (getDebugLoggingEnabled()) {
+			logger.info(
+				formatRequestLogLine(requestKind, this.classificationStats.format(classification)),
+			);
+		}
 
 		dumpProviderInput({
 			globalStorageUri: this.globalStorageUri,
@@ -355,7 +467,7 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 			setCharsPerToken: (charsPerToken) => {
 				this.charsPerToken = charsPerToken;
 			},
-			recordUsage: (usage) => this.recordSessionUsage(modelInfo.id, usage),
+			recordUsage: (usage) => this.recordSessionUsage(modelInfo.id, usage, prepared.requestKind),
 		});
 	}
 
@@ -371,6 +483,15 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 function joinInitialResponseNotices(...notices: (string | undefined)[]): string | undefined {
 	const joined = notices.filter((notice) => notice && notice.trim().length > 0).join('\n');
 	return joined || undefined;
+}
+
+/** Session-wide context-cache hit rate (0-100), or undefined when no prompt tokens. */
+function getSessionCacheHitRate(summary: SessionCostSummary): number | undefined {
+	if (summary.totalPromptTokens <= 0) {
+		return undefined;
+	}
+	const rate = (summary.totalCachedPromptTokens / summary.totalPromptTokens) * 100;
+	return Math.min(100, Math.max(0, rate));
 }
 
 interface ProviderQuickPickItem extends vscode.QuickPickItem {
@@ -404,9 +525,7 @@ function pickProviderQuickPick(
 		};
 
 		quickPick.onDidTriggerItemButton((event) => {
-			void vscode.env.openExternal(
-				vscode.Uri.parse(event.item.provider.externalUrls.apiKeys),
-			);
+			void vscode.env.openExternal(vscode.Uri.parse(event.item.provider.externalUrls.apiKeys));
 		});
 		quickPick.onDidAccept(() => settle(quickPick.selectedItems[0]));
 		quickPick.onDidHide(() => settle(undefined));
@@ -434,4 +553,11 @@ async function openCopilotChat(): Promise<void> {
 		}
 	}
 	logger.warn('Could not open Copilot Chat: no known chat command is available');
+}
+
+export async function openProviderSettings(provider: ProviderDefinition): Promise<void> {
+	await vscode.commands.executeCommand(
+		'workbench.action.openSettings',
+		`@ext:cuilian.cllms-for-copilot ${provider.baseUrlSetting} ${provider.modelIdOverridesSetting}`,
+	);
 }

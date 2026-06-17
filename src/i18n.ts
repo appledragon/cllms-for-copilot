@@ -27,32 +27,82 @@ const zh: Translations = {
 	'model.qwen3-max.tooltip': 'Qwen3 旗舰模型，面向广泛世界知识与复杂任务（默认不开启思考模式）。',
 	'model.qwen3-vl-plus.detail': '原生视觉模型',
 	'model.qwen3-vl-plus.tooltip': '支持原生图片输入的 Qwen3-VL 模型，可直接理解图片。',
+	'model.qwen3.7-max.detail': '最新旗舰，对标 GPT-5.5 / Claude Opus 4.7',
+	'model.qwen3.7-max.tooltip':
+		'Qwen3.7 Max 最新旗舰模型，最高 1M 上下文，面向高难度编码、复杂推理与长程任务，支持思考模式与工具调用。',
+	'model.qwen3.7-plus.detail': '均衡旗舰，推荐默认选择',
+	'model.qwen3.7-plus.tooltip':
+		'Qwen3.7 Plus 均衡旗舰模型，最高 1M 上下文，在质量、速度和成本之间取得平衡，支持思考模式与工具调用。',
+	'model.qwen3.6-flash.detail': '轻量快速，接近旗舰质量',
+	'model.qwen3.6-flash.tooltip':
+		'Qwen3.6 Flash 轻量模型，最高 1M 上下文，响应更快、成本更低，适合日常编码与 Agent 任务，支持思考模式与工具调用。',
 	'model.qwen3-coder-plus-intl.detail': '智能编码与工具调用（国际站）',
-	'model.qwen3-coder-plus-intl.tooltip': '面向 Agent 编程与工具调用的 Qwen3 Coder 模型（国际站），擅长大型重构。',
+	'model.qwen3-coder-plus-intl.tooltip':
+		'面向 Agent 编程与工具调用的 Qwen3 Coder 模型（国际站），擅长大型重构。',
 	'model.qwen-plus-intl.detail': '均衡，支持混合思考（国际站）',
 	'model.qwen-plus-intl.tooltip': '日常均衡使用的 Qwen Plus 模型（国际站），支持开关思考模式。',
 	'model.qwen3-max-intl.detail': '旗舰模型（国际站）',
-	'model.qwen3-max-intl.tooltip': 'Qwen3 旗舰模型（国际站），面向广泛世界知识与复杂任务（默认不开启思考模式）。',
+	'model.qwen3-max-intl.tooltip':
+		'Qwen3 旗舰模型（国际站），面向广泛世界知识与复杂任务（默认不开启思考模式）。',
 	'model.qwen3-vl-plus-intl.detail': '原生视觉模型（国际站）',
-	'model.qwen3-vl-plus-intl.tooltip': '支持原生图片输入的 Qwen3-VL 模型（国际站），可直接理解图片。',
+	'model.qwen3-vl-plus-intl.tooltip':
+		'支持原生图片输入的 Qwen3-VL 模型（国际站），可直接理解图片。',
+	'model.qwen3.7-max-intl.detail': '最新旗舰（国际站），对标 GPT-5.5 / Claude Opus 4.7',
+	'model.qwen3.7-max-intl.tooltip':
+		'Qwen3.7 Max 最新旗舰模型（国际站），最高 1M 上下文，面向高难度编码、复杂推理与长程任务，支持思考模式与工具调用。',
+	'model.qwen3.7-plus-intl.detail': '均衡旗舰（国际站），推荐默认选择',
+	'model.qwen3.7-plus-intl.tooltip':
+		'Qwen3.7 Plus 均衡旗舰模型（国际站），最高 1M 上下文，在质量、速度和成本之间取得平衡，支持思考模式与工具调用。',
+	'model.qwen3.6-flash-intl.detail': '轻量快速（国际站），接近旗舰质量',
+	'model.qwen3.6-flash-intl.tooltip':
+		'Qwen3.6 Flash 轻量模型（国际站），最高 1M 上下文，响应更快、成本更低，适合日常编码与 Agent 任务，支持思考模式与工具调用。',
 	'model.glm-5.2.detail': '最新旗舰，1M 上下文，开源 SOTA 编码',
-	'model.glm-5.2.tooltip': 'z.ai GLM-5.2 最新旗舰模型，1M 上下文，支撑项目级工程上下文与复杂长程任务，从需求到多端部署的完整开发链路，支持深度思考模式与工具调用。',
+	'model.glm-5.2.tooltip':
+		'z.ai GLM-5.2 最新旗舰模型，1M 上下文，支撑项目级工程上下文与复杂长程任务，从需求到多端部署的完整开发链路，支持深度思考模式与工具调用。',
 	'model.glm-5.1.detail': '旗舰长程编码与 Agent',
-	'model.glm-5.1.tooltip': 'z.ai GLM-5.1 旗舰模型，200K 上下文，支持长达 8 小时的自主编码与 Agent，擅长复杂工程优化与长程任务，支持思考模式与工具调用。',
+	'model.glm-5.1.tooltip':
+		'z.ai GLM-5.1 旗舰模型，200K 上下文，支持长达 8 小时的自主编码与 Agent，擅长复杂工程优化与长程任务，支持思考模式与工具调用。',
 	'model.glm-4.6.detail': '旗舰编码与 Agent',
-	'model.glm-4.6.tooltip': 'z.ai GLM-4.6 旗舰模型，200K 上下文，擅长编码与 Agent，支持思考模式与工具调用。',
+	'model.glm-4.6.tooltip':
+		'z.ai GLM-4.6 旗舰模型，200K 上下文，擅长编码与 Agent，支持思考模式与工具调用。',
 	'model.glm-4.5-air.detail': '轻量快速',
-	'model.glm-4.5-air.tooltip': 'z.ai GLM-4.5-Air 轻量模型，响应更快、成本更低，支持思考模式与工具调用。',
+	'model.glm-4.5-air.tooltip':
+		'z.ai GLM-4.5-Air 轻量模型，响应更快、成本更低，支持思考模式与工具调用。',
 	'model.glm-4.5v.detail': '原生视觉模型',
 	'model.glm-4.5v.tooltip': 'z.ai GLM-4.5V 视觉模型，支持原生图片输入，可直接理解图片。',
+	'model.glm-5.detail': '高智能基座，编码对齐 Claude Opus 4.5',
+	'model.glm-5.tooltip':
+		'z.ai GLM-5 高智能模型，200K 上下文，擅长编码、复杂推理与工具调用，支持思考模式。',
+	'model.glm-5-turbo.detail': 'Lobster 优化基座，长任务连续性更强',
+	'model.glm-5-turbo.tooltip':
+		'z.ai GLM-5-Turbo 模型，200K 上下文，面向长任务连续编码与 Agent 场景优化，支持思考模式与工具调用。',
+	'model.glm-4.7.detail': '升级通用模型，编码能力更强',
+	'model.glm-4.7.tooltip':
+		'z.ai GLM-4.7 通用模型，200K 上下文，编码能力更强，支持思考模式与工具调用。',
+	'model.glm-4.7-flashx.detail': '轻量快速，高性价比',
+	'model.glm-4.7-flashx.tooltip':
+		'z.ai GLM-4.7-FlashX 轻量模型，200K 上下文，响应更快、成本更低，支持工具调用。',
+	'model.glm-5v-turbo.detail': '多模态编码基座，视觉 + 深度思考',
+	'model.glm-5v-turbo.tooltip':
+		'z.ai GLM-5V-Turbo 多模态模型，200K 上下文，支持原生图片输入、深度思考和工具调用。',
 	'model.MiniMax-M3.detail': '旗舰 Agent 与长上下文',
-	'model.MiniMax-M3.tooltip': 'MiniMax-M3 旗舰模型，最高 1M 上下文，擅长 Agent 推理、编码与长上下文，支持思考模式与工具调用。',
+	'model.MiniMax-M3.tooltip':
+		'MiniMax-M3 旗舰模型，最高 1M 上下文，擅长 Agent 推理、编码与长上下文，支持思考模式与工具调用。',
 	'model.MiniMax-M2.7.detail': '快速编码与 Agent',
-	'model.MiniMax-M2.7.tooltip': 'MiniMax-M2.7 模型，编码与 Agent 能力强、推理速度更快（思考模式默认开启）。',
+	'model.MiniMax-M2.7.tooltip':
+		'MiniMax-M2.7 模型，编码与 Agent 能力强、推理速度更快（思考模式默认开启）。',
+	'model.MiniMax-M2.5.detail': '高性价比推理与编码',
+	'model.MiniMax-M2.5.tooltip':
+		'MiniMax-M2.5 模型，面向高性价比推理、编码和 Agent 任务，支持思考模式与工具调用。',
 	'model.MiniMax-M3-intl.detail': '旗舰 Agent 与长上下文（国际站）',
-	'model.MiniMax-M3-intl.tooltip': 'MiniMax-M3 旗舰模型（国际站），最高 1M 上下文，擅长 Agent 推理、编码与长上下文，支持思考模式与工具调用。',
+	'model.MiniMax-M3-intl.tooltip':
+		'MiniMax-M3 旗舰模型（国际站），最高 1M 上下文，擅长 Agent 推理、编码与长上下文，支持思考模式与工具调用。',
 	'model.MiniMax-M2.7-intl.detail': '快速编码与 Agent（国际站）',
-	'model.MiniMax-M2.7-intl.tooltip': 'MiniMax-M2.7 模型（国际站），编码与 Agent 能力强、推理速度更快（思考模式默认开启）。',
+	'model.MiniMax-M2.7-intl.tooltip':
+		'MiniMax-M2.7 模型（国际站），编码与 Agent 能力强、推理速度更快（思考模式默认开启）。',
+	'model.MiniMax-M2.5-intl.detail': '高性价比推理与编码（国际站）',
+	'model.MiniMax-M2.5-intl.tooltip':
+		'MiniMax-M2.5 模型（国际站），面向高性价比推理、编码和 Agent 任务，支持思考模式与工具调用。',
 	'model.mimo-v2.5-pro.detail': '旗舰推理与编码',
 	'model.mimo-v2.5-pro.tooltip':
 		'小米 MiMo V2.5 Pro 旗舰混合推理模型，最高 1M 上下文，擅长复杂推理与编码，支持思考模式与工具调用。',
@@ -84,14 +134,15 @@ const zh: Translations = {
 	'model.hunyuan-2.0-think.tooltip':
 		'腾讯混元 HY 2.0 Think 旗舰模型，128K 上下文，擅长编码与深度推理，支持思考模式与工具调用。',
 	'model.hunyuan-turbos.detail': '快速均衡',
-	'model.hunyuan-turbos.tooltip':
-		'腾讯混元 TurboS 快速模型，响应更快、成本更低，支持工具调用。',
+	'model.hunyuan-turbos.tooltip': '腾讯混元 TurboS 快速模型，响应更快、成本更低，支持工具调用。',
 	'model.hunyuan-t1.detail': '深度思考，高性价比',
 	'model.hunyuan-t1.tooltip':
 		'腾讯混元 T1 深度思考模型，编码与推理能力强、价格实惠，支持思考模式与工具调用。',
 	'model.hunyuan-a13b.detail': '轻量快速',
-	'model.hunyuan-a13b.tooltip':
-		'腾讯混元 A13B 轻量模型，响应最快、成本最低，支持工具调用。',
+	'model.hunyuan-a13b.tooltip': '腾讯混元 A13B 轻量模型，响应最快、成本最低，支持工具调用。',
+	'model.hunyuan-2.0-instruct.detail': '指令跟随，创作与知识准确性',
+	'model.hunyuan-2.0-instruct.tooltip':
+		'腾讯混元 HY 2.0 Instruct 模型，128K 上下文，适合指令跟随、创作和知识准确性场景，支持工具调用。',
 
 	// API Key
 	'auth.apiKeyRequiredDetail': '请先配置 API Key',
@@ -110,6 +161,23 @@ const zh: Translations = {
 	'auth.openApiKeyPage': '打开 {0} 的 API Key 页面',
 	'auth.savedAction.testConnection': '测试连接',
 	'auth.savedAction.openChat': '打开聊天',
+
+	// Setup flow
+	'setup.selectProvider': '选择要设置的服务商',
+	'setup.start': '设置 {0}：先打开服务商控制台创建 API Key，然后粘贴保存并测试连接。',
+	'setup.done': '{0} 设置完成。连接测试结果已显示；你可以继续打开聊天，或检查该服务商设置。',
+	'setup.action.openApiKeyPage': '打开 API Key 页面',
+	'setup.action.enterApiKey': '输入 API Key',
+
+	// Settings
+	'settings.selectProvider': '选择要打开设置的服务商',
+
+	// Providers view
+	'providers.tooltip.status': '状态：{0}',
+	'providers.tooltip.endpoint': '端点：{0}',
+	'providers.tooltip.models': '模型：{0} 个',
+	'providers.badge.vision': '视觉',
+	'providers.badge.thinking': '思考',
 
 	// Thinking Effort — short labels for model picker dropdown
 	'status.thinking': '思考模式',
@@ -240,7 +308,7 @@ const zh: Translations = {
 	'notice.visionProxyMissing': '⚠️ 视觉代理不可用，所选模型无法看到图片。[配置视觉代理]({0})',
 	'notice.visionProxyFailure': '**⚠️ {0}**\\\n\\\n**{1} · {2}**',
 	'notice.toolDrift':
-		'⚠️ 工具列表不稳定，缓存命中率可能下降。[了解更多](https://github.com/appledragon/cllms-for-copilot/blob/main/docs/notices/tool-drift.zh.md)',
+		'⚠️ 工具列表不稳定，缓存命中率可能下降。[了解更多](https://github.com/appledragon/cllms-for-copilot/blob/main/advanced-settings.nls.zh-cn.md)',
 
 	// Errors
 	'error.http.400': '[{0}] 请求体格式错误。请根据错误信息提示修改请求体。',
@@ -293,6 +361,11 @@ const zh: Translations = {
 	'connection.action.openApiKeyPage': '打开 API Key 页面',
 	'connection.action.showLogs': '显示日志',
 
+	// Diagnostics
+	'debug.dumpPrivacyWarning':
+		'Verbose 请求 dump 可能包含提示词、工具参数、图片描述等敏感内容，仅用于本地调试。CLLMs 会清理 7 天前的旧 dump，并会对凭证字段做最小化脱敏。',
+	'diagnosticReport.copied': '已复制 CLLMs 诊断报告（不包含 API Key、提示词或完整请求体）。',
+
 	// Session cost
 	'sessionCost.statusBarTooltip': 'CLLMs 本次会话费用（近似，点击查看明细）',
 	'sessionCost.empty': '本次会话尚未记录任何 CLLMs 用量。',
@@ -301,8 +374,21 @@ const zh: Translations = {
 	'sessionCost.approximateNote':
 		'仅为近似值，且只统计当前会话：基于服务商返回的 usage 估算，命中缓存的输入按缓存命中价计费。',
 	'sessionCost.unbilledNote': '另有 {0} 次请求（{1} 个模型）因缺少定价未纳入估算。',
+	'sessionCost.cacheHealthNote':
+		'本次会话平均上下文缓存命中率：{0}%（命中缓存的输入按更低价计费；命中率越高越省钱）。',
+	'sessionCost.tierSplitNote': '其中 utility/辅助请求约 {0}，主力/agent 请求约 {1}。',
 	'sessionCost.reset': '清零',
 	'sessionCost.resetDone': '已清零 CLLMs 会话费用。',
+
+	// Configure Utility Model command
+	'utilityModel.title': '配置辅助请求模型（chat.utilityModel）',
+	'utilityModel.placeholder': '选择一个更便宜的模型用于标题、提交信息等辅助请求',
+	'utilityModel.openSettings': '改为打开设置…',
+	'utilityModel.openSettingsAction': '打开设置',
+	'utilityModel.configured':
+		'已将 chat.utilityModel 与 chat.utilitySmallModel 设为「{0}」。VS Code 会用它处理辅助请求。',
+	'utilityModel.writeFailed':
+		'无法写入 chat.utilityModel 设置（当前 VS Code 版本可能不支持），请在设置中手动配置。',
 
 	// Image Read Tool
 	'tool.readImage.error.missingPath': '必需参数 filePath 未提供或为空。',
@@ -310,7 +396,8 @@ const zh: Translations = {
 	'tool.readImage.error.readFailed': '无法读取图片文件：{0}',
 	'tool.readImage.error.emptyFile': '图片文件为空：{0}',
 	'tool.readImage.error.unsupportedFormat': '不支持的图片格式：{0}',
-	'tool.readImage.error.noVisionProxy': '视觉代理未配置或不可用。请使用命令 "CLLMs: 配置视觉代理" 设置视觉代理。',
+	'tool.readImage.error.noVisionProxy':
+		'视觉代理未配置或不可用。请使用命令 "CLLMs: 配置视觉代理" 设置视觉代理。',
 	'tool.readImage.error.emptyResponse': '视觉代理对 {0} 返回了空响应。',
 	'tool.readImage.error.describeFailed': '无法描述图片 {0}：{1}',
 	'tool.readImage.cancelled': '图片读取已取消。',
@@ -329,14 +416,22 @@ const en: Translations = {
 	'model.qwen3-coder-plus.tooltip':
 		'Qwen3 Coder model for agentic coding and tool calling, strong at large refactors.',
 	'model.qwen-plus.detail': 'Balanced, hybrid thinking',
-	'model.qwen-plus.tooltip':
-		'Balanced everyday Qwen Plus model with toggleable thinking mode.',
+	'model.qwen-plus.tooltip': 'Balanced everyday Qwen Plus model with toggleable thinking mode.',
 	'model.qwen3-max.detail': 'Flagship model',
 	'model.qwen3-max.tooltip':
 		'Flagship Qwen3 model for broad world knowledge and complex tasks (thinking off by default).',
 	'model.qwen3-vl-plus.detail': 'Native vision model',
 	'model.qwen3-vl-plus.tooltip':
 		'Qwen3-VL model with native image input — understands images directly.',
+	'model.qwen3.7-max.detail': 'Latest flagship, aligned with GPT-5.5 / Claude Opus 4.7',
+	'model.qwen3.7-max.tooltip':
+		'Qwen3.7 Max latest flagship with up to 1M context, built for demanding coding, complex reasoning, and long-horizon tasks with thinking mode and tool calling.',
+	'model.qwen3.7-plus.detail': 'Balanced flagship, recommended default',
+	'model.qwen3.7-plus.tooltip':
+		'Qwen3.7 Plus balanced flagship with up to 1M context, balancing quality, speed, and cost for everyday coding and agent tasks with thinking mode and tool calling.',
+	'model.qwen3.6-flash.detail': 'Lightweight, near-flagship quality',
+	'model.qwen3.6-flash.tooltip':
+		'Qwen3.6 Flash lightweight model with up to 1M context, faster responses and lower cost for everyday coding and agent tasks with thinking mode and tool calling.',
 	'model.qwen3-coder-plus-intl.detail': 'Agentic coding & tool use (Intl)',
 	'model.qwen3-coder-plus-intl.tooltip':
 		'Qwen3 Coder model for agentic programming and tool calling (international). Excels at large-scale refactoring.',
@@ -349,6 +444,15 @@ const en: Translations = {
 	'model.qwen3-vl-plus-intl.detail': 'Native vision model (Intl)',
 	'model.qwen3-vl-plus-intl.tooltip':
 		'Qwen3-VL model with native image input (international) — understands images directly.',
+	'model.qwen3.7-max-intl.detail': 'Latest flagship (Intl), aligned with GPT-5.5 / Claude Opus 4.7',
+	'model.qwen3.7-max-intl.tooltip':
+		'Qwen3.7 Max latest flagship (international) with up to 1M context, built for demanding coding, complex reasoning, and long-horizon tasks with thinking mode and tool calling.',
+	'model.qwen3.7-plus-intl.detail': 'Balanced flagship (Intl), recommended default',
+	'model.qwen3.7-plus-intl.tooltip':
+		'Qwen3.7 Plus balanced flagship (international) with up to 1M context, balancing quality, speed, and cost for everyday coding and agent tasks with thinking mode and tool calling.',
+	'model.qwen3.6-flash-intl.detail': 'Lightweight (Intl), near-flagship quality',
+	'model.qwen3.6-flash-intl.tooltip':
+		'Qwen3.6 Flash lightweight model (international) with up to 1M context, faster responses and lower cost for everyday coding and agent tasks with thinking mode and tool calling.',
 	'model.glm-5.2.detail': 'Latest flagship, 1M context, open-source SOTA coding',
 	'model.glm-5.2.tooltip':
 		'z.ai GLM-5.2 latest flagship with a 1M context — supports project-scale engineering context and complex long-horizon tasks, from requirements to multi-platform deployment in a single session, with deep thinking mode and tool calling.',
@@ -364,18 +468,39 @@ const en: Translations = {
 	'model.glm-4.5v.detail': 'Native vision model',
 	'model.glm-4.5v.tooltip':
 		'z.ai GLM-4.5V vision model with native image input — understands images directly.',
+	'model.glm-5.detail': 'High-intelligence base, coding aligned with Claude Opus 4.5',
+	'model.glm-5.tooltip':
+		'z.ai GLM-5 high-intelligence model with a 200K context, strong at coding, complex reasoning, and tool calling with thinking mode.',
+	'model.glm-5-turbo.detail': 'Lobster-optimized base, long-task continuity',
+	'model.glm-5-turbo.tooltip':
+		'z.ai GLM-5-Turbo model with a 200K context, optimized for long-running coding and agent tasks with thinking mode and tool calling.',
+	'model.glm-4.7.detail': 'Upgraded general model, stronger coding',
+	'model.glm-4.7.tooltip':
+		'z.ai GLM-4.7 general model with a 200K context, stronger coding ability, thinking mode, and tool calling.',
+	'model.glm-4.7-flashx.detail': 'Lightweight & fast, budget-friendly',
+	'model.glm-4.7-flashx.tooltip':
+		'z.ai GLM-4.7-FlashX lightweight model with a 200K context, faster responses and lower cost, plus tool calling.',
+	'model.glm-5v-turbo.detail': 'Multimodal coding base, vision + deep thinking',
+	'model.glm-5v-turbo.tooltip':
+		'z.ai GLM-5V-Turbo multimodal model with a 200K context, native image input, deep thinking, and tool calling.',
 	'model.MiniMax-M3.detail': 'Flagship agentic & long context',
 	'model.MiniMax-M3.tooltip':
 		'MiniMax-M3 flagship with up to 1M context — strong at agentic reasoning, coding, and long-context tasks, with thinking mode and tool calling.',
 	'model.MiniMax-M2.7.detail': 'Fast coding & agents',
 	'model.MiniMax-M2.7.tooltip':
 		'MiniMax-M2.7 model with strong coding and agent skills and faster inference (thinking on by default).',
+	'model.MiniMax-M2.5.detail': 'Cost-effective reasoning & coding',
+	'model.MiniMax-M2.5.tooltip':
+		'MiniMax-M2.5 model for cost-effective reasoning, coding, and agent tasks with thinking mode and tool calling.',
 	'model.MiniMax-M3-intl.detail': 'Flagship agentic & long context (Intl)',
 	'model.MiniMax-M3-intl.tooltip':
 		'MiniMax-M3 flagship (international) with up to 1M context — strong at agentic reasoning, coding, and long-context tasks, with thinking mode and tool calling.',
 	'model.MiniMax-M2.7-intl.detail': 'Fast coding & agents (Intl)',
 	'model.MiniMax-M2.7-intl.tooltip':
 		'MiniMax-M2.7 model (international) with strong coding and agent skills and faster inference (thinking on by default).',
+	'model.MiniMax-M2.5-intl.detail': 'Cost-effective reasoning & coding (Intl)',
+	'model.MiniMax-M2.5-intl.tooltip':
+		'MiniMax-M2.5 model (international) for cost-effective reasoning, coding, and agent tasks with thinking mode and tool calling.',
 	'model.mimo-v2.5-pro.detail': 'Flagship reasoning & coding',
 	'model.mimo-v2.5-pro.tooltip':
 		'Xiaomi MiMo V2.5 Pro flagship hybrid-reasoning model with up to 1M context — strong at complex reasoning and coding, with thinking mode and tool calling.',
@@ -415,6 +540,9 @@ const en: Translations = {
 	'model.hunyuan-a13b.detail': 'Lightweight & fast',
 	'model.hunyuan-a13b.tooltip':
 		'Tencent Hunyuan A13B lightweight model with fastest responses and lowest cost, plus tool calling.',
+	'model.hunyuan-2.0-instruct.detail': 'Instruction-following, creative & knowledge-accurate',
+	'model.hunyuan-2.0-instruct.tooltip':
+		'Tencent Hunyuan HY 2.0 Instruct model with a 128K context, suited for instruction following, creative work, and knowledge-accurate tasks, plus tool calling.',
 
 	// API Key
 	'auth.apiKeyRequiredDetail': 'Please run CLLMs: Set API Key to configure.',
@@ -434,6 +562,25 @@ const en: Translations = {
 	'auth.openApiKeyPage': 'Open {0} API key page',
 	'auth.savedAction.testConnection': 'Test Connection',
 	'auth.savedAction.openChat': 'Open Chat',
+
+	// Setup flow
+	'setup.selectProvider': 'Select a provider to set up',
+	'setup.start':
+		'Set up {0}: open the provider console to create an API key, then paste it here and test the connection.',
+	'setup.done':
+		'{0} setup is complete. The connection test result was shown; continue to chat or review this provider settings.',
+	'setup.action.openApiKeyPage': 'Open API Key Page',
+	'setup.action.enterApiKey': 'Enter API Key',
+
+	// Settings
+	'settings.selectProvider': 'Select a provider settings page to open',
+
+	// Providers view
+	'providers.tooltip.status': 'Status: {0}',
+	'providers.tooltip.endpoint': 'Endpoint: {0}',
+	'providers.tooltip.models': 'Models: {0}',
+	'providers.badge.vision': 'vision',
+	'providers.badge.thinking': 'thinking',
 
 	// Thinking Effort
 	'status.thinking': 'Thinking Effort',
@@ -581,7 +728,7 @@ const en: Translations = {
 		'⚠️ Vision Proxy is unavailable. The selected model cannot see images. [Configure Vision Proxy]({0})',
 	'notice.visionProxyFailure': '**⚠️ {0}**\\\n\\\n**{1} · {2}**',
 	'notice.toolDrift':
-		'⚠️ Tool list is unstable; cache hit rate may drop. [Learn more](https://github.com/appledragon/cllms-for-copilot/blob/main/docs/notices/tool-drift.en.md)',
+		'⚠️ Tool list is unstable; cache hit rate may drop. [Learn more](https://github.com/appledragon/cllms-for-copilot/blob/main/advanced-settings.md)',
 
 	// Errors
 	'error.http.400':
@@ -645,6 +792,12 @@ const en: Translations = {
 	'connection.action.openApiKeyPage': 'Open API Key Page',
 	'connection.action.showLogs': 'Show Logs',
 
+	// Diagnostics
+	'debug.dumpPrivacyWarning':
+		'Verbose request dumps may contain prompts, tool arguments, image descriptions, and other sensitive content. Use them for local debugging only. CLLMs removes dumps older than 7 days and redacts credential-like fields.',
+	'diagnosticReport.copied':
+		'Copied CLLMs diagnostic report (API keys, prompts, and full request bodies excluded).',
+
 	// Session cost
 	'sessionCost.statusBarTooltip': 'CLLMs session cost (approximate) — click for details',
 	'sessionCost.empty': 'No CLLMs usage recorded this session yet.',
@@ -654,8 +807,21 @@ const en: Translations = {
 		'Approximate and for this session only: estimated from provider-reported usage, with cached input billed at the cache-hit rate.',
 	'sessionCost.unbilledNote':
 		'{0} more request(s) across {1} model(s) are excluded for lack of pricing.',
+	'sessionCost.cacheHealthNote':
+		'Session average context-cache hit rate: {0}% (cache hits are billed at the lower input price; higher is cheaper).',
+	'sessionCost.tierSplitNote': 'Of which utility/helper requests ≈ {0}, agent requests ≈ {1}.',
 	'sessionCost.reset': 'Reset',
 	'sessionCost.resetDone': 'CLLMs session cost reset.',
+
+	// Configure Utility Model command
+	'utilityModel.title': 'Configure utility model (chat.utilityModel)',
+	'utilityModel.placeholder': 'Pick a cheaper model for titles, commit messages, and other helpers',
+	'utilityModel.openSettings': 'Open Settings instead…',
+	'utilityModel.openSettingsAction': 'Open Settings',
+	'utilityModel.configured':
+		'Set chat.utilityModel and chat.utilitySmallModel to "{0}". VS Code will use it for helper requests.',
+	'utilityModel.writeFailed':
+		'Could not write the chat.utilityModel settings (your VS Code may not support them yet); configure them manually in Settings.',
 
 	// Image Read Tool
 	'tool.readImage.error.missingPath': 'Required parameter filePath is missing or empty.',
@@ -663,7 +829,8 @@ const en: Translations = {
 	'tool.readImage.error.readFailed': 'Failed to read image file: {0}',
 	'tool.readImage.error.emptyFile': 'Image file is empty: {0}',
 	'tool.readImage.error.unsupportedFormat': 'Unsupported image format: {0}',
-	'tool.readImage.error.noVisionProxy': 'Vision proxy is not configured or unavailable. Use "CLLMs: Configure Vision Proxy" to set one up.',
+	'tool.readImage.error.noVisionProxy':
+		'Vision proxy is not configured or unavailable. Use "CLLMs: Configure Vision Proxy" to set one up.',
 	'tool.readImage.error.emptyResponse': 'Vision proxy returned an empty response for {0}.',
 	'tool.readImage.error.describeFailed': 'Failed to describe image {0}: {1}',
 	'tool.readImage.cancelled': 'Image reading was cancelled.',

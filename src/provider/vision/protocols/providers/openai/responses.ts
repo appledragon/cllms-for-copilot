@@ -26,7 +26,10 @@ function createBody(config: VisionProxyConfig, request: VisionDescriptionRequest
 
 function parseResponse(value: unknown): string {
 	if (!isRecord(value)) {
-		throwVisionResponseError('unsupported-response', 'vision.proxy.error.unsupportedOpenAIResponse');
+		throwVisionResponseError(
+			'unsupported-response',
+			'vision.proxy.error.unsupportedOpenAIResponse',
+		);
 	}
 
 	if (typeof value.output_text === 'string' && value.output_text.trim()) {
@@ -42,7 +45,10 @@ function parseResponse(value: unknown): string {
 
 function parseOutput(output: unknown): string {
 	if (!Array.isArray(output)) {
-		throwVisionResponseError('unsupported-response', 'vision.proxy.error.unsupportedOpenAIResponse');
+		throwVisionResponseError(
+			'unsupported-response',
+			'vision.proxy.error.unsupportedOpenAIResponse',
+		);
 	}
 
 	return output

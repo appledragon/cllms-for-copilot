@@ -226,9 +226,7 @@ async function pickProvider(authManager: AuthManager): Promise<ProviderDefinitio
 
 	const items = providers.map((provider, index) => ({
 		label: provider.name,
-		description: configured[index]
-			? t('auth.providerConfigured')
-			: t('auth.providerNotConfigured'),
+		description: configured[index] ? t('auth.providerConfigured') : t('auth.providerNotConfigured'),
 		provider,
 	}));
 

@@ -1,6 +1,8 @@
 import vscode from 'vscode';
+import { getMaxRetries, getVisionProxyTimeoutMs } from '../../config';
 import { t } from '../../i18n';
 import { logger } from '../../logger';
+import { createCachingVisionDescriber, VisionDescriptionCache } from './cache';
 import { VISION_PROXY_API_KEY_SECRET, VisionProxyConfigStore } from './sources/endpoint/config';
 import { createEndpointVisionDescriber } from './sources/endpoint';
 import { openVisionProxyPanel } from './ui/panel';
@@ -20,9 +22,13 @@ export function createVisionService(context: vscode.ExtensionContext): {
 } {
 	const store = new VisionProxyConfigStore(context);
 	const vscodeLm = createVSCodeLanguageModelVisionDescriberGetter();
+	const descriptionCache = new VisionDescriptionCache();
+	const withCache = (describer: VisionDescriber | undefined): VisionDescriber | undefined =>
+		describer ? createCachingVisionDescriber(describer, descriptionCache) : undefined;
 
 	const reset = (): void => {
 		vscodeLm.reset();
+		descriptionCache.clear();
 	};
 
 	context.subscriptions.push(
@@ -42,7 +48,7 @@ export function createVisionService(context: vscode.ExtensionContext): {
 		async get() {
 			const source = store.getSource();
 			if (source === 'vscode-lm') {
-				return vscodeLm.get();
+				return withCache(await vscodeLm.get());
 			}
 
 			if (source === 'api-endpoint') {
@@ -51,22 +57,29 @@ export function createVisionService(context: vscode.ExtensionContext): {
 					if (!result.error) {
 						return undefined;
 					}
+					// The invalid-config describer always throws; do not cache it.
 					return createInvalidApiEndpointDescriber(result.error);
 				}
 				const apiKey = await store.getApiKey();
-				const describer = createEndpointVisionDescriber(result.config, apiKey);
+				const describer = createEndpointVisionDescriber(result.config, apiKey, {
+					timeoutMs: getVisionProxyTimeoutMs(),
+					maxRetries: getMaxRetries(),
+				});
 				logger.info(`Vision proxy: ${describer.id} source=api-endpoint`);
-				return describer;
+				return withCache(describer);
 			}
 
 			const result = getApiEndpointConfig(store, false);
 			if (result.config) {
 				const apiKey = await store.getApiKey();
-				const describer = createEndpointVisionDescriber(result.config, apiKey);
+				const describer = createEndpointVisionDescriber(result.config, apiKey, {
+					timeoutMs: getVisionProxyTimeoutMs(),
+					maxRetries: getMaxRetries(),
+				});
 				logger.info(`Vision proxy: ${describer.id} source=api-endpoint`);
-				return describer;
+				return withCache(describer);
 			}
-			return vscodeLm.get();
+			return withCache(await vscodeLm.get());
 		},
 
 		reset,

@@ -129,7 +129,16 @@ export interface StreamCallbacks {
 // ---- Provider definitions ----
 
 /** Identifies an upstream API provider. */
-export type ProviderId = 'qwen' | 'qwen-intl' | 'zai' | 'minimax' | 'minimax-intl' | 'xiaomi' | 'moonshot' | 'moonshot-intl' | 'hunyuan';
+export type ProviderId =
+	| 'qwen'
+	| 'qwen-intl'
+	| 'zai'
+	| 'minimax'
+	| 'minimax-intl'
+	| 'xiaomi'
+	| 'moonshot'
+	| 'moonshot-intl'
+	| 'hunyuan';
 
 /**
  * How a provider serializes "thinking" / reasoning control on the request:

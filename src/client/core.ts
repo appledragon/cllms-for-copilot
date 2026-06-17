@@ -113,9 +113,7 @@ export class LlmClient {
 		}
 
 		const timer =
-			this.idleTimeoutMs > 0
-				? setTimeout(() => controller.abort(), this.idleTimeoutMs)
-				: undefined;
+			this.idleTimeoutMs > 0 ? setTimeout(() => controller.abort(), this.idleTimeoutMs) : undefined;
 
 		try {
 			const response = await fetch(`${this.baseUrl}/models`, {
@@ -204,7 +202,13 @@ export class LlmClient {
 				throw new Error('No response body received');
 			}
 
-			await this.consumeStream(response.body, callbacks, cancellationToken, controller, armIdleTimer);
+			await this.consumeStream(
+				response.body,
+				callbacks,
+				cancellationToken,
+				controller,
+				armIdleTimer,
+			);
 		} catch (error) {
 			if (abortState.timedOut && isAbortError(error)) {
 				throw createIdleTimeoutError(this.idleTimeoutMs);
@@ -230,34 +234,42 @@ export class LlmClient {
 		// Accumulate tool call deltas by index, then emit on finish.
 		const pendingToolCalls = new Map<number, LlmToolCall>();
 
-		while (true) {
-			if (cancellationToken?.isCancellationRequested) {
-				controller.abort();
-				return;
-			}
-
-			const { done, value } = await reader.read();
-			if (done) {
-				break;
-			}
-			armIdleTimer();
-
-			const events = parser.push(decoder.decode(value, { stream: true }));
-			for (const event of events) {
-				if (event.type === 'done') {
-					flushToolCalls(pendingToolCalls, callbacks);
-					callbacks.onDone();
+		try {
+			while (true) {
+				if (cancellationToken?.isCancellationRequested) {
+					controller.abort();
 					return;
 				}
-				if (event.type === 'parse-error') {
-					logger.error('Failed to parse SSE chunk:', event.raw.slice(0, 200), event.error);
-					continue;
-				}
-				dispatchChunk(event.data, pendingToolCalls, callbacks);
-			}
-		}
 
-		callbacks.onDone();
+				const { done, value } = await reader.read();
+				if (done) {
+					break;
+				}
+				armIdleTimer();
+
+				const events = parser.push(decoder.decode(value, { stream: true }));
+				for (const event of events) {
+					if (event.type === 'done') {
+						flushToolCalls(pendingToolCalls, callbacks);
+						callbacks.onDone();
+						return;
+					}
+					if (event.type === 'parse-error') {
+						logger.error('Failed to parse SSE chunk:', event.raw.slice(0, 200), event.error);
+						continue;
+					}
+					dispatchChunk(event.data, pendingToolCalls, callbacks);
+				}
+			}
+
+			callbacks.onDone();
+		} finally {
+			// Release the reader on every exit path — normal end, the `[DONE]`
+			// sentinel, cancellation, or a thrown error. cancel() also tears down
+			// the underlying connection, so a provider that keeps the socket open
+			// after `[DONE]` is not left dangling until GC.
+			void reader.cancel().catch(() => {});
+		}
 	}
 }
 

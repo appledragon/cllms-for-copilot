@@ -27,7 +27,10 @@ function createBody(config: VisionProxyConfig, request: VisionDescriptionRequest
 
 function parseResponse(value: unknown): string {
 	if (!isRecord(value) || !Array.isArray(value.choices)) {
-		throwVisionResponseError('unsupported-response', 'vision.proxy.error.unsupportedOpenAIResponse');
+		throwVisionResponseError(
+			'unsupported-response',
+			'vision.proxy.error.unsupportedOpenAIResponse',
+		);
 	}
 
 	const choice = value.choices[0];

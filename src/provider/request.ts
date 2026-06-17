@@ -1,18 +1,31 @@
 import vscode from 'vscode';
 import { AuthManager } from '../auth';
 import { LlmClient } from '../client';
-import { getApiModelId, getBaseUrl, getMaxRetries, getMaxTokens } from '../config';
+import {
+	getApiModelId,
+	getBaseUrl,
+	getDebugLoggingEnabled,
+	getMaxRetries,
+	getMaxTokens,
+	getReplayReasoningScope,
+	getSortToolsForCacheEnabled,
+	getUtilityMaxOutputTokens,
+	getUtilityModelIdOverride,
+} from '../config';
 import { MODELS, PROVIDERS, getModelProvider } from '../consts';
 import { t } from '../i18n';
+import { logger } from '../logger';
 import type { LlmRequest } from '../types';
 import { convertMessages, countMessageChars } from './convert';
-import {
-	dumpLlmRequest,
-	type CacheDiagnosticsRecorder,
-	type CacheDiagnosticsRun,
-} from './debug';
+import { dumpLlmRequest, type CacheDiagnosticsRecorder, type CacheDiagnosticsRun } from './debug';
 import { getConfiguredThinkingEffort, type ModelConfigurationOptions } from './models';
-import { classifyLlmRequest, shouldForceThinkingNone, type RequestKind } from './routing';
+import {
+	classifyLlmRequest,
+	formatRequestLogLine,
+	isUtilityRequestKind,
+	shouldForceThinkingNone,
+	type RequestKind,
+} from './routing';
 import type { ReplayMarkerMetadata } from './replay';
 import type { ConversationSegment } from './segment';
 import { buildThinkingFields } from './thinking';
@@ -78,13 +91,22 @@ export async function prepareChatRequest({
 		nativeVision: isVisionModel,
 	});
 	const resolvedMessages = visionResolution.messages;
-	const qwenMessages = convertMessages(resolvedMessages, isThinkingModel, isVisionModel);
-	const tools = prepareRequestTools(modelDef?.capabilities.toolCalling, options);
+	const llmMessages = convertMessages(
+		resolvedMessages,
+		isThinkingModel,
+		isVisionModel,
+		getReplayReasoningScope(),
+	);
+	const tools = prepareRequestTools(
+		modelDef?.capabilities.toolCalling,
+		options,
+		getSortToolsForCacheEnabled(),
+	);
 
-	const totalRequestChars = countMessageChars(qwenMessages);
+	const totalRequestChars = countMessageChars(llmMessages);
 	const baseRequest: LlmRequest = {
 		model: getApiModelId(provider, modelInfo.id),
-		messages: qwenMessages,
+		messages: llmMessages,
 		stream: true,
 		tools,
 		tool_choice: tools && tools.length > 0 ? ('auto' as const) : undefined,
@@ -94,6 +116,32 @@ export async function prepareChatRequest({
 		request: baseRequest,
 		inputMessages: messages,
 	});
+	// Utility cost controls (default-off): cap output tokens and/or route to a
+	// cheaper model for lightweight one-shot helper requests. Never applied to
+	// agent-tier or unknown work so real turns are never throttled/downgraded.
+	const utilityRequest = isUtilityRequestKind(requestKind);
+	const effectiveModel = utilityRequest
+		? (getUtilityModelIdOverride(provider) ?? baseRequest.model)
+		: baseRequest.model;
+	const effectiveMaxTokens = utilityRequest
+		? applyUtilityMaxTokens(maxTokens, getUtilityMaxOutputTokens())
+		: maxTokens;
+	if (getDebugLoggingEnabled() && effectiveModel !== baseRequest.model) {
+		logger.info(
+			formatRequestLogLine(
+				requestKind,
+				`Utility model downgrade: ${baseRequest.model} -> ${effectiveModel}`,
+			),
+		);
+	}
+	if (getDebugLoggingEnabled() && effectiveMaxTokens !== maxTokens) {
+		logger.info(
+			formatRequestLogLine(
+				requestKind,
+				`Utility max_tokens cap: ${maxTokens ?? 'default'} -> ${effectiveMaxTokens}`,
+			),
+		);
+	}
 	const configuredThinkingEffort = getConfiguredThinkingEffort(
 		options as ModelConfigurationOptions,
 	);
@@ -102,9 +150,9 @@ export async function prepareChatRequest({
 	// reasoning arrives in `delta.reasoning_content` regardless of provider.
 	const request: LlmRequest = {
 		...baseRequest,
-		...(isThinkingModel
-			? buildThinkingFields(provider.thinkingStyle, thinkingEffort)
-			: {}),
+		...(isThinkingModel ? buildThinkingFields(provider.thinkingStyle, thinkingEffort) : {}),
+		model: effectiveModel,
+		max_tokens: effectiveMaxTokens,
 	};
 	dumpLlmRequest(request, {
 		globalStorageUri,
@@ -113,7 +161,7 @@ export async function prepareChatRequest({
 		vscodeModelId: modelInfo.id,
 		isThinkingModel,
 		thinkingEffort,
-		maxTokens,
+		maxTokens: effectiveMaxTokens,
 		inputMessages: messages,
 		resolvedMessages,
 		requestOptions: options,
@@ -129,7 +177,7 @@ export async function prepareChatRequest({
 		vscodeModelId: modelInfo.id,
 		isThinkingModel,
 		thinkingEffort,
-		maxTokens,
+		maxTokens: effectiveMaxTokens,
 		inputMessages: messages,
 		resolvedMessages,
 		visionModelId: visionResolution.visionModelId,
@@ -142,7 +190,7 @@ export async function prepareChatRequest({
 		request,
 		isThinkingModel,
 		totalRequestChars,
-		trailingToolResultIds: collectTrailingToolResultIds(qwenMessages),
+		trailingToolResultIds: collectTrailingToolResultIds(llmMessages),
 		cacheDiagnostics: diagnosticsRun,
 		requestKind,
 		segment,
@@ -150,4 +198,22 @@ export async function prepareChatRequest({
 		visionMarkerTextChars: visionResolution.stats.markerVisionTextChars || undefined,
 		initialResponseNotice: visionResolution.initialResponseNotice,
 	};
+}
+
+/**
+ * Combine the global max-tokens limit with the utility cap by taking the
+ * smaller bound. `undefined` means "no limit", so an unset value never
+ * tightens the other.
+ */
+function applyUtilityMaxTokens(
+	current: number | undefined,
+	cap: number | undefined,
+): number | undefined {
+	if (cap === undefined) {
+		return current;
+	}
+	if (current === undefined) {
+		return cap;
+	}
+	return Math.min(current, cap);
 }

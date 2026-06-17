@@ -85,7 +85,12 @@ export function summarizeLlmSystemPrompt(messages: readonly LlmMessage[]): Syste
 		return createSystemPromptSummary(null, null, '', customizations);
 	}
 
-	return createSystemPromptSummary(0, message.role, llmContentToText(message.content), customizations);
+	return createSystemPromptSummary(
+		0,
+		message.role,
+		llmContentToText(message.content),
+		customizations,
+	);
 }
 
 function createSystemPromptSummary(

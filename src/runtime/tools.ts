@@ -41,9 +41,7 @@ export function createImageReadTool(
 			const resolved = await resolveAndReadImageFile(filePath.trim());
 			if (!resolved) {
 				return new vscode.LanguageModelToolResult([
-					new vscode.LanguageModelTextPart(
-						t('tool.readImage.error.notFound', filePath),
-					),
+					new vscode.LanguageModelTextPart(t('tool.readImage.error.notFound', filePath)),
 				]);
 			}
 
@@ -51,9 +49,7 @@ export function createImageReadTool(
 
 			if (imageData.byteLength === 0) {
 				return new vscode.LanguageModelToolResult([
-					new vscode.LanguageModelTextPart(
-						t('tool.readImage.error.emptyFile', filePath),
-					),
+					new vscode.LanguageModelTextPart(t('tool.readImage.error.emptyFile', filePath)),
 				]);
 			}
 
@@ -61,9 +57,7 @@ export function createImageReadTool(
 			const mimeType = detectImageMimeType(resolvedPath.fsPath);
 			if (!mimeType) {
 				return new vscode.LanguageModelToolResult([
-					new vscode.LanguageModelTextPart(
-						t('tool.readImage.error.unsupportedFormat', filePath),
-					),
+					new vscode.LanguageModelTextPart(t('tool.readImage.error.unsupportedFormat', filePath)),
 				]);
 			}
 
@@ -78,9 +72,7 @@ export function createImageReadTool(
 			const describer = await getVisionDescriber();
 			if (!describer || token.isCancellationRequested) {
 				return new vscode.LanguageModelToolResult([
-					new vscode.LanguageModelTextPart(
-						t('tool.readImage.error.noVisionProxy'),
-					),
+					new vscode.LanguageModelTextPart(t('tool.readImage.error.noVisionProxy')),
 				]);
 			}
 
@@ -94,9 +86,7 @@ export function createImageReadTool(
 
 				if (!description || description.trim().length === 0) {
 					return new vscode.LanguageModelToolResult([
-						new vscode.LanguageModelTextPart(
-							t('tool.readImage.error.emptyResponse', filePath),
-						),
+						new vscode.LanguageModelTextPart(t('tool.readImage.error.emptyResponse', filePath)),
 					]);
 				}
 
@@ -144,9 +134,7 @@ interface ResolvedImageFile {
  * Resolve the given file path against workspace folders and read the file.
  * Tries absolute paths first, then each workspace folder for relative paths.
  */
-async function resolveAndReadImageFile(
-	filePath: string,
-): Promise<ResolvedImageFile | undefined> {
+async function resolveAndReadImageFile(filePath: string): Promise<ResolvedImageFile | undefined> {
 	const candidates = getCandidateUris(filePath);
 	if (candidates.length === 0) {
 		return undefined;

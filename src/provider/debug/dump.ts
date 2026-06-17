@@ -1,4 +1,4 @@
-import { appendFile, mkdir } from 'fs/promises';
+import { appendFile, mkdir, readdir, rm, stat } from 'fs/promises';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import vscode from 'vscode';
@@ -38,13 +38,20 @@ import {
 	type SystemPromptSummary,
 	type ToolSummary,
 } from './dump-summarize';
-import { sanitizeJsonValue, writeJsonFile, writeTextFile } from './dump-utils';
+import {
+	redactSensitiveJsonValue,
+	sanitizeJsonValue,
+	writeJsonFile,
+	writeTextFile,
+} from './dump-utils';
 
 let dumpCounter = 0;
 let providerInputDumpCounter = 0;
 let dumpWriteQueue: Promise<void> = Promise.resolve();
+let cleanupQueued = false;
 
 const REQUEST_OBSERVATIONS_FILE = '_request-observations.jsonl';
+const REQUEST_DUMP_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
 type DumpEvent = 'provider-input' | 'qwen-request';
 type DumpStage = 'provider-input' | 'input' | 'resolved';
@@ -121,8 +128,12 @@ export function dumpProviderInput(options: DumpProviderInputOptions): void {
 	const toolSummary = summarizeTools(options.requestOptions.tools);
 
 	enqueueDumpWrite(formatRequestLogLine(requestKind, 'providerInputDump'), async () => {
+		await cleanupOldRequestDumps(options.globalStorageUri);
 		await mkdir(context.root, { recursive: true });
-		await writeJsonFile(paths.providerInput, createProviderInputSnapshot(options, context));
+		await writeJsonFile(
+			paths.providerInput,
+			redactSensitiveJsonValue(createProviderInputSnapshot(options, context)),
+		);
 
 		await writeDumpObservation(
 			options.globalStorageUri,
@@ -157,10 +168,7 @@ export function dumpProviderInput(options: DumpProviderInputOptions): void {
  *   qwen-request-<timestamp>-NNNN.json           — full request body
  *   qwen-request-<timestamp>-NNNN.msg0.txt       — messages[0] content (system prompt)
  */
-export function dumpLlmRequest(
-	request: LlmRequest,
-	options: DumpLlmRequestOptions,
-): void {
+export function dumpLlmRequest(request: LlmRequest, options: DumpLlmRequestOptions): void {
 	if (!getRequestDumpEnabled()) return;
 
 	const classification = classifyLlmRequestDetailed({
@@ -181,18 +189,25 @@ export function dumpLlmRequest(
 	const toolSummary = summarizeTools(options.requestOptions.tools);
 
 	enqueueDumpWrite(formatRequestLogLine(requestKind, 'requestDump'), async () => {
+		await cleanupOldRequestDumps(options.globalStorageUri);
 		await mkdir(context.root, { recursive: true });
 		await writeJsonFile(
 			paths.input,
-			createPipelineSnapshot('input', request, options.inputMessages, options, context),
+			redactSensitiveJsonValue(
+				createPipelineSnapshot('input', request, options.inputMessages, options, context),
+			),
 		);
 		await writeJsonFile(
 			paths.resolved,
-			createPipelineSnapshot('resolved', request, options.resolvedMessages, options, context),
+			redactSensitiveJsonValue(
+				createPipelineSnapshot('resolved', request, options.resolvedMessages, options, context),
+			),
 		);
 
-		const requestJson = await writeJsonFile(paths.request, request, (value) =>
-			JSON.stringify(value, null, 2),
+		const requestJson = await writeJsonFile(
+			paths.request,
+			redactSensitiveJsonValue(request),
+			(value) => JSON.stringify(value, null, 2),
 		);
 
 		if (msg0 && paths.msg0) {
@@ -217,13 +232,21 @@ export function dumpLlmRequest(
 				toolSummary,
 			}),
 		);
-		logRequestDump(request, options, paths, requestJson.length, requestKind, context.requestKindReason);
+		logRequestDump(
+			request,
+			options,
+			paths,
+			requestJson.length,
+			requestKind,
+			context.requestKindReason,
+		);
 	});
 }
 
 export async function ensureRequestDumpRoot(globalStorageUri: vscode.Uri): Promise<vscode.Uri> {
 	const root = getRequestDumpBaseRootUri(globalStorageUri);
 	await mkdir(root.fsPath, { recursive: true });
+	await cleanupOldRequestDumps(globalStorageUri);
 	return root;
 }
 
@@ -389,7 +412,7 @@ async function writeDumpObservation(
 	await mkdir(baseRoot, { recursive: true });
 	await appendFile(
 		join(baseRoot, REQUEST_OBSERVATIONS_FILE),
-		`${safeStringify(observation)}\n`,
+		`${safeStringify(redactSensitiveJsonValue(observation))}\n`,
 		'utf-8',
 	);
 }
@@ -463,4 +486,32 @@ function getRequestDumpBaseRootUri(globalStorageUri: vscode.Uri): vscode.Uri {
 	}
 
 	return vscode.Uri.file(join(tmpdir(), 'qwen-request-dumps'));
+}
+
+async function cleanupOldRequestDumps(globalStorageUri: vscode.Uri): Promise<void> {
+	if (cleanupQueued) {
+		return;
+	}
+	cleanupQueued = true;
+
+	const baseRoot = getRequestDumpBaseRoot(globalStorageUri);
+	const cutoff = Date.now() - REQUEST_DUMP_MAX_AGE_MS;
+	try {
+		await mkdir(baseRoot, { recursive: true });
+		const entries = await readdir(baseRoot, { withFileTypes: true });
+		await Promise.all(
+			entries.map(async (entry) => {
+				if (entry.name === REQUEST_OBSERVATIONS_FILE) {
+					return;
+				}
+				const entryPath = join(baseRoot, entry.name);
+				const entryStat = await stat(entryPath);
+				if (entryStat.mtimeMs < cutoff) {
+					await rm(entryPath, { recursive: true, force: true });
+				}
+			}),
+		);
+	} catch (error) {
+		logger.warn('Failed to clean old request dumps', error);
+	}
 }

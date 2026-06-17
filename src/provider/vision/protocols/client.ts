@@ -1,4 +1,5 @@
 import type { CancellationToken } from 'vscode';
+import { RETRY_BASE_DELAY_MS, RETRY_MAX_DELAY_MS } from '../../../client/consts';
 import {
 	getNetworkErrorCategory,
 	getNetworkErrorCauseInfo,
@@ -20,11 +21,50 @@ import { resolveVisionEndpoint } from './url';
 
 const DEFAULT_TIMEOUT_MS = 30_000;
 
+export interface VisionProxyRequestOptions {
+	/** Per-attempt request timeout (ms). Falls back to the built-in default. */
+	timeoutMs?: number;
+	/** Extra attempts after the first for transient (429 / 5xx / network) failures. */
+	maxRetries?: number;
+}
+
 export class VisionProxyClient {
 	async describe(
 		config: VisionProxyConfig,
 		apiKey: string | undefined,
 		request: VisionDescriptionRequest,
+		options: VisionProxyRequestOptions = {},
+	): Promise<string> {
+		const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+		const maxRetries = Math.max(0, options.maxRetries ?? 0);
+
+		let attempt = 0;
+		for (;;) {
+			try {
+				return await this.describeOnce(config, apiKey, request, timeoutMs);
+			} catch (error) {
+				attempt += 1;
+				if (
+					attempt > maxRetries ||
+					request.token.isCancellationRequested ||
+					!(error instanceof VisionProxyError) ||
+					!isRetryableVisionProxyError(error)
+				) {
+					throw error;
+				}
+				await delay(getVisionRetryDelayMs(attempt), request.token);
+				if (request.token.isCancellationRequested) {
+					throw error;
+				}
+			}
+		}
+	}
+
+	private async describeOnce(
+		config: VisionProxyConfig,
+		apiKey: string | undefined,
+		request: VisionDescriptionRequest,
+		timeoutMs: number,
 	): Promise<string> {
 		if (request.token.isCancellationRequested) {
 			throw new VisionProxyError('cancelled', t('vision.proxy.error.cancelled'));
@@ -41,12 +81,13 @@ export class VisionProxyClient {
 			headers,
 			request,
 			apiKey,
+			timeoutMs,
 		);
 		const responseValue = await postJson(endpoint, {
 			context,
 			headers,
 			body,
-			timeoutMs: DEFAULT_TIMEOUT_MS,
+			timeoutMs,
 			token: request.token,
 		});
 
@@ -59,6 +100,50 @@ export class VisionProxyClient {
 			throw error;
 		}
 	}
+}
+
+/**
+ * Mirrors the main client's retry policy: retry HTTP 429 / 5xx, our own request
+ * timeout, and transient transport failures (interrupted/timeout/unreachable).
+ * Auth, not-found, payload-too-large, DNS, TLS, cancellation, and malformed
+ * responses are treated as permanent.
+ */
+function isRetryableVisionProxyError(error: VisionProxyError): boolean {
+	if (error.status !== undefined) {
+		return error.status === 429 || error.status >= 500;
+	}
+	if (error.code === 'timeout') {
+		return true;
+	}
+	if (error.code === 'network') {
+		const causeInfo =
+			error.cause instanceof Error ? getNetworkErrorCauseInfo(error.cause) : undefined;
+		const category = getNetworkErrorCategory(getNetworkErrorCode(causeInfo));
+		return category === 'interrupted' || category === 'timeout' || category === 'unreachable';
+	}
+	return false;
+}
+
+function getVisionRetryDelayMs(attempt: number): number {
+	const exponential = Math.min(RETRY_BASE_DELAY_MS * 2 ** (attempt - 1), RETRY_MAX_DELAY_MS);
+	return Math.round(Math.random() * exponential);
+}
+
+function delay(ms: number, token: CancellationToken): Promise<void> {
+	if (ms <= 0) {
+		return Promise.resolve();
+	}
+	return new Promise((resolve) => {
+		const timer = setTimeout(() => {
+			listener.dispose();
+			resolve();
+		}, ms);
+		const listener = token.onCancellationRequested(() => {
+			clearTimeout(timer);
+			listener.dispose();
+			resolve();
+		});
+	});
 }
 
 async function postJson(
@@ -183,6 +268,7 @@ function createVisionProxyRequestDiagnostics(
 	headers: Record<string, string>,
 	request: VisionDescriptionRequest,
 	apiKey: string | undefined,
+	timeoutMs: number = DEFAULT_TIMEOUT_MS,
 ): VisionProxyRequestDiagnostics {
 	return {
 		phase,
@@ -190,7 +276,7 @@ function createVisionProxyRequestDiagnostics(
 		apiType: config.apiType,
 		modelId: config.modelId,
 		endpoint,
-		timeoutMs: DEFAULT_TIMEOUT_MS,
+		timeoutMs,
 		hasApiKey: Boolean(apiKey?.trim()),
 		headerNames: Object.keys(headers).sort(),
 		imageCount: request.images.length,

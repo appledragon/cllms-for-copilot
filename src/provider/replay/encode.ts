@@ -1,10 +1,6 @@
 import vscode from 'vscode';
 import { safeStringify } from '../../json';
-import {
-	ENCODED_JSON_MARKER_PREFIX,
-	REPLAY_MARKER_MIME,
-	REPLAY_MARKER_WRITER_ID,
-} from './consts';
+import { ENCODED_JSON_MARKER_PREFIX, REPLAY_MARKER_MIME, REPLAY_MARKER_WRITER_ID } from './consts';
 import type { ReplayMarkerMetadata } from './types';
 
 const textEncoder = new TextEncoder();

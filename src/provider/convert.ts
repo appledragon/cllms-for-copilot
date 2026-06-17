@@ -1,4 +1,5 @@
 import vscode from 'vscode';
+import type { ReasoningReplayScope } from '../config';
 import { safeStringify } from '../json';
 import type { LlmImageContentPart, LlmMessage, LlmTool, LlmToolCall } from '../types';
 import { isImageDataPart } from './imageParts';
@@ -11,15 +12,27 @@ import { parseFirstReplayMarker } from './replay';
  * When `nativeVision` is true the selected model is vision-capable, so image
  * attachments are forwarded directly as OpenAI-compatible `image_url` content
  * parts instead of being resolved to text by the vision proxy.
+ *
+ * `reasoningReplayScope` controls whether reasoning_content is replayed for
+ * every assistant turn (`all`) or only the in-flight tool-call loop
+ * (`latest-tool-loop`); see {@link ReasoningReplayScope}.
  */
 export function convertMessages(
 	messages: readonly vscode.LanguageModelChatRequestMessage[],
 	isThinkingModel: boolean,
 	nativeVision = false,
+	reasoningReplayScope: ReasoningReplayScope = 'all',
 ): LlmMessage[] {
 	const result: LlmMessage[] = [];
+	// In `latest-tool-loop` mode, reasoning_content is only replayed for assistant
+	// turns at or after the most recent human user message; older turns are
+	// dropped to save tokens. `-1` keeps every turn (the `all` default).
+	const reasoningBoundaryIndex =
+		isThinkingModel && reasoningReplayScope === 'latest-tool-loop'
+			? findLatestHumanUserMessageIndex(messages)
+			: -1;
 
-	for (const message of messages) {
+	for (const [messageIndex, message] of messages.entries()) {
 		const role = mapRole(message.role);
 
 		let content = '';
@@ -70,7 +83,7 @@ export function convertMessages(
 					msg.tool_calls = toolCalls;
 				}
 
-				if (isThinkingModel) {
+				if (isThinkingModel && messageIndex >= reasoningBoundaryIndex) {
 					msg.reasoning_content = getReasoningContent(replayMarker, thinkingContent);
 				}
 
@@ -115,9 +128,7 @@ export function llmContentToText(content: LlmMessage['content']): string {
 	if (typeof content === 'string') {
 		return content;
 	}
-	return content
-		.map((part) => (part.type === 'text' ? part.text : '[image]'))
-		.join('');
+	return content.map((part) => (part.type === 'text' ? part.text : '[image]')).join('');
 }
 
 function toImageContentPart(part: vscode.LanguageModelDataPart): LlmImageContentPart {
@@ -136,6 +147,36 @@ function getReasoningContent(
 		return replayMarker.reasoningText;
 	}
 	return thinkingContent;
+}
+
+/**
+ * Index of the most recent real (human-authored) user message. Tool-result-only
+ * user turns are skipped so the boundary tracks actual user input, not the
+ * synthetic user messages VS Code uses to carry tool results.
+ */
+function findLatestHumanUserMessageIndex(
+	messages: readonly vscode.LanguageModelChatRequestMessage[],
+): number {
+	for (let index = messages.length - 1; index >= 0; index -= 1) {
+		const message = messages[index];
+		if (message.role !== vscode.LanguageModelChatMessageRole.User) {
+			continue;
+		}
+		if (message.content.some(isHumanUserMessagePart)) {
+			return index;
+		}
+	}
+	return -1;
+}
+
+function isHumanUserMessagePart(part: unknown): boolean {
+	if (part instanceof vscode.LanguageModelToolResultPart) {
+		return false;
+	}
+	if (part instanceof vscode.LanguageModelTextPart) {
+		return part.value.length > 0;
+	}
+	return true;
 }
 
 function isLanguageModelThinkingPart(part: unknown): part is vscode.LanguageModelThinkingPart {

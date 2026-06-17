@@ -73,6 +73,17 @@ export function getConstructorName(value: unknown): string | undefined {
 	return constructorName || undefined;
 }
 
+const SENSITIVE_KEY_PATTERN =
+	/(^|[-_])(?:api[-_]?key|authorization|bearer|client[-_]?secret|credential|password|secret|token)([-_]|$)/i;
+
+export function redactSensitiveJsonValue(value: unknown): unknown {
+	return JSON.parse(
+		JSON.stringify(sanitizeJsonValue(value), (key, entryValue: unknown) =>
+			typeof key === 'string' && SENSITIVE_KEY_PATTERN.test(key) ? '[REDACTED]' : entryValue,
+		) ?? 'null',
+	) as unknown;
+}
+
 export function formatRole(role: vscode.LanguageModelChatMessageRole): string {
 	if (role === vscode.LanguageModelChatMessageRole.User) return 'user';
 	if (role === vscode.LanguageModelChatMessageRole.Assistant) return 'assistant';

@@ -99,17 +99,20 @@ export function streamChatCompletion({
 			token,
 		)
 		.then(undefined, (error) => {
-			reportSkippedReplayMarkerIfNeeded(
+			// Preserve any reasoning produced before the failure so the next turn's
+			// assistant message keeps a non-empty reasoning_content (an empty hole
+			// breaks Qwen-style prefix caches and can be rejected by some providers).
+			reportReplayMarkerOnce(
 				prepared,
+				progress,
 				state,
 				token.isCancellationRequested ? 'cancelled' : 'stream-error',
-				error,
 			);
 			throw error;
 		})
 		.then(() => {
 			if (token.isCancellationRequested) {
-				reportSkippedReplayMarkerIfNeeded(prepared, state, 'cancelled');
+				reportReplayMarkerOnce(prepared, progress, state, 'cancelled');
 			}
 		})
 		.finally(() => {
@@ -140,25 +143,6 @@ function reportReplayMarkerOnce(
 	}
 	state.replayMarkerReported = true;
 	reportReplayMarker(prepared, progress, state, trigger);
-}
-
-function reportSkippedReplayMarkerIfNeeded(
-	prepared: PreparedChatRequest,
-	state: ResponseStreamState,
-	reason: 'cancelled' | 'stream-error',
-	error?: unknown,
-): void {
-	if (state.replayMarkerReported) {
-		return;
-	}
-	state.replayMarkerReported = true;
-	prepared.cacheDiagnostics.onReplayMarkerReport({
-		status: 'skipped',
-		reason,
-		visionTextChars: prepared.visionMarkerTextChars,
-		reasoningTextChars: state.accumulatedReasoning.length || undefined,
-		error,
-	});
 }
 
 function reportReplayMarker(

@@ -1,11 +1,12 @@
-import { VisionProxyClient } from '../../protocols/client';
+import { VisionProxyClient, type VisionProxyRequestOptions } from '../../protocols/client';
 import type { VisionDescriptionRequest, VisionDescriber, VisionProxyConfig } from '../../types';
 
 export function createEndpointVisionDescriber(
 	config: VisionProxyConfig,
 	apiKey: string | undefined,
+	options: VisionProxyRequestOptions = {},
 ): VisionDescriber {
-	return new EndpointVisionDescriber(config, apiKey);
+	return new EndpointVisionDescriber(config, apiKey, options);
 }
 
 class EndpointVisionDescriber implements VisionDescriber {
@@ -15,6 +16,7 @@ class EndpointVisionDescriber implements VisionDescriber {
 	constructor(
 		private readonly config: VisionProxyConfig,
 		private readonly apiKey: string | undefined,
+		private readonly options: VisionProxyRequestOptions = {},
 	) {}
 
 	get id(): string {
@@ -22,6 +24,6 @@ class EndpointVisionDescriber implements VisionDescriber {
 	}
 
 	describe(request: VisionDescriptionRequest): Promise<string> {
-		return this.client.describe(this.config, this.apiKey, request);
+		return this.client.describe(this.config, this.apiKey, request, this.options);
 	}
 }

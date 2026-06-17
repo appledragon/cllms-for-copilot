@@ -106,9 +106,7 @@ export async function createHttpError(
 			getRequestDiagnosticMessage(context),
 			`statusText=${safeStringify(response.statusText || 'unknown')}`,
 			serverError.type ? `serverType=${safeStringify(serverError.type)}` : undefined,
-			redactedServerMessage
-				? `serverMessage=${safeStringify(redactedServerMessage)}`
-				: undefined,
+			redactedServerMessage ? `serverMessage=${safeStringify(redactedServerMessage)}` : undefined,
 			redactedResponseText && redactedResponseText !== redactedServerMessage
 				? `body=${safeStringify(truncateSingleLine(redactedResponseText))}`
 				: undefined,
@@ -348,7 +346,10 @@ function getProviderHttpErrorLink(
 	return providerId && statusKey ? API_PROVIDER_HTTP_ERROR_LINKS[statusKey][providerId] : undefined;
 }
 
-function getCreateApiKeyUrl(status: number, providerId: ApiProviderId | undefined): string | undefined {
+function getCreateApiKeyUrl(
+	status: number,
+	providerId: ApiProviderId | undefined,
+): string | undefined {
 	return status === 401 ? getProviderHttpErrorLink(status, providerId)?.url : undefined;
 }
 
@@ -366,12 +367,8 @@ function getRequestDiagnosticMessage(context: RequestErrorContext): string {
 		request.temperature !== undefined ? `temperature=${request.temperature}` : undefined,
 		request.top_p !== undefined ? `topP=${request.top_p}` : undefined,
 		request.max_tokens !== undefined ? `maxTokens=${request.max_tokens}` : undefined,
-		request.enable_thinking !== undefined
-			? `enableThinking=${request.enable_thinking}`
-			: undefined,
-		request.thinking_budget !== undefined
-			? `thinkingBudget=${request.thinking_budget}`
-			: undefined,
+		request.enable_thinking !== undefined ? `enableThinking=${request.enable_thinking}` : undefined,
+		request.thinking_budget !== undefined ? `thinkingBudget=${request.thinking_budget}` : undefined,
 		request.tool_choice ? `toolChoice=${safeStringify(request.tool_choice)}` : undefined,
 		`toolCount=${request.tools?.length ?? 0}`,
 		`messageCount=${request.messages.length}`,

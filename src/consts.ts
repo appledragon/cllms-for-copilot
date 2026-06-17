@@ -229,6 +229,9 @@ export const API_KEY_SECRET = 'cllms.apiKey';
 /** memento key tracking whether the welcome walkthrough has been shown. */
 export const WELCOME_SHOWN_KEY = 'cllms.welcomeShown';
 
+/** memento key tracking whether the verbose dump privacy warning has been shown. */
+export const REQUEST_DUMP_WARNING_SHOWN_KEY = 'cllms.requestDumpWarningShown';
+
 // ---- Walkthrough ----
 
 /** Walkthrough contribution ID. */

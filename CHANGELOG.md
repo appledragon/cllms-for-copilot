@@ -1,7 +1,23 @@
 # Changelog
 
+## Unreleased
+
+- **Cost & cache optimizations**:
+  - **Reasoning replay on cancel/error** — when a streamed thinking response is cancelled or errors after reasoning was produced, the replay marker is now still written so the assistant turn keeps a non-empty `reasoning_content`, avoiding an empty hole that breaks Qwen-style prefix caches.
+  - Add `cllms.experimental.replayReasoningScope` (`all` | `latest-tool-loop`) to optionally drop `reasoning_content` from older turns and only replay the in-flight tool-call loop, saving input tokens on long sessions.
+  - Add `cllms.experimental.sortToolsForCache` to stably sort the request `tools` array by name so host-side tool reordering no longer invalidates the provider's context-cache prefix.
+  - `CLLMs: Show Session Cost` now reports the session **average context-cache hit rate** and splits billed cost into **utility vs agent** tiers.
+  - **Vision proxy**: session-level description cache keyed by image content (avoids re-describing the same image on retries / re-attachments), light retry on transient (429/5xx/network) failures, and a configurable `cllms.visionProxy.timeoutMs`.
+  - **Utility cost control**: add `cllms.utility.maxOutputTokens` to cap output for one-shot helper requests, `cllms.utility.modelIdByProvider` to route utility requests to a cheaper model on the same provider, and a `CLLMs: Configure Utility Model` command that guides VS Code's native `chat.utilityModel` / `chat.utilitySmallModel` routing.
+- Document provider models that were already present in the model registry but missing from the changelog and READMEs, and complete their i18n (en/zh-cn) `detail`/`tooltip` coverage plus registry-consistency tests:
+  - **Qwen (DashScope)**: Qwen3.7 Max, Qwen3.7 Plus, Qwen3.6 Flash (with `-intl` variants).
+  - **z.ai (Zhipu GLM)**: GLM-5, GLM-5-Turbo, GLM-4.7, GLM-4.7-FlashX, and the native-vision GLM-5V-Turbo.
+  - **MiniMax**: MiniMax-M2.5 (with `-intl` variant).
+  - **Tencent Hunyuan (混元)**: Tencent HY 2.0 Instruct.
+
 ## 0.1.9
 
+- Add a **CLLMs Activity Bar view** to manage providers: a sidebar tree lists every provider with its API-key status, inline/context actions (set/clear key, test connection, open API key/usage/status pages), and an expandable read-only model list. The view toolbar links to the vision proxy, settings, logs, and the getting-started walkthrough.
 - Add **GLM-5.2** model — z.ai's latest flagship with 1M context, 128K output tokens, open-source SOTA coding capability, and project-scale engineering context support. Supports deep thinking mode, tool calling, and MCP. Pricing: ¥8 / ¥2 (cached) input, ¥28 output per 1M tokens.
 
 ## 0.1.8
