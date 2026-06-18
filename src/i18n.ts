@@ -627,7 +627,8 @@ const en: Translations = {
 	'providers.action.statusPage': 'Status',
 	'providers.action.providerSettings': 'Settings',
 	'providers.summary': '{0} / {1} configured',
-	'providers.noneConfigured': 'No providers configured yet — click “Setup” on any provider to begin.',
+	'providers.noneConfigured':
+		'No providers configured yet — click “Setup” on any provider to begin.',
 	'providers.loading': 'Loading…',
 	'providers.error': 'Could not load provider status.',
 	'providers.retry': 'Retry',

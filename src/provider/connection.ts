@@ -22,7 +22,10 @@ export type ConnectionTestOutcome =
 	| 'cancelled';
 
 /** Notified once per test with the resolved provider id and its outcome. */
-export type ConnectionTestObserver = (providerId: ProviderId, outcome: ConnectionTestOutcome) => void;
+export type ConnectionTestObserver = (
+	providerId: ProviderId,
+	outcome: ConnectionTestOutcome,
+) => void;
 
 export interface StaleModelOverride {
 	readonly apiModelId: string;
