@@ -9,8 +9,8 @@ import {
 import { MODELS, PROVIDERS } from '../consts';
 import { t } from '../i18n';
 import { logger } from '../logger';
-import type { LlmUsage, ProviderDefinition, ProviderId } from '../types';
-import { runConnectionTest } from './connection';
+import type { LlmUsage, ProviderConnectivity, ProviderDefinition, ProviderId } from '../types';
+import { type ConnectionTestOutcome, runConnectionTest } from './connection';
 import { createCacheDiagnosticsRecorder, dumpProviderInput } from './debug';
 import { hashString, stableStringify } from './debug/trace-utils';
 import { toChatInfo } from './models';
@@ -46,6 +46,13 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 	private readonly globalStorageUri: vscode.Uri;
 	private readonly onDidChangeLanguageModelChatInformationEmitter = new vscode.EventEmitter<void>();
 	private isActive = true;
+
+	/**
+	 * Latest connection-test result per provider, surfaced by the providers view.
+	 * In-memory only (resets on reload) and cleared whenever a key changes so the
+	 * status dot never shows stale reachability.
+	 */
+	private readonly connectivity = new Map<ProviderId, ProviderConnectivity>();
 
 	readonly onDidChangeLanguageModelChatInformation =
 		this.onDidChangeLanguageModelChatInformationEmitter.event;
@@ -86,8 +93,8 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 		this.sessionCostStatusBar.command = 'cllms.showSessionCost';
 		this.sessionCostStatusBar.tooltip = t('sessionCost.statusBarTooltip');
 
-		const providerSecretKeys = new Set(
-			Object.values(PROVIDERS).map((provider) => provider.apiKeySecret),
+		const providerIdBySecret = new Map(
+			Object.values(PROVIDERS).map((provider) => [provider.apiKeySecret, provider.id]),
 		);
 
 		context.subscriptions.push(
@@ -96,9 +103,10 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 			// Settings-based fallback API key + base URL changes (any provider).
 			vscode.workspace.onDidChangeConfiguration((e) => {
 				if (e.affectsConfiguration('cllms')) {
-					// A settings-fallback API key may have changed; drop all cached
-					// key-presence so the picker re-reads the latest state.
+					// A settings-fallback API key or base URL may have changed; drop all
+					// cached key-presence and connectivity so both are re-derived.
 					this.authManager.invalidatePresence();
+					this.connectivity.clear();
 					this.invalidateCurrencyAndRefreshModels();
 				}
 			}),
@@ -106,8 +114,10 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 			// When another window sets/clears any provider's API key, refresh this
 			// window's model picker so the warning state stays in sync.
 			context.secrets.onDidChange((e) => {
-				if (providerSecretKeys.has(e.key)) {
+				const providerId = providerIdBySecret.get(e.key);
+				if (providerId) {
 					this.authManager.invalidatePresence(e.key);
+					this.connectivity.delete(providerId);
 					this.invalidateCurrencyAndRefreshModels();
 				}
 			}),
@@ -123,6 +133,8 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 		}
 		const saved = await this.authManager.promptForApiKey(provider);
 		if (saved) {
+			// A new key is unverified until the next connection test.
+			this.connectivity.delete(provider.id);
 			this.invalidateCurrencyAndRefreshModels();
 			void this.notifyApiKeySaved(provider).catch((error) =>
 				logger.warn('Failed to present API key follow-up actions', error),
@@ -198,6 +210,7 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 			return;
 		}
 		await this.authManager.deleteApiKey(provider);
+		this.connectivity.delete(provider.id);
 		this.invalidateCurrencyAndRefreshModels();
 		vscode.window.showInformationMessage(t('auth.removedFor', provider.name));
 	}
@@ -230,6 +243,36 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 			providers.map((provider) => this.authManager.hasApiKey(provider)),
 		);
 		return new Map(providers.map((provider, index) => [provider.id, states[index]]));
+	}
+
+	/**
+	 * Snapshot of the latest connection-test result per provider for the
+	 * providers view. Pairs with {@link onDidChangeLanguageModelChatInformation},
+	 * which fires after each test so the view can re-render the status dot.
+	 */
+	getProviderConnectivity(): ReadonlyMap<ProviderId, ProviderConnectivity> {
+		return this.connectivity;
+	}
+
+	private recordConnectivity(providerId: ProviderId, outcome: ConnectionTestOutcome): void {
+		switch (outcome) {
+			case 'success':
+			case 'empty-model-list':
+			case 'stale-overrides':
+				this.connectivity.set(providerId, 'ok');
+				break;
+			case 'failed':
+				this.connectivity.set(providerId, 'error');
+				break;
+			case 'no-key':
+				this.connectivity.delete(providerId);
+				break;
+			case 'cancelled':
+				// Leave the previous result intact; still refresh so the view can
+				// clear any transient "testing…" indicator.
+				break;
+		}
+		this.onDidChangeLanguageModelChatInformationEmitter.fire();
 	}
 
 	/**
@@ -306,7 +349,9 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 	/** Validate a provider's key + endpoint and discover its model list. */
 	async testConnection(providerId?: ProviderId): Promise<void> {
 		const provider = providerId ? PROVIDERS[providerId] : undefined;
-		await runConnectionTest(this.authManager, provider);
+		await runConnectionTest(this.authManager, provider, (id, outcome) =>
+			this.recordConnectivity(id, outcome),
+		);
 	}
 
 	/** Show the accumulated session cost breakdown with a reset action. */

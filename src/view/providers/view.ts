@@ -1,12 +1,16 @@
 import vscode from 'vscode';
 import { PROVIDERS } from '../../consts';
+import { t } from '../../i18n';
 import { logger } from '../../logger';
-import type { ProviderId } from '../../types';
+import type { ProviderConnectivity, ProviderId } from '../../types';
 import { getProvidersViewHtml } from './html';
-import { buildProvidersViewState } from './state';
+import { buildProvidersViewState, type ProvidersViewState } from './state';
 
 /** Resolves per-provider API-key presence (boolean only, never the value). */
 export type ProviderKeyStateProvider = () => Promise<Map<ProviderId, boolean>>;
+
+/** Resolves the latest connection-test result per provider (synchronous snapshot). */
+export type ProviderConnectivityProvider = () => ReadonlyMap<ProviderId, ProviderConnectivity>;
 
 /**
  * Provider-scoped webview actions, mapped to the existing `cllms.providers.*`
@@ -50,11 +54,18 @@ export class ProvidersWebviewViewProvider implements vscode.WebviewViewProvider 
 	constructor(
 		private readonly getKeyStates: ProviderKeyStateProvider,
 		private readonly onRefresh: vscode.Event<void>,
+		private readonly getConnectivity: ProviderConnectivityProvider = () => new Map(),
 	) {}
 
 	resolveWebviewView(webviewView: vscode.WebviewView): void {
 		this.view = webviewView;
 		webviewView.webview.options = { enableScripts: true, localResourceRoots: [] };
+		// Paint a loading shell synchronously so the view never flashes blank while
+		// key presence resolves; the real state is posted right after.
+		webviewView.webview.html = getProvidersViewHtml(webviewView.webview, {
+			phase: 'loading',
+			providers: [],
+		});
 
 		const refreshSub = this.onRefresh(() => this.refresh());
 		const messageSub = webviewView.webview.onDidReceiveMessage((message: unknown) => {
@@ -74,7 +85,7 @@ export class ProvidersWebviewViewProvider implements vscode.WebviewViewProvider 
 			}
 		});
 
-		void this.render();
+		this.refresh();
 	}
 
 	/** Re-post the latest state to the live view (used by `cllms.providers.refresh`). */
@@ -84,25 +95,18 @@ export class ProvidersWebviewViewProvider implements vscode.WebviewViewProvider 
 		);
 	}
 
-	private async render(): Promise<void> {
-		const view = this.view;
-		if (!view) {
-			return;
-		}
-		try {
-			const state = buildProvidersViewState(await this.getKeyStates());
-			view.webview.html = getProvidersViewHtml(view.webview, state);
-		} catch (error) {
-			logger.warn('Failed to render providers webview', error);
-		}
-	}
-
 	private async postState(): Promise<void> {
 		const view = this.view;
 		if (!view) {
 			return;
 		}
-		const state = buildProvidersViewState(await this.getKeyStates());
+		let state: ProvidersViewState;
+		try {
+			state = buildProvidersViewState(await this.getKeyStates(), this.getConnectivity());
+		} catch (error) {
+			logger.warn('Failed to build providers view state', error);
+			state = { phase: 'error', providers: [], errorMessage: t('providers.error') };
+		}
 		await view.webview.postMessage({ type: 'state', value: state });
 	}
 

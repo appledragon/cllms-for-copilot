@@ -2,9 +2,9 @@ import assert from "node:assert/strict";
 import { beforeEach, describe, it } from "node:test";
 import vscode from "vscode";
 import { getProvidersViewHtml } from "../src/view/providers/html";
-import type { ProvidersViewState } from "../src/view/providers/state";
+import { buildProvidersViewState, type ProvidersViewState } from "../src/view/providers/state";
 import { ProvidersWebviewViewProvider } from "../src/view/providers/view";
-import type { ProviderId } from "../src/types";
+import type { ProviderConnectivity, ProviderId } from "../src/types";
 
 interface VscodeShim {
   __state: {
@@ -110,6 +110,23 @@ describe("ProvidersWebviewViewProvider", () => {
     );
   });
 
+  it("posts an error phase when provider state resolution fails", async () => {
+    const provider = new ProvidersWebviewViewProvider(async () => {
+      throw new Error("boom");
+    }, noOpEvent);
+    const fake = createFakeWebviewView();
+
+    provider.resolveWebviewView(fake.view);
+    await flushAsyncWork();
+
+    const stateMessage = fake.postedMessages.at(-1) as
+      | { type?: string; value?: ProvidersViewState }
+      | undefined;
+    assert.equal(stateMessage?.type, "state");
+    assert.equal(stateMessage?.value?.phase, "error");
+    assert.ok((stateMessage?.value?.errorMessage ?? "").length > 0);
+  });
+
   it("handles refresh messages from the webview", async () => {
     const provider = new ProvidersWebviewViewProvider(
       async () => new Map<ProviderId, boolean>([["zai", true]]),
@@ -157,6 +174,16 @@ describe("getProvidersViewHtml", () => {
     assert.equal(csp.includes("unsafe-inline"), false);
   });
 
+  it("includes the icon sprite, summary, and view-state regions", () => {
+    const html = getProvidersViewHtml(createFakeWebviewView().webview, { providers: [] });
+
+    assert.match(html, /class="icon-sprite"/);
+    assert.match(html, /<symbol id="i-key"/);
+    assert.match(html, /id="summary"/);
+    assert.match(html, /id="view-state"/);
+    assert.equal(html.includes("global-actions"), false);
+  });
+
   it("escapes provider state before embedding it in script JSON", () => {
     const state: ProvidersViewState = {
       providers: [
@@ -164,6 +191,7 @@ describe("getProvidersViewHtml", () => {
           id: "qwen",
           name: "<Provider>",
           configured: false,
+          statusKind: "not-configured",
           endpoint: "https://example.test/<endpoint>",
           statusLabel: "not <configured>",
           models: [
@@ -188,6 +216,37 @@ describe("getProvidersViewHtml", () => {
     assert.match(html, /\\u003c\/script>\\u003cscript>alert\(1\)\\u003c\/script>/);
     assert.match(html, /line\\u2028separator/);
     assert.match(html, /tip\\u2029separator/);
+  });
+});
+
+describe("buildProvidersViewState", () => {
+  beforeEach(() => {
+    shim.__reset();
+    (vscode.env as { language: string }).language = "en";
+  });
+
+  it("derives status kind from key presence and connectivity", () => {
+    const state = buildProvidersViewState(
+      new Map<ProviderId, boolean>([
+        ["qwen", true],
+        ["zai", true],
+        ["hunyuan", true],
+        ["minimax", false],
+      ]),
+      new Map<ProviderId, ProviderConnectivity>([
+        ["qwen", "ok"],
+        ["zai", "error"],
+      ]),
+    );
+    const byId = (id: ProviderId) => state.providers.find((entry) => entry.id === id);
+
+    assert.equal(state.phase, "ready");
+    assert.equal(byId("qwen")?.statusKind, "ok");
+    assert.equal(byId("zai")?.statusKind, "error");
+    assert.equal(byId("hunyuan")?.statusKind, "configured");
+    assert.equal(byId("minimax")?.statusKind, "not-configured");
+    assert.equal(state.configuredCount, 3);
+    assert.equal(state.totalCount, state.providers.length);
   });
 });
 

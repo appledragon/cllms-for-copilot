@@ -24,6 +24,7 @@ export function registerProvidersView(
 	const viewProvider = new ProvidersWebviewViewProvider(
 		() => provider.getProviderKeyStates(),
 		provider.onDidChangeLanguageModelChatInformation,
+		() => provider.getProviderConnectivity(),
 	);
 
 	context.subscriptions.push(
