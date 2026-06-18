@@ -8,8 +8,14 @@ export interface SessionCostLineItem {
 	readonly promptTokens: number;
 	/** Portion of promptTokens billed at the cheaper cache-hit tier. */
 	readonly cachedPromptTokens: number;
+	/** Context-cache hit rate for this model (0-100), if it sent prompt tokens. */
+	readonly cacheHitRate?: number;
 	readonly completionTokens: number;
 	readonly cost: number;
+	/** Estimated amount saved by cached input versus billing every input token at cache-miss price. */
+	readonly cacheSavings: number;
+	/** Average estimated cost per request for this model. */
+	readonly averageCost: number;
 }
 
 export interface SessionCostSummary {
@@ -30,6 +36,8 @@ export interface SessionCostSummary {
 	readonly utilityCost: number;
 	/** Billed cost attributed to user-facing/agent (non-utility) requests. */
 	readonly agentCost: number;
+	/** Estimated session-wide amount saved by cached input versus cache-miss pricing. */
+	readonly totalCacheSavings: number;
 }
 
 interface MutableEntry {
@@ -39,9 +47,11 @@ interface MutableEntry {
 	cachedPromptTokens: number;
 	completionTokens: number;
 	cost: number;
+	cacheSavings: number;
 }
 
 const TOKENS_PER_PRICING_UNIT = 1_000_000;
+const UNKNOWN_UNBILLED_MODEL_ID = 'unknown';
 
 /**
  * Accumulates approximate spend for the current VS Code session from streamed
@@ -64,10 +74,11 @@ export class SessionCostTracker {
 	private totalCost = 0;
 
 	record(
-		model: ModelDefinition,
+		model: ModelDefinition | undefined,
 		usage: LlmUsage,
 		currency: PricingCurrency | undefined,
 		costTier: RequestCostTier = 'agent',
+		unbilledModelId: string = UNKNOWN_UNBILLED_MODEL_ID,
 	): void {
 		if (!currency) {
 			return;
@@ -80,29 +91,34 @@ export class SessionCostTracker {
 		}
 		this.currency = currency;
 
-		// Cache health spans the whole session, including requests we cannot price.
-		const cacheHealthCachedTokens = Math.max(0, usage.prompt_tokens_details?.cached_tokens ?? 0);
-		this.totalPromptTokens += Math.max(0, usage.prompt_tokens);
-		this.totalCachedPromptTokens += Math.min(
-			Math.max(0, usage.prompt_tokens),
-			cacheHealthCachedTokens,
+		const promptTokens = Math.max(0, usage.prompt_tokens);
+		const cachedTokens = Math.min(
+			promptTokens,
+			Math.max(0, usage.prompt_tokens_details?.cached_tokens ?? 0),
 		);
+		const completionTokens = Math.max(0, usage.completion_tokens);
 
-		const pricing = model.pricing?.[currency];
+		// Cache health spans the whole session, including requests we cannot price.
+		this.totalPromptTokens += promptTokens;
+		this.totalCachedPromptTokens += cachedTokens;
+
+		const pricing = model?.pricing?.[currency];
 		if (!pricing) {
 			// Keep the cost total honest: this request is real but cannot be
 			// priced, so record it as unbilled instead of silently dropping it.
 			this.unbilledRequests += 1;
-			this.unbilledModelIds.add(model.id);
+			this.unbilledModelIds.add(model?.id ?? unbilledModelId);
 			return;
 		}
 
-		const cachedTokens = Math.max(0, usage.prompt_tokens_details?.cached_tokens ?? 0);
-		const nonCachedPromptTokens = Math.max(0, usage.prompt_tokens - cachedTokens);
+		const nonCachedPromptTokens = promptTokens - cachedTokens;
 		const cost =
 			(nonCachedPromptTokens * pricing.cacheMissInput +
 				cachedTokens * pricing.cacheHitInput +
-				usage.completion_tokens * pricing.output) /
+				completionTokens * pricing.output) /
+			TOKENS_PER_PRICING_UNIT;
+		const cacheSavings =
+			(cachedTokens * Math.max(0, pricing.cacheMissInput - pricing.cacheHitInput)) /
 			TOKENS_PER_PRICING_UNIT;
 
 		const entry = this.entries.get(model.id) ?? {
@@ -112,12 +128,14 @@ export class SessionCostTracker {
 			cachedPromptTokens: 0,
 			completionTokens: 0,
 			cost: 0,
+			cacheSavings: 0,
 		};
 		entry.requests += 1;
-		entry.promptTokens += usage.prompt_tokens;
+		entry.promptTokens += promptTokens;
 		entry.cachedPromptTokens += cachedTokens;
-		entry.completionTokens += usage.completion_tokens;
+		entry.completionTokens += completionTokens;
 		entry.cost += cost;
+		entry.cacheSavings += cacheSavings;
 		this.entries.set(model.id, entry);
 		this.totalCost += cost;
 		if (costTier === 'utility') {
@@ -151,8 +169,11 @@ export class SessionCostTracker {
 				requests: entry.requests,
 				promptTokens: entry.promptTokens,
 				cachedPromptTokens: entry.cachedPromptTokens,
+				cacheHitRate: getCacheHitRate(entry.promptTokens, entry.cachedPromptTokens),
 				completionTokens: entry.completionTokens,
 				cost: entry.cost,
+				cacheSavings: entry.cacheSavings,
+				averageCost: entry.requests > 0 ? entry.cost / entry.requests : 0,
 			}))
 			.sort((a, b) => b.cost - a.cost);
 		const billedRequests = items.reduce((sum, item) => sum + item.requests, 0);
@@ -167,6 +188,7 @@ export class SessionCostTracker {
 			totalCachedPromptTokens: this.totalCachedPromptTokens,
 			utilityCost: this.utilityCost,
 			agentCost: this.agentCost,
+			totalCacheSavings: items.reduce((sum, item) => sum + item.cacheSavings, 0),
 		};
 	}
 
@@ -180,6 +202,13 @@ export class SessionCostTracker {
 		this.agentCost = 0;
 		this.totalCost = 0;
 	}
+}
+
+function getCacheHitRate(promptTokens: number, cachedPromptTokens: number): number | undefined {
+	if (promptTokens <= 0) {
+		return undefined;
+	}
+	return Math.min(100, Math.max(0, (cachedPromptTokens / promptTokens) * 100));
 }
 
 /** Format a cost amount with its currency symbol (4 dp for sub-cent precision). */

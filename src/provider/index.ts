@@ -1,16 +1,27 @@
 import vscode from 'vscode';
 import { AuthManager } from '../auth';
-import { getDebugLoggingEnabled, getStabilizeToolListEnabled } from '../config';
+import {
+	getDebugLoggingEnabled,
+	getReplayReasoningScope,
+	getSortToolsForCacheEnabled,
+	getStabilizeToolListEnabled,
+} from '../config';
 import { MODELS, PROVIDERS } from '../consts';
 import { t } from '../i18n';
 import { logger } from '../logger';
 import type { LlmUsage, ProviderDefinition, ProviderId } from '../types';
 import { runConnectionTest } from './connection';
 import { createCacheDiagnosticsRecorder, dumpProviderInput } from './debug';
+import { hashString, stableStringify } from './debug/trace-utils';
 import { toChatInfo } from './models';
+import {
+	selectSessionOptimizationHints,
+	type SessionOptimizationHintId,
+	type SessionOptimizationSignals,
+} from './pricing/cache-hints';
 import { BalanceCurrencyResolver } from './pricing/currency';
 import { formatSessionCost, SessionCostTracker, type SessionCostSummary } from './pricing/session';
-import { prepareChatRequest } from './request';
+import { prepareChatRequest, type PreparedChatRequest } from './request';
 import {
 	ClassificationStats,
 	classifyProviderRequestDetailed,
@@ -51,6 +62,8 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 	/** Approximate spend accrued from streamed usage during this session. */
 	private readonly sessionCost = new SessionCostTracker();
 	private readonly sessionCostStatusBar: vscode.StatusBarItem;
+	private readonly previousToolHashesByScope = new Map<string, string>();
+	private lastOptimizationSignals: SessionOptimizationSignals | undefined;
 
 	/**
 	 * Adaptive chars-per-token ratio, calibrated from actual usage data.
@@ -313,6 +326,9 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 				item.promptTokens,
 				item.completionTokens,
 				item.cachedPromptTokens,
+				formatPercent(item.cacheHitRate),
+				formatSessionCost(item.cacheSavings, summary.currency),
+				formatSessionCost(item.averageCost, summary.currency),
 			),
 		);
 
@@ -330,39 +346,73 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 				),
 			);
 		}
+		if (summary.totalCacheSavings > 0) {
+			notes.push(
+				t(
+					'sessionCost.cacheSavingsNote',
+					formatSessionCost(summary.totalCacheSavings, summary.currency),
+				),
+			);
+		}
 		if (summary.unbilledRequests > 0) {
 			notes.push(
 				t('sessionCost.unbilledNote', summary.unbilledRequests, summary.unbilledModelCount),
 			);
 		}
+		const hints = selectSessionOptimizationHints(summary, this.lastOptimizationSignals).map(
+			(hint) => t(getSessionOptimizationHintKey(hint)),
+		);
 
-		const detail = [lineItems.join('\n'), notes.join('\n')]
+		const detail = [
+			lineItems.join('\n'),
+			notes.join('\n'),
+			hints.length > 0 ? [t('sessionCost.hintsTitle'), ...hints].join('\n') : '',
+		]
 			.filter((section) => section.length > 0)
 			.join('\n\n');
 
+		const resetAction = t('sessionCost.reset');
+		const advancedSettingsAction = t('sessionCost.action.openAdvancedSettings');
+		const utilityModelAction = t('sessionCost.action.configureUtilityModel');
+		const usagePageAction = t('sessionCost.action.openUsagePage');
+		const primaryProvider = getPrimaryBilledProvider(summary);
+		const actions = [
+			advancedSettingsAction,
+			utilityModelAction,
+			...(primaryProvider ? [usagePageAction] : []),
+			resetAction,
+		];
 		const choice = await vscode.window.showInformationMessage(
 			t('sessionCost.summaryTitle', formatSessionCost(summary.totalCost, summary.currency)),
 			{ modal: true, detail },
-			t('sessionCost.reset'),
+			...actions,
 		);
-		if (choice === t('sessionCost.reset')) {
+		if (choice === resetAction) {
 			this.sessionCost.reset();
 			this.updateSessionCostStatusBar();
 			void vscode.window.showInformationMessage(t('sessionCost.resetDone'));
+		} else if (choice === advancedSettingsAction) {
+			await vscode.commands.executeCommand('cllms.openSettings');
+		} else if (choice === utilityModelAction) {
+			await vscode.commands.executeCommand('cllms.configureUtilityModel');
+		} else if (choice === usagePageAction && primaryProvider) {
+			await vscode.env.openExternal(vscode.Uri.parse(primaryProvider.externalUrls.usage));
 		}
 	}
 
-	private recordSessionUsage(modelId: string, usage: LlmUsage, requestKind: RequestKind): void {
-		const model = MODELS.find((m) => m.id === modelId);
-		if (!model) {
-			return;
-		}
+	private recordSessionUsage(
+		billableModelId: string,
+		usage: LlmUsage,
+		requestKind: RequestKind,
+	): void {
+		const model = MODELS.find((m) => m.id === billableModelId);
 		const costTier: RequestCostTier = isUtilityRequestKind(requestKind) ? 'utility' : 'agent';
 		this.sessionCost.record(
 			model,
 			usage,
 			this.balanceCurrencyResolver.getDisplayCurrency(),
 			costTier,
+			billableModelId,
 		);
 		this.updateSessionCostStatusBar();
 	}
@@ -454,6 +504,7 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 			cacheDiagnostics: this.cacheDiagnostics,
 			getVisionDescriber: () => this.vision.get(),
 		});
+		this.rememberSessionOptimizationSignals(prepared, toolFlow.initialResponseNotice !== undefined);
 
 		return streamChatCompletion({
 			prepared,
@@ -467,8 +518,37 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 			setCharsPerToken: (charsPerToken) => {
 				this.charsPerToken = charsPerToken;
 			},
-			recordUsage: (usage) => this.recordSessionUsage(modelInfo.id, usage, prepared.requestKind),
+			recordUsage: (usage) =>
+				this.recordSessionUsage(prepared.billableModelId, usage, prepared.requestKind),
 		});
+	}
+
+	private rememberSessionOptimizationSignals(
+		prepared: PreparedChatRequest,
+		hasUnexpandedActivateTools: boolean,
+	): void {
+		const toolsHash = hashString(stableStringify(prepared.request.tools ?? []));
+		const scopeKey = `${prepared.requestKind}:${prepared.request.model}`;
+		const previousToolsHash = this.previousToolHashesByScope.get(scopeKey);
+		this.previousToolHashesByScope.delete(scopeKey);
+		this.previousToolHashesByScope.set(scopeKey, toolsHash);
+		while (this.previousToolHashesByScope.size > 50) {
+			const oldestKey = this.previousToolHashesByScope.keys().next().value;
+			if (oldestKey === undefined) {
+				break;
+			}
+			this.previousToolHashesByScope.delete(oldestKey);
+		}
+
+		this.lastOptimizationSignals = {
+			requestKind: prepared.requestKind,
+			toolCount: prepared.request.tools?.length ?? 0,
+			toolsChanged: previousToolsHash !== undefined && previousToolsHash !== toolsHash,
+			hasUnexpandedActivateTools,
+			sortToolsForCacheEnabled: getSortToolsForCacheEnabled(),
+			stabilizeToolListEnabled: getStabilizeToolListEnabled(),
+			replayReasoningScope: getReplayReasoningScope(),
+		};
 	}
 
 	async provideTokenCount(
@@ -485,6 +565,10 @@ function joinInitialResponseNotices(...notices: (string | undefined)[]): string 
 	return joined || undefined;
 }
 
+function formatPercent(value: number | undefined): string {
+	return value === undefined ? t('sessionCost.notAvailable') : value.toFixed(0);
+}
+
 /** Session-wide context-cache hit rate (0-100), or undefined when no prompt tokens. */
 function getSessionCacheHitRate(summary: SessionCostSummary): number | undefined {
 	if (summary.totalPromptTokens <= 0) {
@@ -492,6 +576,28 @@ function getSessionCacheHitRate(summary: SessionCostSummary): number | undefined
 	}
 	const rate = (summary.totalCachedPromptTokens / summary.totalPromptTokens) * 100;
 	return Math.min(100, Math.max(0, rate));
+}
+
+function getSessionOptimizationHintKey(hint: SessionOptimizationHintId): string {
+	switch (hint) {
+		case 'sort-tools-for-cache':
+			return 'sessionCost.hint.sortToolsForCache';
+		case 'stabilize-tool-list':
+			return 'sessionCost.hint.stabilizeToolList';
+		case 'latest-tool-loop':
+			return 'sessionCost.hint.latestToolLoop';
+		case 'utility-cost-control':
+			return 'sessionCost.hint.utilityCostControl';
+	}
+}
+
+function getPrimaryBilledProvider(summary: SessionCostSummary): ProviderDefinition | undefined {
+	const primaryModelId = summary.items[0]?.modelId;
+	if (!primaryModelId) {
+		return undefined;
+	}
+	const model = MODELS.find((candidate) => candidate.id === primaryModelId);
+	return model ? PROVIDERS[model.provider] : undefined;
 }
 
 interface ProviderQuickPickItem extends vscode.QuickPickItem {

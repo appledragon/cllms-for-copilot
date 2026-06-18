@@ -141,7 +141,7 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 | `cllms.visionPrompt` | *(内置)* | 通过视觉代理描述图片附件时使用的提示词 |
 | `cllms.visionProxy.timeoutMs` | `30000` | API 端点视觉代理的单次请求超时（毫秒），取值范围 `1000`–`120000`。调小可让缓慢的视觉端点尽快失败，而不是拖住整条对话 |
 | `cllms.utility.maxOutputTokens` | `0` | 仅对一次性 utility/辅助请求（对话标题、提交/分支信息、内联进度、重命名建议、提示分类、设置解析、todo 跟踪）封顶输出 token。`0` 关闭。与 `cllms.maxTokens` 取较小值，不影响 agent/对话轮次 |
-| `cllms.utility.modelIdByProvider` | `{}` | 将 utility/辅助请求在同一服务商下路由到更便宜的 API 模型，按服务商 id 配置（如 `{ "qwen": "qwen-flash" }`）。默认空（不降级）。费用估算仍按所选模型计算，但服务商实际按更便宜的模型计费。条件允许时优先使用 VS Code 原生 `chat.utilityModel`（`CLLMs: 配置辅助请求模型`） |
+| `cllms.utility.modelIdByProvider` | `{}` | 将 utility/辅助请求在同一服务商下路由到更便宜的 API 模型，按服务商 id 配置（如 `{ "qwen": "qwen-flash" }`）。默认空（不降级）。如果 CLLMs 识别该覆盖模型，会话费用按覆盖模型的内置价格估算；否则该请求会显示为未计费。条件允许时优先使用 VS Code 原生 `chat.utilityModel`（`CLLMs: 配置辅助请求模型`） |
 | `cllms.experimental.stabilizeToolList` | `false` | 实验性设置。尝试预先激活 VS Code/Copilot 的虚拟工具，让 `tools` 参数在多轮对话中更完整、更稳定。当已启用工具跨轮次变化时，可能提高上下文缓存命中率。代价是 input tokens 可能增加；缓存命中的 input tokens 单价更低，但仍会计入用量。64 个或更少已启用工具时通常无需开启，除非工具列表仍在跨轮次变化；超过 128 个已启用工具时不建议开启 |
 | `cllms.experimental.sortToolsForCache` | `false` | 实验性设置。将请求中的 `tools` 数组按名称字母序稳定排序，避免 VS Code/Copilot 跨轮次调整工具顺序导致服务商上下文缓存前缀失效。可与 `stabilizeToolList` 协同 |
 | `cllms.experimental.replayReasoningScope` | `all` | 实验性设置。控制思考模型回放多少 `reasoning_content`。`all` 回放每个 assistant 轮次（兼容性最好、前缀字节稳定）；`latest-tool-loop` 仅回放当前 tool-call 循环并丢弃更早轮次，在长会话中节省 input tokens |
