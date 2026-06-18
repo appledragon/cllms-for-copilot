@@ -19,6 +19,7 @@ interface VscodeShim {
     activatedExtensions: string[];
     treeDataProviders: Map<string, unknown>;
     treeViews: Array<{ viewId: string }>;
+    webviewViewProviders: Map<string, { provider: unknown; options?: unknown }>;
   };
   __reset(): void;
   __setConfiguration(
@@ -213,10 +214,9 @@ describe("runtime integration", () => {
     }
     assert.equal(shim.__state.uriHandlers.length, 1);
     assert.equal(shim.__state.languageModelProviders.has("cllms"), true);
-    assert.equal(shim.__state.treeDataProviders.has("cllms.providers"), true);
     assert.ok(
-      shim.__state.treeViews.some((view) => view.viewId === "cllms.providers"),
-      "cllms.providers tree view should be created",
+      shim.__state.webviewViewProviders.has("cllms.providers"),
+      "cllms.providers webview view provider should be registered",
     );
     assert.deepEqual(shim.__state.activatedExtensions, ["github.copilot-chat"]);
     assert.equal(

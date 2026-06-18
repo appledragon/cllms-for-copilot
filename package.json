@@ -90,7 +90,8 @@
       "cllms": [
         {
           "id": "cllms.providers",
-          "name": "%cllms.view.providers.name%"
+          "name": "%cllms.view.providers.name%",
+          "type": "webview"
         }
       ]
     },
@@ -276,63 +277,6 @@
           "command": "cllms.openWalkthrough",
           "when": "view == cllms.providers",
           "group": "1_config@5"
-        }
-      ],
-      "view/item/context": [
-        {
-          "command": "cllms.providers.setApiKey",
-          "when": "view == cllms.providers && viewItem == cllmsProvider",
-          "group": "inline@2"
-        },
-        {
-          "command": "cllms.providers.testConnection",
-          "when": "view == cllms.providers && viewItem == cllmsProvider",
-          "group": "inline@3"
-        },
-        {
-          "command": "cllms.providers.setupProvider",
-          "when": "view == cllms.providers && viewItem == cllmsProvider",
-          "group": "inline@1"
-        },
-        {
-          "command": "cllms.providers.setupProvider",
-          "when": "view == cllms.providers && viewItem == cllmsProvider",
-          "group": "1_key@0"
-        },
-        {
-          "command": "cllms.providers.setApiKey",
-          "when": "view == cllms.providers && viewItem == cllmsProvider",
-          "group": "1_key@1"
-        },
-        {
-          "command": "cllms.providers.clearApiKey",
-          "when": "view == cllms.providers && viewItem == cllmsProvider",
-          "group": "1_key@2"
-        },
-        {
-          "command": "cllms.providers.testConnection",
-          "when": "view == cllms.providers && viewItem == cllmsProvider",
-          "group": "1_key@3"
-        },
-        {
-          "command": "cllms.providers.openApiKeyPage",
-          "when": "view == cllms.providers && viewItem == cllmsProvider",
-          "group": "2_links@1"
-        },
-        {
-          "command": "cllms.providers.openUsagePage",
-          "when": "view == cllms.providers && viewItem == cllmsProvider",
-          "group": "2_links@2"
-        },
-        {
-          "command": "cllms.providers.openStatusPage",
-          "when": "view == cllms.providers && viewItem == cllmsProvider",
-          "group": "2_links@3"
-        },
-        {
-          "command": "cllms.providers.openSettings",
-          "when": "view == cllms.providers && viewItem == cllmsProvider",
-          "group": "3_settings@1"
         }
       ]
     },

@@ -3,31 +3,34 @@ import { PROVIDERS, WALKTHROUGH_ID } from '../consts';
 import { logger } from '../logger';
 import { LlmChatProvider } from '../provider';
 import type { ProviderId } from '../types';
-import { ProvidersTreeDataProvider, type ProvidersNode } from '../view/providersTree';
+import { ProvidersWebviewViewProvider } from '../view/providers/view';
 
 /**
- * Register the CLLMs "Providers" Activity Bar view and its provider-scoped
- * commands. The view reuses the provider's auth + change event so its status
- * icons stay in sync with the model picker.
+ * Argument passed to the provider-scoped commands. The providers webview sends a
+ * synthetic node for the acted-on provider; invoking a command without one (e.g.
+ * from the command palette) falls back to the interactive provider picker.
+ */
+type ProvidersNode = { readonly kind: 'provider'; readonly providerId: ProviderId };
+
+/**
+ * Register the CLLMs "Providers" Activity Bar view (a custom webview) and its
+ * provider-scoped commands. The view reuses the provider's auth + change event
+ * so its status stays in sync with the model picker.
  */
 export function registerProvidersView(
 	context: vscode.ExtensionContext,
 	provider: LlmChatProvider,
 ): void {
-	const treeDataProvider = new ProvidersTreeDataProvider(
+	const viewProvider = new ProvidersWebviewViewProvider(
 		() => provider.getProviderKeyStates(),
 		provider.onDidChangeLanguageModelChatInformation,
 	);
 
-	const treeView = vscode.window.createTreeView('cllms.providers', {
-		treeDataProvider,
-		showCollapseAll: true,
-	});
-
 	context.subscriptions.push(
-		treeDataProvider,
-		treeView,
-		vscode.commands.registerCommand('cllms.providers.refresh', () => treeDataProvider.refresh()),
+		vscode.window.registerWebviewViewProvider(ProvidersWebviewViewProvider.viewId, viewProvider, {
+			webviewOptions: { retainContextWhenHidden: true },
+		}),
+		vscode.commands.registerCommand('cllms.providers.refresh', () => viewProvider.refresh()),
 		vscode.commands.registerCommand('cllms.providers.setupProvider', (node?: ProvidersNode) =>
 			provider.setupProvider(getProviderId(node)),
 		),

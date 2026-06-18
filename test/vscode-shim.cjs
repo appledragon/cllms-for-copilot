@@ -221,6 +221,7 @@ const state = {
 	workspaceConfiguration: new Map(),
 	treeDataProviders: new Map(),
 	treeViews: [],
+	webviewViewProviders: new Map(),
 };
 
 const configurationEmitter = new EventEmitter();
@@ -444,6 +445,7 @@ function resetState() {
 	state.workspaceConfiguration.clear();
 	state.treeDataProviders.clear();
 	state.treeViews.length = 0;
+	state.webviewViewProviders.clear();
 	vscodeStub.env.language = 'en';
 	vscodeStub.env.remoteName = undefined;
 }
@@ -517,6 +519,10 @@ const vscodeStub = {
 		registerTreeDataProvider: (viewId, treeDataProvider) => {
 			state.treeDataProviders.set(viewId, treeDataProvider);
 			return createDisposable(() => state.treeDataProviders.delete(viewId));
+		},
+		registerWebviewViewProvider: (viewId, provider, options) => {
+			state.webviewViewProviders.set(viewId, { provider, options });
+			return createDisposable(() => state.webviewViewProviders.delete(viewId));
 		},
 		withProgress: async (_options, task) =>
 			task(
