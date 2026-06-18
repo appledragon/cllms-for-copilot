@@ -163,7 +163,7 @@ CLLMs 可以让一次性的 Copilot 辅助请求比真正的 agent 轮次跑得�
 - `cllms.utility.maxOutputTokens`：对 utility 请求封顶输出 token（与 `cllms.maxTokens` 取较小值）。
 - `cllms.utility.modelIdByProvider`：在同一 provider/key 下把 API `model` 换成更便宜的模型（如 `{ "qwen": "qwen-flash" }`）。
 
-两者**默认关闭** —— 不配置则什么都不变。模型选择器仍显示你所选的模型（属服务端静默替换），且当 `cllms.debugMode` 为 `metadata` 或 `verbose` 时每次降级/封顶都会记录日志。会话费用估算仍按所选模型计价，但服务商实际按更便宜的模型计费。
+两者**默认关闭** —— 不配置则什么都不变。模型选择器仍显示你所选的模型（属服务端静默替换），且当 `cllms.debugMode` 为 `metadata` 或 `verbose` 时每次降级/封顶都会记录日志。如果 CLLMs 识别该覆盖模型，会话费用按覆盖模型的内置价格估算；否则该请求会显示为未计费。
 
 **路径 B —— VS Code 原生（`chat.utilityModel` / `chat.utilitySmallModel`）。** 这里是 **VS Code / Copilot 自己**判定哪些是辅助请求并完成路由 —— 在请求到达任何服务商**之前**。CLLMs 不参与该决策，只是为宿主选中的那个模型提供服务。运行 `CLLMs: 配置辅助请求模型` 即可写入这两个原生设置。
 

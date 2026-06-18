@@ -8,7 +8,7 @@ two cases:
 - **A.** Add a model to an **existing provider** (Qwen, z.ai/GLM, MiniMax, Xiaomi MiMo, Moonshot Kimi, or Tencent Hunyuan).
 - **B.** Add a model under a **brand-new provider** (a different vendor).
 
-Most of the time you want case **A**, which is just two required edits.
+Most of the time you want case **A**, which is three required registry/config edits.
 
 ---
 
@@ -20,8 +20,8 @@ Most of the time you want case **A**, which is just two required edits.
 |---|---|---|---|
 | 1 | `src/consts.ts` | A `ModelDefinition` entry in `MODELS` | ✅ |
 | 2 | `src/i18n.ts` | `model.<id>.detail` + `model.<id>.tooltip` (EN **and** 中文) | ✅ |
-| 3 | `package.json` + `package.nls*.json` | A `modelIdOverrides` entry for the new id | ⬜ recommended |
-| 4 | `test/registry.test.ts` | Update affected assertions | ✅ if they change |
+| 3 | `package.json` + `package.nls*.json` | A `modelIdOverrides` entry for the new id | ✅ |
+| 4 | `test/registry*.test.ts` | Update affected assertions | ✅ if they change |
 | 5 | `README*.md` / `CHANGELOG.md` | Document the model | ⬜ recommended |
 
 ### Step 1 — Register the model (`src/consts.ts`)
@@ -31,7 +31,7 @@ entries, GLM models in the z.ai block, etc.
 
 ```ts
 {
-  id: 'qwen3-coder-flash',          // API model id sent to the provider (overridable, see step 3)
+  id: 'qwen3-coder-flash',          // CLLMs/Copilot model id; defaults to the API id unless overridden (see step 3)
   name: 'Qwen3 Coder Flash',        // display name in the Copilot model picker
   provider: 'qwen',                 // ProviderId — MUST exist in PROVIDERS ('qwen' | 'qwen-intl' | 'zai' | 'minimax' | 'minimax-intl' | 'xiaomi' | 'moonshot' | 'moonshot-intl' | 'hunyuan')
   family: 'qwen',                   // grouping metadata shown by Copilot
@@ -55,8 +55,10 @@ entries, GLM models in the z.ai block, etc.
 
 Field notes:
 
-- **`id`** is what gets sent to the API as the `model`. It can be remapped per
-  install via `modelIdOverrides` (step 3), so keep it the official model name.
+- **`id`** is the model id shown to VS Code/Copilot and used as the default API
+  `model`. The actual wire/API id is `getApiModelId(provider, id)`, so provider
+  aliases such as `*-intl` can map to the vendor's official model id via
+  `modelIdOverrides` (step 3).
 - **`provider`** wires the model to its base URL, API key, error links, and
   thinking serialization. It must be a key of `PROVIDERS`.
 - **`capabilities.thinking`** — when `true`, the per-model **Thinking Effort**
@@ -84,13 +86,14 @@ the `zh` and `en` dictionaries, using the model `id` in the key:
   'Faster Qwen3 Coder Flash model for quick agentic coding and tool calls.',
 ```
 
-If you skip this, the model still works but falls back to the `detail` string
-from step 1 and shows no tooltip.
+The runtime can fall back to the `detail` string from step 1, but repository
+tests require localized detail and tooltip strings for every model.
 
-### Step 3 — Expose a model-ID override (recommended, `package.json`)
+### Step 3 — Expose a model-ID override (`package.json`)
 
 This lets users point the model at a compatible third-party / self-hosted
-endpoint. Add an entry to the matching provider's `modelIdOverrides` setting
+endpoint and documents the default wire/API model id for provider aliases. Add
+an entry to the matching provider's `modelIdOverrides` setting
 (`cllms.modelIdOverrides` for Qwen, `cllms.qwenIntl.modelIdOverrides` for Qwen International, `cllms.zai.modelIdOverrides`,
 `cllms.minimax.modelIdOverrides`, `cllms.minimaxIntl.modelIdOverrides`, `cllms.xiaomi.modelIdOverrides`,
 `cllms.moonshot.modelIdOverrides`, `cllms.moonshotIntl.modelIdOverrides`, `cllms.hunyuan.modelIdOverrides`):
@@ -118,10 +121,11 @@ Then add the referenced description string to **both** localization files:
 "cllms.config.modelIdOverrides.qwen3-coder-flash.description": "Qwen3 Coder Flash 的 API 模型 ID。",
 ```
 
-> The model works **without** this step (the `id` is used as-is by default via
-> `getApiModelId`). It is only for discoverable, validated overrides.
+> The runtime can use the `id` as-is when no override exists, but this repository
+> treats the setting as required so the override is discoverable, localized, and
+> schema-validated.
 
-### Step 4 — Update tests (`test/registry.test.ts`)
+### Step 4 — Update tests (`test/registry*.test.ts`)
 
 A few assertions enumerate the exact model set and must be updated when it
 changes, e.g.:
@@ -129,8 +133,9 @@ changes, e.g.:
 - `marks only the known native-vision models` — update if `imageInput: true`.
 - The per-provider list checks (e.g. the MiniMax model list).
 
-The generic invariants (unique ids, provider exists, pricing ordering) cover
-your new model automatically.
+The generic invariants (unique ids, provider exists, pricing ordering,
+`modelIdOverrides` schema/default coverage, and package NLS entries) cover your
+new model automatically.
 
 ### Step 5 — Verify
 

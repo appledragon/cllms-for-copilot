@@ -50,9 +50,7 @@ export function buildProvidersViewState(
 				name: provider.name,
 				configured,
 				endpoint: getBaseUrl(provider),
-				statusLabel: configured
-					? t('auth.providerConfigured')
-					: t('auth.providerNotConfigured'),
+				statusLabel: configured ? t('auth.providerConfigured') : t('auth.providerNotConfigured'),
 				models: MODELS.filter((model) => model.provider === provider.id).map(toModelView),
 			};
 		}),

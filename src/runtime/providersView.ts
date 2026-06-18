@@ -10,7 +10,7 @@ import { ProvidersWebviewViewProvider } from '../view/providers/view';
  * synthetic node for the acted-on provider; invoking a command without one (e.g.
  * from the command palette) falls back to the interactive provider picker.
  */
-type ProvidersNode = { readonly kind: 'provider'; readonly providerId: ProviderId };
+type ProvidersNode = { readonly kind: 'provider'; readonly providerId: unknown };
 
 /**
  * Register the CLLMs "Providers" Activity Bar view (a custom webview) and its
@@ -62,7 +62,14 @@ export function registerProvidersView(
 }
 
 function getProviderId(node: ProvidersNode | undefined): ProviderId | undefined {
-	return node?.kind === 'provider' ? node.providerId : undefined;
+	if (node?.kind !== 'provider') {
+		return undefined;
+	}
+	if (isProviderId(node.providerId)) {
+		return node.providerId;
+	}
+	logger.warn(`Ignoring provider command with invalid provider id: ${String(node.providerId)}`);
+	return undefined;
 }
 
 function openProviderUrl(
@@ -77,4 +84,8 @@ function openProviderUrl(
 	void vscode.env
 		.openExternal(vscode.Uri.parse(url))
 		.then(undefined, (error) => logger.warn(`Failed to open provider URL: ${url}`, error));
+}
+
+function isProviderId(value: unknown): value is ProviderId {
+	return typeof value === 'string' && Object.prototype.hasOwnProperty.call(PROVIDERS, value);
 }

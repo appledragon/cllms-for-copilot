@@ -101,16 +101,35 @@ describe("package.json provider settings", () => {
         );
       }
     });
+
+    it(`modelIdOverrides defaults cover every model for provider "${providerId}"`, () => {
+      const configKey = `cllms.${provider.modelIdOverridesSetting}`;
+      const prop = configProps[configKey] as Record<string, unknown>;
+      const defaults = (prop?.default ?? {}) as Record<string, unknown>;
+
+      for (const modelId of modelsForProvider) {
+        const defaultModelId = defaults[modelId];
+        if (typeof defaultModelId !== "string") {
+          assert.fail(`model "${modelId}" is missing from package.json "${configKey}.default"`);
+        }
+        assert.ok(
+          defaultModelId.length > 0,
+          `${configKey}.default["${modelId}"] should be non-empty`,
+        );
+      }
+    });
   }
 
-  it("defines modelIdOverrides only for models that exist in MODELS", () => {
-    // Gather all model IDs that appear in any provider's modelIdOverrides.
+  it("defines modelIdOverrides properties and defaults only for models that exist in MODELS", () => {
+    // Gather all model IDs that appear in any provider's modelIdOverrides schema/default map.
     const packageModelIds = new Set<string>();
     for (const provider of Object.values(PROVIDERS)) {
       const configKey = `cllms.${provider.modelIdOverridesSetting}`;
       const prop = configProps[configKey] as Record<string, unknown> | undefined;
-      if (!prop?.properties) continue;
-      for (const modelId of Object.keys(prop.properties as Record<string, unknown>)) {
+      for (const modelId of Object.keys((prop?.properties ?? {}) as Record<string, unknown>)) {
+        packageModelIds.add(modelId);
+      }
+      for (const modelId of Object.keys((prop?.default ?? {}) as Record<string, unknown>)) {
         packageModelIds.add(modelId);
       }
     }
@@ -248,6 +267,23 @@ describe("package.json optimization settings", () => {
       nlsZh["cllms.command.configureUtilityModel"]?.length,
       "missing zh-cn title for cllms.configureUtilityModel",
     );
+  });
+
+  it("limits utility model overrides to known provider ids", () => {
+    const prop = configProps["cllms.utility.modelIdByProvider"] as
+      | Record<string, unknown>
+      | undefined;
+    const properties = (prop?.properties ?? {}) as Record<string, unknown>;
+
+    assert.equal(prop?.additionalProperties, false);
+    assert.deepEqual(Object.keys(properties).sort(), Object.keys(PROVIDERS).sort());
+    for (const providerId of Object.keys(PROVIDERS)) {
+      assert.equal(
+        (properties[providerId] as Record<string, unknown> | undefined)?.type,
+        "string",
+        `utility model override for "${providerId}" should be a string`,
+      );
+    }
   });
 });
 

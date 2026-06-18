@@ -165,7 +165,7 @@ CLLMs can run lightweight, one-shot Copilot helper requests more cheaply than yo
 - `cllms.utility.maxOutputTokens` caps output tokens for utility requests (combined with `cllms.maxTokens` by taking the smaller value).
 - `cllms.utility.modelIdByProvider` swaps the API `model` to a cheaper one on the same provider/key (e.g. `{ "qwen": "qwen-flash" }`).
 
-Both are **off by default** — with no config, nothing changes. The model picker still shows your selected model (this is a silent, server-side swap), and each downgrade/cap is logged when `cllms.debugMode` is `metadata` or `verbose`. The session-cost estimate still prices your selected model, while the provider bills the cheaper one.
+Both are **off by default** — with no config, nothing changes. The model picker still shows your selected model (this is a silent, server-side swap), and each downgrade/cap is logged when `cllms.debugMode` is `metadata` or `verbose`. Session cost uses the override model's built-in pricing when CLLMs recognizes that model; otherwise the request is shown as unbilled.
 
 **Path B — VS Code native (`chat.utilityModel` / `chat.utilitySmallModel`).** Here **VS Code / Copilot itself** decides which requests are utility and routes them — before they reach any provider. CLLMs does not participate in that decision; it just serves whichever model the host picked. Run `CLLMs: Configure Utility Model` to set these native settings.
 

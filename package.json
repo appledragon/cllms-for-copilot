@@ -366,8 +366,35 @@
         "cllms.utility.modelIdByProvider": {
           "type": "object",
           "default": {},
-          "additionalProperties": {
-            "type": "string"
+          "additionalProperties": false,
+          "properties": {
+            "qwen": {
+              "type": "string"
+            },
+            "qwen-intl": {
+              "type": "string"
+            },
+            "zai": {
+              "type": "string"
+            },
+            "minimax": {
+              "type": "string"
+            },
+            "minimax-intl": {
+              "type": "string"
+            },
+            "xiaomi": {
+              "type": "string"
+            },
+            "moonshot": {
+              "type": "string"
+            },
+            "moonshot-intl": {
+              "type": "string"
+            },
+            "hunyuan": {
+              "type": "string"
+            }
           },
           "markdownDescription": "%cllms.config.utility.modelIdByProvider.description%"
         },

@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, it } from "node:test";
 import vscode from "vscode";
 import { PROVIDERS, WELCOME_SHOWN_KEY, MODELS } from "../src/consts";
 import { t } from "../src/i18n";
+import { formatSessionCost } from "../src/provider/pricing/session";
 import { activate, deactivate } from "../src/runtime";
 
 interface VscodeShim {
@@ -229,6 +230,29 @@ describe("runtime integration", () => {
     );
   });
 
+  it("ignores invalid provider command nodes without opening external links", async () => {
+    const context = createTestContext({
+      globalState: { [WELCOME_SHOWN_KEY]: true },
+    });
+
+    await activate(context);
+    await flushAsyncWork();
+
+    await assert.doesNotReject(async () => {
+      await vscode.commands.executeCommand("cllms.providers.openUsagePage", {
+        kind: "provider",
+        providerId: "missing-provider",
+      });
+    });
+    assert.equal(shim.__state.openedExternal.length, 0);
+
+    await vscode.commands.executeCommand("cllms.providers.openUsagePage", {
+      kind: "provider",
+      providerId: "qwen",
+    });
+    assert.equal(shim.__state.openedExternal.at(-1)?.toString(), PROVIDERS.qwen.externalUrls.usage);
+  });
+
   it("opens the welcome walkthrough only when no provider key is configured", async () => {
     const context = createTestContext();
 
@@ -305,6 +329,8 @@ describe("runtime integration", () => {
     const selectedModel = MODELS.find((model) => model.id === "qwen3-coder-plus");
     assert.ok(utilityModel);
     assert.ok(selectedModel);
+    const utilityPricing = utilityModel.pricing?.USD;
+    assert.ok(utilityPricing);
 
     globalThis.fetch = (async (_input, init) => {
       requestBody = JSON.parse(String(init?.body));
@@ -360,7 +386,10 @@ describe("runtime integration", () => {
 
       await vscode.commands.executeCommand("cllms.showSessionCost");
       const costMessage = shim.__state.infoMessages.at(-1);
-      assert.ok(costMessage?.message.includes("$2.4000"), JSON.stringify(costMessage));
+      assert.ok(
+        costMessage?.message.includes(formatSessionCost(utilityPricing.output, "USD")),
+        JSON.stringify(costMessage),
+      );
       assert.ok((costMessage?.items ?? []).includes(t("sessionCost.action.openAdvancedSettings")));
       assert.ok((costMessage?.items ?? []).includes(t("sessionCost.action.configureUtilityModel")));
       assert.ok((costMessage?.items ?? []).includes(t("sessionCost.action.openUsagePage")));
