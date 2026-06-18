@@ -139,6 +139,7 @@ export function getProvidersViewStyle(): string {
 			background: var(--vscode-button-hoverBackground);
 		}
 		button.icon-button {
+			position: relative;
 			padding: 4px;
 			width: 26px;
 			height: 26px;
@@ -148,6 +149,29 @@ export function getProvidersViewStyle(): string {
 		}
 		button.icon-button:hover {
 			background: var(--vscode-toolbar-hoverBackground);
+		}
+		button.icon-button[data-tooltip]:hover::after,
+		button.icon-button[data-tooltip]:focus-visible::after {
+			content: attr(data-tooltip);
+			position: absolute;
+			left: 50%;
+			bottom: calc(100% + 6px);
+			transform: translateX(-50%);
+			padding: 2px 6px;
+			max-width: 260px;
+			white-space: nowrap;
+			color: var(--vscode-editorHoverWidget-foreground, var(--vscode-foreground));
+			background: var(
+				--vscode-editorHoverWidget-background,
+				var(--vscode-editorWidget-background, #252526)
+			);
+			border: 1px solid var(--vscode-editorHoverWidget-border, var(--vscode-panel-border, transparent));
+			border-radius: 3px;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+			font-size: 11px;
+			line-height: 1.3;
+			pointer-events: none;
+			z-index: 20;
 		}
 		button.danger:hover {
 			color: var(--vscode-errorForeground, var(--vscode-foreground));

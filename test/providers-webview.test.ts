@@ -181,6 +181,7 @@ describe("getProvidersViewHtml", () => {
     assert.match(html, /<symbol id="i-key"/);
     assert.match(html, /id="summary"/);
     assert.match(html, /id="view-state"/);
+    assert.match(html, /dataset\.tooltip = title/);
     assert.equal(html.includes("global-actions"), false);
   });
 

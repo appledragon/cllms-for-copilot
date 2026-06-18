@@ -73,6 +73,7 @@ export function getProvidersViewScript(initialState: string, initialStrings: str
 				button.dataset.provider = providerId;
 			}
 			button.title = title;
+			button.dataset.tooltip = title;
 			button.setAttribute('aria-label', ariaLabel);
 			button.appendChild(svgIcon(iconName));
 			return button;
@@ -116,7 +117,8 @@ export function getProvidersViewScript(initialState: string, initialStrings: str
 				return textButton(label, action, provider.id, primary, label + ' — ' + name);
 			}
 			function ib(iconName, label, action, danger) {
-				return iconButton(iconName, label, label + ' — ' + name, action, provider.id, danger);
+				const hint = label + ' — ' + name;
+				return iconButton(iconName, hint, hint, action, provider.id, danger);
 			}
 
 			if (!provider.configured) {
