@@ -1,7 +1,12 @@
 # Changelog
 
-## Unreleased
+## 0.2.0
 
+- **Providers webview UI improvements**:
+  - Status text ("Connected" / "configured") now displayed in green, matching the status dot color.
+  - Removed duplicate native browser tooltips on icon buttons (CSS tooltip remains).
+  - Removed provider name from button tooltips for a cleaner look.
+  - Removed the Status button from provider cards (redundant with other actions).
 - **Cost & cache optimizations**:
   - **Reasoning replay on cancel/error** — when a streamed thinking response is cancelled or errors after reasoning was produced, the replay marker is now still written so the assistant turn keeps a non-empty `reasoning_content`, avoiding an empty hole that breaks Qwen-style prefix caches.
   - Add `cllms.experimental.replayReasoningScope` (`all` | `latest-tool-loop`) to optionally drop `reasoning_content` from older turns and only replay the in-flight tool-call loop, saving input tokens on long sessions.

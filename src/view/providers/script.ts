@@ -72,7 +72,6 @@ export function getProvidersViewScript(initialState: string, initialStrings: str
 			if (providerId) {
 				button.dataset.provider = providerId;
 			}
-			button.title = title;
 			button.dataset.tooltip = title;
 			button.setAttribute('aria-label', ariaLabel);
 			button.appendChild(svgIcon(iconName));
@@ -117,8 +116,7 @@ export function getProvidersViewScript(initialState: string, initialStrings: str
 				return textButton(label, action, provider.id, primary, label + ' — ' + name);
 			}
 			function ib(iconName, label, action, danger) {
-				const hint = label + ' — ' + name;
-				return iconButton(iconName, hint, hint, action, provider.id, danger);
+				return iconButton(iconName, label, label + ' — ' + name, action, provider.id, danger);
 			}
 
 			if (!provider.configured) {
@@ -126,7 +124,6 @@ export function getProvidersViewScript(initialState: string, initialStrings: str
 				actions.appendChild(tb(strings.actionSetApiKey, 'setApiKey', false));
 				actions.appendChild(el('span', 'spacer'));
 				actions.appendChild(ib('i-link', strings.actionApiKeyPage, 'openApiKeyPage'));
-				actions.appendChild(ib('i-pulse', strings.actionStatusPage, 'openStatusPage'));
 				return actions;
 			}
 
@@ -148,7 +145,6 @@ export function getProvidersViewScript(initialState: string, initialStrings: str
 			actions.appendChild(ib('i-trash', strings.actionClearApiKey, 'clearApiKey', true));
 			actions.appendChild(ib('i-link', strings.actionApiKeyPage, 'openApiKeyPage'));
 			actions.appendChild(ib('i-graph', strings.actionUsagePage, 'openUsagePage'));
-			actions.appendChild(ib('i-pulse', strings.actionStatusPage, 'openStatusPage'));
 			actions.appendChild(ib('i-sliders', strings.actionProviderSettings, 'openProviderSettings'));
 			return actions;
 		}

@@ -90,6 +90,10 @@ export function getProvidersViewStyle(): string {
 			font-size: 11px;
 			white-space: nowrap;
 		}
+		.card.status-ok .card-status,
+		.card.status-configured .card-status {
+			color: var(--vscode-charts-green, #89d185);
+		}
 		.card.status-error .card-status {
 			color: var(--vscode-charts-red, #f14c4c);
 		}
