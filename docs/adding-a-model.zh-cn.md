@@ -7,7 +7,7 @@
 - **A.** 给**已有 Provider**（Qwen、z.ai/GLM、MiniMax、小米 MiMo、Moonshot Kimi、腾讯混元）新增模型。
 - **B.** 新增一个**全新 Provider**（不同厂商）下的模型。
 
-大多数情况属于 **A**，只需两处必改。
+大多数情况属于 **A**，需要三处注册/配置改动。
 
 ---
 
@@ -19,8 +19,8 @@
 |---|---|---|---|
 | 1 | `src/consts.ts` | 在 `MODELS` 中新增一条 `ModelDefinition` | ✅ |
 | 2 | `src/i18n.ts` | `model.<id>.detail` + `model.<id>.tooltip`（中文**和**英文） | ✅ |
-| 3 | `package.json` + `package.nls*.json` | 新增对应的 `modelIdOverrides` 条目 | ⬜ 推荐 |
-| 4 | `test/registry.test.ts` | 更新受影响的断言 | ✅ 若有变化 |
+| 3 | `package.json` + `package.nls*.json` | 新增对应的 `modelIdOverrides` 条目 | ✅ |
+| 4 | `test/registry*.test.ts` | 更新受影响的断言 | ✅ 若有变化 |
 | 5 | `README*.md` / `CHANGELOG.md` | 补充文档 | ⬜ 推荐 |
 
 ### 步骤 1 — 注册模型（`src/consts.ts`）
@@ -30,7 +30,7 @@ z.ai 区块里，依此类推。
 
 ```ts
 {
-  id: 'qwen3-coder-flash',          // 发送给服务商的 API 模型 id（可被覆盖，见步骤 3）
+  id: 'qwen3-coder-flash',          // CLLMs/Copilot 模型 id；默认作为 API id，可被覆盖（见步骤 3）
   name: 'Qwen3 Coder Flash',        // 在 Copilot 模型选择器中显示的名称
   provider: 'qwen',                 // ProviderId —— 必须存在于 PROVIDERS（'qwen' | 'qwen-intl' | 'zai' | 'minimax' | 'minimax-intl' | 'xiaomi' | 'moonshot' | 'moonshot-intl' | 'hunyuan'）
   family: 'qwen',                   // Copilot 用于分组的元数据
@@ -54,8 +54,9 @@ z.ai 区块里，依此类推。
 
 字段说明：
 
-- **`id`** 即作为 `model` 发送给 API 的值。它可以按安装环境通过
-  `modelIdOverrides`（步骤 3）重映射，因此这里填官方模型名即可。
+- **`id`** 是展示给 VS Code/Copilot 的模型 id，也会默认作为 API 的 `model`。
+  实际发送到服务商的 wire/API id 由 `getApiModelId(provider, id)` 决定，因此
+  `*-intl` 这类 Provider 别名可通过 `modelIdOverrides`（步骤 3）映射到厂商官方模型 id。
 - **`provider`** 把模型关联到对应的 base URL、API Key、错误链接以及思考参数序列化方式。
   它必须是 `PROVIDERS` 的一个 key。
 - **`capabilities.thinking`** —— 为 `true` 时会出现按模型的**思考深度**下拉
@@ -82,11 +83,13 @@ z.ai 区块里，依此类推。
   'Faster Qwen3 Coder Flash model for quick agentic coding and tool calls.',
 ```
 
-若省略此步，模型仍可使用，但只会回退到步骤 1 的 `detail` 字符串，且不显示 tooltip。
+运行时可以回退到步骤 1 的 `detail` 字符串，但仓库测试要求每个模型都有本地化
+`detail` 和 `tooltip`。
 
-### 步骤 3 — 暴露模型 ID 覆盖项（推荐，`package.json`）
+### 步骤 3 — 暴露模型 ID 覆盖项（`package.json`）
 
-这让用户能把模型指向兼容的第三方 / 自托管端点。在对应 Provider 的
+这让用户能把模型指向兼容的第三方 / 自托管端点，也能为 Provider 别名记录默认的
+wire/API 模型 id。在对应 Provider 的
 `modelIdOverrides` 设置里新增条目（Qwen 用 `cllms.modelIdOverrides`，Qwen 国际站用 `cllms.qwenIntl.modelIdOverrides`，
 其余为 `cllms.zai.modelIdOverrides`、`cllms.minimax.modelIdOverrides`、`cllms.minimaxIntl.modelIdOverrides`、`cllms.xiaomi.modelIdOverrides`、`cllms.moonshot.modelIdOverrides`、`cllms.moonshotIntl.modelIdOverrides`、`cllms.hunyuan.modelIdOverrides`）：
 
@@ -113,17 +116,18 @@ z.ai 区块里，依此类推。
 "cllms.config.modelIdOverrides.qwen3-coder-flash.description": "Qwen3 Coder Flash 的 API 模型 ID。",
 ```
 
-> 没有这一步模型也能用（默认通过 `getApiModelId` 直接使用 `id`）。它只是为了提供
-> 可发现、带校验的覆盖项。
+> 运行时在没有覆盖项时可以直接使用 `id`，但本仓库把此设置视为必需，以确保覆盖项
+> 可发现、已本地化，并受 schema 校验。
 
-### 步骤 4 — 更新测试（`test/registry.test.ts`）
+### 步骤 4 — 更新测试（`test/registry*.test.ts`）
 
 有几条断言枚举了精确的模型集合，集合变化时需要同步更新，例如：
 
 - `marks only the known native-vision models` —— 当 `imageInput: true` 时需更新。
 - 按 Provider 的列表检查（如 MiniMax 模型列表）。
 
-通用不变量（id 唯一、provider 存在、定价排序）会自动覆盖你的新模型。
+通用不变量（id 唯一、provider 存在、定价排序、`modelIdOverrides` schema/default
+覆盖以及 package NLS 条目）会自动覆盖你的新模型。
 
 ### 步骤 5 — 校验
 

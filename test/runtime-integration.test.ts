@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, it } from "node:test";
 import vscode from "vscode";
 import { PROVIDERS, WELCOME_SHOWN_KEY, MODELS } from "../src/consts";
 import { t } from "../src/i18n";
+import { formatSessionCost } from "../src/provider/pricing/session";
 import { activate, deactivate } from "../src/runtime";
 
 interface VscodeShim {
@@ -19,6 +20,7 @@ interface VscodeShim {
     activatedExtensions: string[];
     treeDataProviders: Map<string, unknown>;
     treeViews: Array<{ viewId: string }>;
+    webviewViewProviders: Map<string, { provider: unknown; options?: unknown }>;
   };
   __reset(): void;
   __setConfiguration(
@@ -140,6 +142,23 @@ async function provideModelInfo(
   }
 }
 
+function createSseResponse(events: unknown[]): Response {
+  const encoder = new TextEncoder();
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      for (const event of events) {
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
+      }
+      controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+      controller.close();
+    },
+  });
+  return new Response(body, {
+    status: 200,
+    headers: { "content-type": "text/event-stream" },
+  });
+}
+
 function disposeContexts(): void {
   for (const context of contexts.splice(0)) {
     for (const disposable of context.subscriptions) {
@@ -196,10 +215,9 @@ describe("runtime integration", () => {
     }
     assert.equal(shim.__state.uriHandlers.length, 1);
     assert.equal(shim.__state.languageModelProviders.has("cllms"), true);
-    assert.equal(shim.__state.treeDataProviders.has("cllms.providers"), true);
     assert.ok(
-      shim.__state.treeViews.some((view) => view.viewId === "cllms.providers"),
-      "cllms.providers tree view should be created",
+      shim.__state.webviewViewProviders.has("cllms.providers"),
+      "cllms.providers webview view provider should be registered",
     );
     assert.deepEqual(shim.__state.activatedExtensions, ["github.copilot-chat"]);
     assert.equal(
@@ -210,6 +228,29 @@ describe("runtime integration", () => {
       vscode.workspace.getConfiguration("cllms").inspect<string>("debugMode")?.globalValue,
       "metadata",
     );
+  });
+
+  it("ignores invalid provider command nodes without opening external links", async () => {
+    const context = createTestContext({
+      globalState: { [WELCOME_SHOWN_KEY]: true },
+    });
+
+    await activate(context);
+    await flushAsyncWork();
+
+    await assert.doesNotReject(async () => {
+      await vscode.commands.executeCommand("cllms.providers.openUsagePage", {
+        kind: "provider",
+        providerId: "missing-provider",
+      });
+    });
+    assert.equal(shim.__state.openedExternal.length, 0);
+
+    await vscode.commands.executeCommand("cllms.providers.openUsagePage", {
+      kind: "provider",
+      providerId: "qwen",
+    });
+    assert.equal(shim.__state.openedExternal.at(-1)?.toString(), PROVIDERS.qwen.externalUrls.usage);
   });
 
   it("opens the welcome walkthrough only when no provider key is configured", async () => {
@@ -279,6 +320,90 @@ describe("runtime integration", () => {
 
     await vscode.commands.executeCommand("cllms.showSessionCost");
     assert.ok(shim.__state.infoMessages.some((entry) => entry.message === t("sessionCost.empty")));
+  });
+
+  it("estimates session cost from the actual utility override model and surfaces actions", async () => {
+    const originalFetch = globalThis.fetch;
+    let requestBody: { model?: string } | undefined;
+    const utilityModel = MODELS.find((model) => model.id === "qwen3.6-flash");
+    const selectedModel = MODELS.find((model) => model.id === "qwen3-coder-plus");
+    assert.ok(utilityModel);
+    assert.ok(selectedModel);
+    const utilityPricing = utilityModel.pricing?.USD;
+    assert.ok(utilityPricing);
+
+    globalThis.fetch = (async (_input, init) => {
+      requestBody = JSON.parse(String(init?.body));
+      return createSseResponse([
+        {
+          choices: [],
+          usage: {
+            prompt_tokens: 0,
+            completion_tokens: 1_000_000,
+            total_tokens: 1_000_000,
+            prompt_tokens_details: { cached_tokens: 0 },
+          },
+        },
+      ]);
+    }) as typeof fetch;
+
+    try {
+      shim.__setConfiguration(
+        "cllms",
+        "utility.modelIdByProvider",
+        { qwen: utilityModel.id },
+        vscode.ConfigurationTarget.Global,
+      );
+      const context = createTestContext({
+        secrets: { [PROVIDERS.qwen.apiKeySecret]: "sk-test" },
+        globalState: { [WELCOME_SHOWN_KEY]: true },
+      });
+      await activate(context);
+      await flushAsyncWork();
+
+      const provider = getRegisteredProvider();
+      const infos = await provideModelInfo(provider);
+      const modelInfo = infos.find((info) => info.id === selectedModel.id);
+      assert.ok(modelInfo);
+
+      const tokenSource = new vscode.CancellationTokenSource();
+      await provider.provideLanguageModelChatResponse(
+        modelInfo,
+        [
+          vscode.LanguageModelChatMessage.User([
+            new vscode.LanguageModelTextPart(
+              "You are an expert in crafting ultra-compact titles for conversations.",
+            ),
+          ]),
+        ],
+        { tools: [] } as unknown as vscode.ProvideLanguageModelChatResponseOptions,
+        { report: () => {} },
+        tokenSource.token,
+      );
+      tokenSource.dispose();
+
+      assert.equal(requestBody?.model, utilityModel.id);
+
+      await vscode.commands.executeCommand("cllms.showSessionCost");
+      const costMessage = shim.__state.infoMessages.at(-1);
+      assert.ok(
+        costMessage?.message.includes(formatSessionCost(utilityPricing.output, "USD")),
+        JSON.stringify(costMessage),
+      );
+      assert.ok((costMessage?.items ?? []).includes(t("sessionCost.action.openAdvancedSettings")));
+      assert.ok((costMessage?.items ?? []).includes(t("sessionCost.action.configureUtilityModel")));
+      assert.ok((costMessage?.items ?? []).includes(t("sessionCost.action.openUsagePage")));
+      assert.ok(JSON.stringify(costMessage?.items ?? []).includes(utilityModel.name));
+
+      shim.__setMessageResult(t("sessionCost.action.openUsagePage"));
+      await vscode.commands.executeCommand("cllms.showSessionCost");
+      assert.equal(
+        shim.__state.openedExternal.at(-1)?.toString(),
+        PROVIDERS.qwen.externalUrls.usage,
+      );
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
   });
 
   it("opens the provider API key page from stale connection-test feedback", async () => {

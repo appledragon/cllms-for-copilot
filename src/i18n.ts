@@ -178,6 +178,25 @@ const zh: Translations = {
 	'providers.tooltip.models': '模型：{0} 个',
 	'providers.badge.vision': '视觉',
 	'providers.badge.thinking': '思考',
+	'providers.webview.title': 'CLLMs 服务商',
+	'providers.webview.endpointLabel': '端点',
+	'providers.section.models': '模型',
+	'providers.action.setup': '设置向导',
+	'providers.action.setApiKey': '设置 API Key',
+	'providers.action.clearApiKey': '清除 API Key',
+	'providers.action.test': '测试连接',
+	'providers.action.apiKeyPage': 'API Key 页面',
+	'providers.action.usagePage': '用量',
+	'providers.action.statusPage': '状态',
+	'providers.action.providerSettings': '设置',
+	'providers.summary': '已配置 {0} / {1}',
+	'providers.noneConfigured': '尚未配置任何服务商，点击任一服务商的“设置向导”即可开始。',
+	'providers.loading': '正在加载…',
+	'providers.error': '无法加载服务商状态。',
+	'providers.retry': '重试',
+	'providers.status.ok': '连接正常',
+	'providers.status.error': '连接失败',
+	'providers.status.testing': '测试中…',
 
 	// Thinking Effort — short labels for model picker dropdown
 	'status.thinking': '思考模式',
@@ -370,13 +389,28 @@ const zh: Translations = {
 	'sessionCost.statusBarTooltip': 'CLLMs 本次会话费用（近似，点击查看明细）',
 	'sessionCost.empty': '本次会话尚未记录任何 CLLMs 用量。',
 	'sessionCost.summaryTitle': 'CLLMs 本次会话费用（近似）：{0}',
-	'sessionCost.lineItem': '{0}：{1}（{2} 次请求，输入 {3} / 输出 {4} tokens，其中命中缓存 {5}）',
+	'sessionCost.lineItem':
+		'{0}：{1}（{2} 次请求，输入 {3} / 输出 {4} tokens，缓存 {5}，命中率 {6}%，省 {7}，均价 {8}/次）',
 	'sessionCost.approximateNote':
 		'仅为近似值，且只统计当前会话：基于服务商返回的 usage 估算，命中缓存的输入按缓存命中价计费。',
 	'sessionCost.unbilledNote': '另有 {0} 次请求（{1} 个模型）因缺少定价未纳入估算。',
 	'sessionCost.cacheHealthNote':
 		'本次会话平均上下文缓存命中率：{0}%（命中缓存的输入按更低价计费；命中率越高越省钱）。',
 	'sessionCost.tierSplitNote': '其中 utility/辅助请求约 {0}，主力/agent 请求约 {1}。',
+	'sessionCost.cacheSavingsNote': '本次会话上下文缓存估算节省：{0}。',
+	'sessionCost.hintsTitle': '优化建议：',
+	'sessionCost.hint.sortToolsForCache':
+		'- 检测到工具 schema 变化且缓存命中率偏低，可尝试开启 Sort Tools For Cache 稳定工具顺序。',
+	'sessionCost.hint.stabilizeToolList':
+		'- 工具列表较大或仍有未展开工具且缓存命中率偏低，可尝试 Stabilize Tool List，但请留意输入 tokens 增加。',
+	'sessionCost.hint.latestToolLoop':
+		'- 长会话已积累较多输入 tokens，可尝试 Reasoning Replay Scope = latest-tool-loop 降低后续输入成本。',
+	'sessionCost.hint.utilityCostControl':
+		'- utility/辅助请求费用占比较高，可配置辅助请求模型或设置 utility max output tokens。',
+	'sessionCost.notAvailable': '不适用',
+	'sessionCost.action.openAdvancedSettings': '打开高级设置',
+	'sessionCost.action.configureUtilityModel': '配置辅助模型',
+	'sessionCost.action.openUsagePage': '打开用量页',
 	'sessionCost.reset': '清零',
 	'sessionCost.resetDone': '已清零 CLLMs 会话费用。',
 
@@ -581,6 +615,25 @@ const en: Translations = {
 	'providers.tooltip.models': 'Models: {0}',
 	'providers.badge.vision': 'vision',
 	'providers.badge.thinking': 'thinking',
+	'providers.webview.title': 'CLLMs Providers',
+	'providers.webview.endpointLabel': 'Endpoint',
+	'providers.section.models': 'Models',
+	'providers.action.setup': 'Setup',
+	'providers.action.setApiKey': 'Set API Key',
+	'providers.action.clearApiKey': 'Clear API Key',
+	'providers.action.test': 'Test Connection',
+	'providers.action.apiKeyPage': 'API Key Page',
+	'providers.action.usagePage': 'Usage',
+	'providers.action.statusPage': 'Status',
+	'providers.action.providerSettings': 'Settings',
+	'providers.summary': '{0} / {1} configured',
+	'providers.noneConfigured': 'No providers configured yet — click “Setup” on any provider to begin.',
+	'providers.loading': 'Loading…',
+	'providers.error': 'Could not load provider status.',
+	'providers.retry': 'Retry',
+	'providers.status.ok': 'Connected',
+	'providers.status.error': 'Connection failed',
+	'providers.status.testing': 'Testing…',
 
 	// Thinking Effort
 	'status.thinking': 'Thinking Effort',
@@ -802,7 +855,8 @@ const en: Translations = {
 	'sessionCost.statusBarTooltip': 'CLLMs session cost (approximate) — click for details',
 	'sessionCost.empty': 'No CLLMs usage recorded this session yet.',
 	'sessionCost.summaryTitle': 'CLLMs session cost (approximate): {0}',
-	'sessionCost.lineItem': '{0}: {1} ({2} requests, {3} in / {4} out tokens, {5} cached in)',
+	'sessionCost.lineItem':
+		'{0}: {1} ({2} requests, {3} in / {4} out tokens, {5} cached in, {6}% hit, {7} saved, {8}/request)',
 	'sessionCost.approximateNote':
 		'Approximate and for this session only: estimated from provider-reported usage, with cached input billed at the cache-hit rate.',
 	'sessionCost.unbilledNote':
@@ -810,6 +864,20 @@ const en: Translations = {
 	'sessionCost.cacheHealthNote':
 		'Session average context-cache hit rate: {0}% (cache hits are billed at the lower input price; higher is cheaper).',
 	'sessionCost.tierSplitNote': 'Of which utility/helper requests ≈ {0}, agent requests ≈ {1}.',
+	'sessionCost.cacheSavingsNote': 'Estimated context-cache savings this session: {0}.',
+	'sessionCost.hintsTitle': 'Optimization suggestions:',
+	'sessionCost.hint.sortToolsForCache':
+		'- Tool schema drift was detected with a low cache hit rate; try Sort Tools For Cache to stabilize tool order.',
+	'sessionCost.hint.stabilizeToolList':
+		'- The tool list is large or still has unexpanded tools with a low cache hit rate; try Stabilize Tool List, watching input-token growth.',
+	'sessionCost.hint.latestToolLoop':
+		'- This long session has accumulated many input tokens; try Reasoning Replay Scope = latest-tool-loop to reduce future input cost.',
+	'sessionCost.hint.utilityCostControl':
+		'- Utility/helper requests are a meaningful share of cost; configure a utility model or utility max output tokens.',
+	'sessionCost.notAvailable': 'n/a',
+	'sessionCost.action.openAdvancedSettings': 'Open Advanced Settings',
+	'sessionCost.action.configureUtilityModel': 'Configure Utility Model',
+	'sessionCost.action.openUsagePage': 'Open Usage Page',
 	'sessionCost.reset': 'Reset',
 	'sessionCost.resetDone': 'CLLMs session cost reset.',
 

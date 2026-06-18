@@ -42,7 +42,7 @@
   "cllms.config.experimental.replayReasoningScope.latestToolLoop": "仅回放当前 tool-call 循环的 reasoning_content；丢弃更早轮次以省 token。",
   "cllms.config.visionProxy.timeoutMs.description": "API 端点视觉代理（为纯文本模型描述图片）的单次请求超时（毫秒）。取值范围 1000–120000。调小可让缓慢的视觉端点尽快失败，而不是拖住整条对话。",
   "cllms.config.utility.maxOutputTokens.description": "仅对一次性 utility/辅助请求（对话标题、提交信息、分支名、内联进度、重命名建议、提示分类、设置解析、todo 跟踪）封顶输出 token。设为 0 关闭。与 `cllms.maxTokens` 取较小值，不影响 agent/对话轮次。",
-  "cllms.config.utility.modelIdByProvider.description": "将 utility/辅助请求在同一服务商下路由到更便宜的 API 模型，按服务商 id 配置（`qwen`、`qwen-intl`、`zai`、`minimax`、`minimax-intl`、`xiaomi`、`moonshot`、`moonshot-intl`、`hunyuan`）。例如：`{ \"qwen\": \"qwen-flash\" }`。默认空（不降级）。费用估算仍按所选模型计算，但服务商实际按更便宜的模型计费。条件允许时优先使用 VS Code 原生的 `chat.utilityModel`（见 `CLLMs: 配置辅助请求模型`）。",
+  "cllms.config.utility.modelIdByProvider.description": "将 utility/辅助请求在同一服务商下路由到更便宜的 API 模型，按服务商 id 配置（`qwen`、`qwen-intl`、`zai`、`minimax`、`minimax-intl`、`xiaomi`、`moonshot`、`moonshot-intl`、`hunyuan`）。例如：`{ \"qwen\": \"qwen-flash\" }`。默认空（不降级）。会话费用估算会在覆盖模型匹配到带定价的已知模型时使用该模型；未知覆盖 ID 会计为未计费用量。条件允许时优先使用 VS Code 原生的 `chat.utilityModel`（见 `CLLMs: 配置辅助请求模型`）。",
   "cllms.config.debugMode.description": "控制 CLLMs 写入的诊断信息量。无论此设置如何，token 用量始终上报给 Copilot。\n\n- **基本** — 仅上报 token 用量，不输出诊断日志或请求 dump。\n- **元数据** — 隐私安全的诊断元数据（请求哈希、前缀重合度、工具定义变更）。不含提示词原文，可安全附在公开 issue 中反馈问题。使用 [`CLLMs: 显示日志`](command:cllms.showLogs) 查看。\n- **详细** — 将完整请求体写入磁盘，供本地调试。**警告：包含敏感的提示词内容。** 使用 [`CLLMs: 打开请求 Dump 目录`](command:cllms.openRequestDumpsFolder) 浏览。",
   "cllms.config.debugMode.minimal.label": "基本",
   "cllms.config.debugMode.minimal.description": "仅上报 token 用量，不输出诊断日志或 dump。",

@@ -5,9 +5,24 @@ import { getApiModelId, getBaseUrl } from '../config';
 import { MODELS, PROVIDERS } from '../consts';
 import { t } from '../i18n';
 import { logger } from '../logger';
-import type { ProviderDefinition } from '../types';
+import type { ProviderDefinition, ProviderId } from '../types';
 
 type ConnectionAction = 'openSettings' | 'openApiKeyPage' | 'showLogs';
+
+/**
+ * Terminal outcome of a connection test, reported to an optional observer so
+ * callers (e.g. the providers view) can reflect reachability without parsing
+ * user-facing messages. The `success`/`empty-model-list`/`stale-overrides`
+ * variants all mean the endpoint was reached.
+ */
+export type ConnectionTestOutcome =
+	| ConnectionSuccessResult['kind']
+	| 'failed'
+	| 'no-key'
+	| 'cancelled';
+
+/** Notified once per test with the resolved provider id and its outcome. */
+export type ConnectionTestObserver = (providerId: ProviderId, outcome: ConnectionTestOutcome) => void;
 
 export interface StaleModelOverride {
 	readonly apiModelId: string;
@@ -31,6 +46,7 @@ type ApiModelIdResolver = (provider: ProviderDefinition, vscodeModelId: string) 
 export async function runConnectionTest(
 	authManager: AuthManager,
 	presetProvider?: ProviderDefinition,
+	observe?: ConnectionTestObserver,
 ): Promise<void> {
 	const provider = presetProvider ?? (await pickProvider(authManager));
 	if (!provider) {
@@ -39,6 +55,7 @@ export async function runConnectionTest(
 
 	const apiKey = await authManager.getApiKey(provider);
 	if (!apiKey) {
+		observe?.(provider.id, 'no-key');
 		void vscode.window.showWarningMessage(t('connection.noKey', provider.name));
 		return;
 	}
@@ -59,13 +76,20 @@ export async function runConnectionTest(
 			try {
 				const modelIds = await client.listModels(token);
 				if (token.isCancellationRequested) {
+					observe?.(provider.id, 'cancelled');
 					return;
 				}
-				await reportSuccess(provider, modelIds);
+				const result = createConnectionSuccessResult(provider, modelIds);
+				// Report the outcome before presenting (possibly blocking) messages
+				// so the status dot updates immediately.
+				observe?.(provider.id, result.kind);
+				await presentConnectionSuccess(provider, result);
 			} catch (error) {
 				if (token.isCancellationRequested) {
+					observe?.(provider.id, 'cancelled');
 					return;
 				}
+				observe?.(provider.id, 'failed');
 				logger.warn(`Connection test failed for ${provider.id}`, error);
 				const detail = formatConnectionFailureDetail(error);
 				await showConnectionMessage(
@@ -78,11 +102,10 @@ export async function runConnectionTest(
 	);
 }
 
-async function reportSuccess(
+async function presentConnectionSuccess(
 	provider: ProviderDefinition,
-	modelIds: readonly string[],
+	result: ConnectionSuccessResult,
 ): Promise<void> {
-	const result = createConnectionSuccessResult(provider, modelIds);
 	if (result.kind === 'empty-model-list') {
 		await showConnectionMessage('info', result.message, provider);
 		return;

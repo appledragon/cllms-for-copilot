@@ -41,6 +41,8 @@ export interface PreparedChatRequest {
 	cacheDiagnostics: CacheDiagnosticsRun;
 	requestKind: RequestKind;
 	segment: ConversationSegment;
+	/** Model id whose pricing should be used for session-cost accounting. */
+	billableModelId: string;
 	replayMarkerMetadata: ReplayMarkerMetadata;
 	visionMarkerTextChars?: number;
 	initialResponseNotice?: string;
@@ -120,9 +122,9 @@ export async function prepareChatRequest({
 	// cheaper model for lightweight one-shot helper requests. Never applied to
 	// agent-tier or unknown work so real turns are never throttled/downgraded.
 	const utilityRequest = isUtilityRequestKind(requestKind);
-	const effectiveModel = utilityRequest
-		? (getUtilityModelIdOverride(provider) ?? baseRequest.model)
-		: baseRequest.model;
+	const utilityModelOverride = utilityRequest ? getUtilityModelIdOverride(provider) : undefined;
+	const effectiveModel = utilityModelOverride ?? baseRequest.model;
+	const billableModelId = utilityModelOverride ?? modelInfo.id;
 	const effectiveMaxTokens = utilityRequest
 		? applyUtilityMaxTokens(maxTokens, getUtilityMaxOutputTokens())
 		: maxTokens;
@@ -194,6 +196,7 @@ export async function prepareChatRequest({
 		cacheDiagnostics: diagnosticsRun,
 		requestKind,
 		segment,
+		billableModelId,
 		replayMarkerMetadata: visionResolution.replayMarkerMetadata,
 		visionMarkerTextChars: visionResolution.stats.markerVisionTextChars || undefined,
 		initialResponseNotice: visionResolution.initialResponseNotice,

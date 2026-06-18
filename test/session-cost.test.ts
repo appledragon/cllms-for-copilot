@@ -62,6 +62,10 @@ describe("SessionCostTracker", () => {
     assert.equal(summary?.items[0].requests, 1);
     // The cached portion of the prompt is surfaced for cache hit/miss insight.
     assert.equal(summary?.items[0].cachedPromptTokens, 400_000);
+    assert.equal(summary?.items[0].cacheHitRate, 40);
+    assert.ok(Math.abs((summary?.items[0].cacheSavings ?? 0) - 0.36) < 1e-9);
+    assert.ok(Math.abs((summary?.items[0].averageCost ?? 0) - 5.64) < 1e-9);
+    assert.ok(Math.abs((summary?.totalCacheSavings ?? 0) - 0.36) < 1e-9);
     assert.equal(summary?.billedRequests, 1);
     assert.equal(summary?.unbilledRequests, 0);
     assert.equal(summary?.unbilledModelCount, 0);
@@ -126,6 +130,16 @@ describe("SessionCostTracker", () => {
     assert.equal(summary?.unbilledRequests, 1);
     assert.equal(summary?.unbilledModelCount, 1);
     assert.equal(summary?.currency, "USD");
+  });
+
+  it("tracks unknown actual API models as unbilled usage", () => {
+    const tracker = new SessionCostTracker();
+    tracker.record(undefined, usage({ prompt_tokens: 1000 }), "USD", "utility", "custom-fast");
+    const summary = tracker.getSummary();
+    assert.equal(tracker.isEmpty(), true);
+    assert.equal(summary?.unbilledRequests, 1);
+    assert.equal(summary?.unbilledModelCount, 1);
+    assert.equal(summary?.totalPromptTokens, 1000);
   });
 
   it("clears unbilled counters when the display currency changes", () => {

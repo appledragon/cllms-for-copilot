@@ -151,6 +151,16 @@ export type ProviderId =
  */
 export type ThinkingStyle = 'qwen' | 'glm' | 'minimax';
 
+/**
+ * Result of the most recent connection test for a provider, surfaced by the
+ * providers view so the status dot reflects real reachability (not just key
+ * presence):
+ *  - `unknown`: configured but not yet tested (or key changed since last test)
+ *  - `ok`:      last test reached the endpoint and listed models
+ *  - `error`:   last test failed (auth, network, or endpoint error)
+ */
+export type ProviderConnectivity = 'unknown' | 'ok' | 'error';
+
 export interface ProviderExternalUrls {
 	apiKeys: string;
 	usage: string;

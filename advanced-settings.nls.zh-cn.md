@@ -32,6 +32,11 @@ CLLMs 提供了一些可选设置，用于降低费用或提高服务商上下�
 
 `cllms.utility.maxOutputTokens` 与 `cllms.utility.modelIdByProvider` 只用于对话标题、提交信息、分支名、内联进度、重命名建议、提示分类、设置解析、todo 跟踪等轻量辅助请求。真正的 agent 轮次和未识别请求不会被这些设置封顶或降级。条件允许时，优先使用 VS Code 原生的 utility model 路由。
 
+- `cllms.utility.maxOutputTokens` 会与 `cllms.maxTokens` 取较小的非零上限。
+- `cllms.utility.modelIdByProvider` 按 provider id 配置，例如 `{ "qwen": "qwen3.6-flash" }`。
+- 如果覆盖模型匹配到带定价的已知模型，会话费用会按该模型估算；未知覆盖 ID 会记录为未计费用量，而不是沿用所选模型估算。
+- Utility 路由由请求分类器决定；不像一次性辅助工作的提示会继续使用所选的 chat/agent 模型。
+
 [配置辅助请求模型](command:cllms.configureUtilityModel)
 
 [打开辅助请求设置](command:workbench.action.openSettings?%5B%22%40id%3Acllms.utility.modelIdByProvider%22%5D)
