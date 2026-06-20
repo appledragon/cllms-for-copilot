@@ -213,11 +213,14 @@ const zh: Translations = {
 
 	// Vision
 	'vision.proxyUsing': '视觉代理：{0}',
+	'vision.fallbackUsing': '视觉代理（回退）：{0}',
 	'vision.notFound': '未找到视觉模型 "{0}"',
 	'vision.unavailable': '无可用视觉模型，图片已忽略。',
 	'vision.proxyError': '视觉代理异常：',
 	'vision.action.configureProxy': '配置视觉代理',
 	'vision.panel.title': 'CLLMs 视觉代理',
+	'model.visionProxyNote':
+		'（原生不支持图片，但贴图会自动路由到视觉代理模型描述后转交本模型。）',
 	'vision.panel.description':
 		'配置一个支持图片输入的模型，用来先把图片转换成文字描述，再把描述随消息发送给所选模型。图片本身不会发送给该模型。',
 	'vision.panel.source.vscodeLm': 'VS Code 模型',
@@ -655,11 +658,14 @@ const en: Translations = {
 	// NOTE: vision.unableToDescribe has been moved to consts.ts as
 	// IMAGE_DESCRIPTION_UNAVAILABLE — it is prompt content, not UI text.
 	'vision.proxyUsing': 'Vision proxy: {0}',
+	'vision.fallbackUsing': 'Vision proxy (fallback): {0}',
 	'vision.notFound': 'Vision model "{0}" not found',
 	'vision.unavailable': 'No vision models available, image(s) ignored',
 	'vision.proxyError': 'Vision proxy error:',
 	'vision.action.configureProxy': 'Configure Vision Proxy',
 	'vision.panel.title': 'CLLMs Vision Proxy',
+	'model.visionProxyNote':
+		'(No native image support — pasted images are auto-routed to a vision proxy model, described, then forwarded to this model as text.)',
 	'vision.panel.description':
 		'Configure a vision-capable model to turn image attachments into text before the selected model receives the request. The model receives the description, not the original images.',
 	'vision.panel.source.vscodeLm': 'VS Code model',

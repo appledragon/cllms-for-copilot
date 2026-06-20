@@ -40,6 +40,7 @@ export function createVSCodeLanguageModelVisionDescriberGetter(): {
 
 			const requestGeneration = generation;
 			const currentPromise = (async () => {
+				// 1. Strict: only models that explicitly advertise vision capabilities.
 				const models = await listVSCodeVisionModels();
 				if (requestGeneration !== generation) {
 					return undefined;
@@ -50,6 +51,35 @@ export function createVSCodeLanguageModelVisionDescriberGetter(): {
 					describer = new VSCodeLanguageModelVisionDescriber(model);
 					return describer;
 				}
+
+				// 2. Fallback: try any available non-cllms model as a vision proxy
+				// (some models like Copilot's support vision but don't advertise
+				// supportsImageToText / imageInput in their capabilities).
+				const fallbackModels = await listVSCodeChatModelsFallback();
+				if (requestGeneration !== generation) {
+					return undefined;
+				}
+				// Diagnostic: dump all selectChatModels() results so users can
+				// see what VS Code exposes and why the fallback may fail.
+				if (fallbackModels.length === 0) {
+					const allRaw = await vscode.lm.selectChatModels();
+					logger.warn(
+						`Vision debug: vscode.lm.selectChatModels() returned ${allRaw.length} model(s): ` +
+							allRaw
+								.map(
+									(m) =>
+										`${m.id} (vendor=${m.vendor}, imageInput=${(m as any).capabilities?.imageInput}, supportsImageToText=${(m as any).capabilities?.supportsImageToText})`,
+								)
+								.join('; '),
+					);
+				}
+				const fallbackModel = fallbackModels[0];
+				if (fallbackModel) {
+					logger.info(t('vision.fallbackUsing', fallbackModel.id));
+					describer = new VSCodeLanguageModelVisionDescriber(fallbackModel);
+					return describer;
+				}
+
 				logger.warn(t('vision.notFound', getConfiguredVisionModelId() ?? DEFAULT_VISION_MODEL_ID));
 				return undefined;
 			})();
@@ -98,6 +128,7 @@ export class VSCodeLanguageModelVisionDescriber implements VisionDescriber {
 			new vscode.LanguageModelTextPart(request.prompt),
 		] as (vscode.LanguageModelDataPart | vscode.LanguageModelTextPart)[]);
 
+		logger.info(`Vision: sending describe request to ${this.model.id} (${this.model.vendor})`);
 		const response = await this.model.sendRequest([visionMsg], {}, request.token);
 		let description = '';
 		for await (const chunk of response.stream) {
@@ -105,7 +136,12 @@ export class VSCodeLanguageModelVisionDescriber implements VisionDescriber {
 				description += chunk.value;
 			}
 		}
-		return description.trim();
+		const trimmed = description.trim();
+		logger.info(
+			`Vision: ${this.model.id} returned ${trimmed.length} chars` +
+				(trimmed ? ` preview: "${trimmed.slice(0, 80)}"` : ' (empty)'),
+		);
+		return trimmed;
 	}
 }
 
@@ -168,6 +204,19 @@ export function pickPreferredVSCodeVisionModelId(
 async function listVSCodeVisionModels(): Promise<vscode.LanguageModelChat[]> {
 	const allModels = await vscode.lm.selectChatModels();
 	return allModels.filter(isVSCodeVisionModel);
+}
+
+/**
+ * Fallback search: any model not from cllms and not in the exclusion list,
+ * regardless of whether it advertises vision capabilities. Many models
+ * (e.g. Copilot's gpt-4o, claude-sonnet-4) support images but don't always
+ * expose supportsImageToText / imageInput through VS Code's API.
+ */
+async function listVSCodeChatModelsFallback(): Promise<vscode.LanguageModelChat[]> {
+	const allModels = await vscode.lm.selectChatModels();
+	return allModels.filter((model) => {
+		return model.vendor !== 'cllms' && !EXCLUDED_VISION_MODEL_IDS.has(model.id);
+	});
 }
 
 function pickPreferredVSCodeVisionModel(

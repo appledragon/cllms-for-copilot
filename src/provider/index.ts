@@ -516,6 +516,21 @@ export class LlmChatProvider implements vscode.LanguageModelChatProvider {
 			logger.info(
 				formatRequestLogLine(requestKind, this.classificationStats.format(classification)),
 			);
+			const messageSummaries = messages.map((message, index) => {
+				const imageCount = message.content.filter(
+					(part) =>
+						part instanceof vscode.LanguageModelDataPart &&
+						part.mimeType.startsWith('image/'),
+				).length;
+				const partTypes = message.content
+					.map((part) => part?.constructor?.name || typeof part)
+					.join(',');
+				return `msg${index}: images=${imageCount} types=[${partTypes}]`;
+			});
+			logger.info(
+				`Provider input summary: model=${modelInfo.id} messages=${messages.length} ` +
+				messageSummaries.join(' | '),
+			);
 		}
 
 		dumpProviderInput({

@@ -35,7 +35,13 @@ export function toChatInfo(
 	pricingCurrency?: PricingCurrency,
 ): ModelPickerChatInformation {
 	const modelDetail = resolveModelText(m, 'detail') ?? m.detail;
-	const modelTooltip = resolveModelText(m, 'tooltip');
+	const baseTooltip = resolveModelText(m, 'tooltip') ?? m.detail;
+	// Text-only models: append a note that images are auto-routed to the
+	// vision proxy so users understand the model picker "accepts images" even
+	// though the underlying LLM is text-only.
+	const modelTooltip = m.capabilities.imageInput
+		? baseTooltip
+		: `${baseTooltip} ${t('model.visionProxyNote')}`;
 	return {
 		id: m.id,
 		name: m.name,
@@ -49,7 +55,13 @@ export function toChatInfo(
 		isUserSelectable: true,
 		capabilities: {
 			toolCalling: m.capabilities.toolCalling,
-			imageInput: m.capabilities.imageInput,
+			// Always tell VS Code we accept images so it forwards image parts to
+			// our provider. Internally, text-only models route images through the
+			// vision proxy (resolveImageMessages); natively-vision models send
+			// them directly as image_url. If we report imageInput:false here, VS
+			// Code silently drops the image (shows a strikethrough) and the
+			// provider never sees it — the proxy never gets a chance to run.
+			imageInput: true,
 		},
 		...toModelCostInfo(m, pricingCurrency),
 		...(m.capabilities.thinking ? { configurationSchema: buildThinkingEffortSchema() } : {}),

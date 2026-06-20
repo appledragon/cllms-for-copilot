@@ -164,7 +164,7 @@ Thinking Effort is configured from Copilot Chat's model picker for each thinking
 
 See [Advanced settings](./advanced-settings.md) for a focused guide to the cost and cache controls above.
 
-For text-only models, the vision proxy resolves image attachments to text before the main request. Identical image descriptions are cached for the current VS Code session by image bytes, prompt, and describer identity, so retries or re-attaching the same image avoid another description call. API-endpoint vision calls also use `cllms.maxRetries` for transient 429 / 5xx / network failures and `cllms.visionProxy.timeoutMs` for each attempt.
+For text-only models, the vision proxy resolves image attachments to text before the main request. **All CLLMs models accept pasted images** — text-only models auto-route them through the vision proxy, while native-vision models (e.g. Qwen3-VL-Plus, GLM-5V-Turbo) receive images directly. If no explicit vision model is configured, the extension falls back to any available Copilot model (e.g. GPT-4o) as a vision describer. Identical image descriptions are cached for the current VS Code session by image bytes, prompt, and describer identity, so retries or re-attaching the same image avoid another description call. API-endpoint vision calls also use `cllms.maxRetries` for transient 429 / 5xx / network failures and `cllms.visionProxy.timeoutMs` for each attempt.
 
 ### Utility cost control
 

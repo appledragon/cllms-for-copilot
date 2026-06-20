@@ -162,7 +162,7 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 
 参见[高级设置](./advanced-settings.nls.zh-cn.md)，了解上方成本与缓存控制项的集中说明。
 
-对于纯文本模型，视觉代理会在主请求前先把图片附件解析成文字。相同图片描述会在当前 VS Code 会话内按图片字节、提示词和描述器身份缓存，因此重试或重复附加同一张图片时不会再次调用描述模型。API 端点视觉代理还会对临时性 429 / 5xx / 网络失败复用 `cllms.maxRetries` 重试，并用 `cllms.visionProxy.timeoutMs` 控制每次尝试的超时。
+对于纯文本模型，视觉代理会在主请求前先把图片附件解析成文字。**所有 CLLMs 模型均接受粘贴图片**——纯文本模型会自动将图片路由到视觉代理，而原生视觉模型（如 Qwen3-VL-Plus、GLM-5V-Turbo）则直接接收图片。如果未配置显式的视觉模型，扩展会回退使用任意可用的 Copilot 模型（如 GPT-4o）作为视觉描述器。相同图片描述会在当前 VS Code 会话内按图片字节、提示词和描述器身份缓存，因此重试或重复附加同一张图片时不会再次调用描述模型。API 端点视觉代理还会对临时性 429 / 5xx / 网络失败复用 `cllms.maxRetries` 重试，并用 `cllms.visionProxy.timeoutMs` 控制每次尝试的超时。
 
 ### 辅助请求成本控制
 

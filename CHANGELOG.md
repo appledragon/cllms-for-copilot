@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.3.1
+## 0.3.2
+
+- **Fix images silently dropped for text-only models** — when a text-only model (e.g. DeepSeek-V4-Pro) was selected, VS Code would show a strikethrough on pasted images and silently drop them before they reached the provider. The vision proxy never got a chance to run. Now all CLLMs models report `imageInput: true` to VS Code so images are always forwarded; internally, text-only models still route images through the vision proxy while native-vision models send them directly.
+- **Add fallback vision model search** — when no model explicitly advertises `supportsImageToText` / `imageInput` through `vscode.lm.selectChatModels()`, the extension now falls back to any available non-CLLMs model (e.g. Copilot's GPT-4o, Claude) as a vision describer. Many Copilot models support images but don't expose vision capabilities through the VS Code API.
+- **Add vision proxy tooltip note** — text-only models now show a note in their tooltip that pasted images are automatically routed through the vision proxy and forwarded as text.
 
 - **Add DeepSeek to Prerequisites, walkthrough, and utility settings** — DeepSeek was missing from the Prerequisites list, walkthrough descriptions, and `cllms.utility.modelIdByProvider` provider key list in `package.json` / `package.nls.json` / `package.nls.zh-cn.json` / `README.md` / `README.zh-cn.md`.
 - **Fix Hunyuan HY 2.0 Think API model ID** — corrected the default `modelIdOverrides` mapping from `hunyuan-2.0-think-20250516` to `hunyuan-2.0-think` (the versioned snapshot ID is no longer listed by the `/v1/models` endpoint, causing the connection test to flag it as stale).
