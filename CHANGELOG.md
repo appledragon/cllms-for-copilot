@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0
+
+- **DeepSeek provider**: first-class DeepSeek support with DeepSeek-V4-Flash and DeepSeek-V4-Pro models.
+  - V4-Flash: 1M context, up to 384K output, supports both thinking and non-thinking modes.
+  - V4-Pro: 1M context, up to 384K output, deep thinking by default.
+  - Thinking sent in GLM-style `thinking: { type: "enabled" | "disabled" }`; tool calling and JSON output supported.
+  - Configurable via `cllms.deepseek.baseUrl` / `cllms.deepseek.modelIdOverrides`.
+  - Default endpoint: `https://api.deepseek.com/v1`.
+- **Remove deprecated GLM-4.5V model** — z.ai no longer lists this model; replaced upstream by GLM-4.6V.
+- **Fix GLM-4.7-FlashX API model ID** — corrected the default `modelIdOverrides` mapping from `glm-4.7-flashx` to `glm-4.7` (FlashX shares the same API model ID as GLM-4.7).
+- **Fix connection test dialog** — the "Testing…" progress notification no longer stays open until the result dialog is dismissed; result messages are now fire-and-forget so the progress completes immediately.
+- **Reorder DeepSeek after Qwen** in all UI surfaces (model picker, providers view, settings, READMEs).
+
 ## 0.2.0
 
 - **Providers webview UI improvements**:

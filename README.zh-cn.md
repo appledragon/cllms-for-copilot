@@ -33,7 +33,7 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 
 ## 模型
 
-内置六个 Provider，每个模型自带独立的 API Key 与端点，因此你可以在 Copilot 模型选择器里同时使用 Qwen、z.ai（GLM）、MiniMax、小米 MiMo、Moonshot Kimi、腾讯混元或任意组合。
+内置七个 Provider，每个模型自带独立的 API Key 与端点，因此你可以在 Copilot 模型选择器里同时使用 Qwen、DeepSeek、z.ai（GLM）、MiniMax、小米 MiMo、Moonshot Kimi、腾讯混元或任意组合。
 
 **Qwen（DashScope）**
 
@@ -47,6 +47,13 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 | **Qwen3.7 Plus** | 均衡旗舰，推荐默认选择 |
 | **Qwen3.6 Flash** | 轻量快速，接近旗舰质量，1M 上下文 |
 
+**DeepSeek**
+
+| 模型 | 适用场景 |
+|---|---|
+| **DeepSeek-V4-Flash** | 旗舰极速，1M 上下文，支持思考与非思考模式 |
+| **DeepSeek-V4-Pro** | 旗舰专业，1M 上下文，默认深度思考 |
+
 **z.ai（智谱 GLM）**
 
 | 模型 | 适用场景 |
@@ -55,7 +62,6 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 | **GLM-5.1** | 旗舰长程编码与 Agent，200K 上下文，支持 8 小时自主编码 |
 | **GLM-4.6** | 旗舰编码与 Agent，200K 上下文 |
 | **GLM-4.5-Air** | 轻量、更快、成本更低 |
-| **GLM-4.5V** | 原生视觉（图片输入） |
 | **GLM-5** | 高智能基座，编码对齐 Claude Opus 4.5，200K 上下文 |
 | **GLM-5-Turbo** | Lobster 优化基座，长任务连续性更强，200K 上下文 |
 | **GLM-4.7** | 升级通用模型，编码能力更强，200K 上下文 |
@@ -96,7 +102,7 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 | **Hunyuan A13B** | 轻量快速，成本最低 |
 | **Tencent HY 2.0 Instruct** | 指令跟随，创作与知识准确，128K 上下文 |
 
-模型 ID 即各服务商官方模型名，可通过 `cllms.modelIdOverrides` / `cllms.zai.modelIdOverrides` / `cllms.minimax.modelIdOverrides` / `cllms.xiaomi.modelIdOverrides` / `cllms.moonshot.modelIdOverrides` / `cllms.hunyuan.modelIdOverrides` 完全自定义，以对接第三方 / 自托管端点。
+模型 ID 即各服务商官方模型名，可通过 `cllms.modelIdOverrides` / `cllms.zai.modelIdOverrides` / `cllms.minimax.modelIdOverrides` / `cllms.xiaomi.modelIdOverrides` / `cllms.moonshot.modelIdOverrides` / `cllms.hunyuan.modelIdOverrides` / `cllms.deepseek.modelIdOverrides` 完全自定义，以对接第三方 / 自托管端点。
 
 ## 添加新模型
 
@@ -108,7 +114,8 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 |---|---|---|
 | Qwen（DashScope 国内） | ✅ 已测试 | Qwen3 Coder Plus、Qwen Plus、Qwen3 Max、Qwen3-VL Plus — 全部验证通过。Qwen3.7 Max、Qwen3.7 Plus、Qwen3.6 Flash 已启用，待单独验证。 |
 | Qwen（DashScope International） | ⚠️ 未测试 | API 兼容性应与国内端点一致。欢迎提供测试 token 或测试反馈！ |
-| z.ai（智谱 GLM） | ✅ 已测试 | GLM-5.2、GLM-5.1、GLM-4.6、GLM-4.5-Air、GLM-4.5V — 全部验证通过。GLM-5、GLM-5-Turbo、GLM-4.7、GLM-4.7-FlashX、GLM-5V-Turbo 已启用，待单独验证。 |
+| DeepSeek | ⚠️ 未测试 | API 兼容性遵循标准 OpenAI 兼容 Chat Completions API。欢迎提供测试 token 或测试反馈！ |
+| z.ai（智谱 GLM） | ✅ 已测试 | GLM-5.2、GLM-5.1、GLM-4.6、GLM-4.5-Air — 全部验证通过。GLM-5、GLM-5-Turbo、GLM-4.7、GLM-4.7-FlashX、GLM-5V-Turbo 已启用，待单独验证。 |
 | MiniMax（国内） | ✅ 已测试 | MiniMax-M3、MiniMax-M2.7 — 全部验证通过。MiniMax-M2.5 已启用，待单独验证。 |
 | MiniMax（International） | ⚠️ 未测试 | API 兼容性应与国内端点一致。欢迎提供测试 token 或测试反馈！ |
 | 小米 MiMo | ✅ 已测试 | MiMo V2.5 Pro、MiMo V2.5（Omni）、MiMo V2 Flash — 全部验证通过。 |
@@ -123,6 +130,8 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 | 设置项 | 默认值 | 说明 |
 |---|---|---|
 | `cllms.baseUrl` | `https://dashscope-intl.aliyuncs.com/compatible-mode/v1` | Qwen OpenAI 兼容端点。北京地域使用 `https://dashscope.aliyuncs.com/compatible-mode/v1`，美国地域使用 `https://dashscope-us.aliyuncs.com/compatible-mode/v1`，也可填写任意兼容的第三方 / 自托管端点 |
+| `cllms.qwenIntl.baseUrl` | `https://dashscope-intl.aliyuncs.com/compatible-mode/v1` | Qwen 国际站 OpenAI 兼容端点 |
+| `cllms.deepseek.baseUrl` | `https://api.deepseek.com/v1` | DeepSeek OpenAI 兼容端点 |
 | `cllms.zai.baseUrl` | `https://api.z.ai/api/paas/v4` | z.ai（GLM）OpenAI 兼容端点。使用 GLM Coding Plan 订阅时改为 `https://api.z.ai/api/coding/paas/v4` |
 | `cllms.minimax.baseUrl` | `https://api.minimax.io/v1` | MiniMax OpenAI 兼容端点。中国大陆使用 `https://api.minimaxi.com/v1` |
 | `cllms.xiaomi.baseUrl` | `https://api.xiaomimimo.com/v1` | 小米 MiMo OpenAI 兼容端点（官方开放平台） |
@@ -131,6 +140,8 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 | `cllms.maxTokens` | `0` | 最大输出 Token 数（`0` = 不限制）。可用于成本控制 |
 | `cllms.maxRetries` | `2` | 在开始输出前，针对临时性失败（HTTP 429、5xx、网络抖动）的自动重试次数。遵循 `Retry-After` 并采用带抖动的指数退避；一旦开始输出即停止重试，因此不会产生重复响应。`0` 表示关闭 |
 | `cllms.modelIdOverrides` | 预填官方 ID 映射 | 各 Qwen 模型对应的 API 模型 ID。仅在使用模型名不同的兼容第三方 API 时修改 |
+| `cllms.qwenIntl.modelIdOverrides` | 预填官方 ID 映射 | 各 Qwen 国际站模型对应的 API 模型 ID |
+| `cllms.deepseek.modelIdOverrides` | 预填官方 ID 映射 | 各 DeepSeek 模型对应的 API 模型 ID |
 | `cllms.zai.modelIdOverrides` | 预填官方 ID 映射 | 各 z.ai（GLM）模型对应的 API 模型 ID |
 | `cllms.minimax.modelIdOverrides` | 预填官方 ID 映射 | 各 MiniMax 模型对应的 API 模型 ID |
 | `cllms.xiaomi.modelIdOverrides` | 预填官方 ID 映射 | 各小米 MiMo 模型对应的 API 模型 ID |
@@ -201,6 +212,16 @@ CLLMs 可以让一次性的 Copilot 辅助请求比真正的 agent 轮次跑得�
 }
 
 ```
+
+## 使用 DeepSeek
+
+DeepSeek 同样开箱即用：
+
+1. 运行 **`CLLMs: 设置 API Key`** 并选择 **DeepSeek**。在 [DeepSeek 平台](https://platform.deepseek.com/api_keys) 获取 API Key。
+2. 打开 Copilot Chat 模型选择器——**DeepSeek-V4-Flash** 和 **DeepSeek-V4-Pro** 会和其他模型一起出现。
+
+DeepSeek 使用标准 OpenAI 兼容 Chat Completions API。V4-Flash 支持思考与非思考两种模式；V4-Pro 默认深度思考。思考模式以 GLM 风格 `thinking: { type: "enabled" | "disabled" }` 发送。两款模型均支持 1M 上下文、最高 384K 输出、工具调用和 JSON 输出。默认端点为 `https://api.deepseek.com/v1`。
+
 ## 使用 z.ai（智谱 GLM）
 
 z.ai 开箱即用——无需代理或改写模型 ID：
@@ -208,7 +229,7 @@ z.ai 开箱即用——无需代理或改写模型 ID：
 1. 运行 **`CLLMs: 设置 API Key`** 并选择 **z.ai（智谱 GLM）**。在 [z.ai API Key 页面](https://z.ai/manage-apikey/apikey-list) 获取密钥。
 2. 打开 Copilot Chat 模型选择器——GLM 模型会和 Qwen 模型一起出现。
 
-GLM 的思考模式以 z.ai 原生格式发送（`thinking: { type: "enabled" }`），支持工具调用，`GLM-4.5V` 与 `GLM-5V-Turbo` 作为原生视觉模型（图片直接发送）。如果你有 GLM Coding Plan 订阅，可将 `cllms.zai.baseUrl` 设为 `https://api.z.ai/api/coding/paas/v4`。
+GLM 的思考模式以 z.ai 原生格式发送（`thinking: { type: "enabled" }`），支持工具调用，`GLM-5V-Turbo` 作为原生视觉模型（图片直接发送）。如果你有 GLM Coding Plan 订阅，可将 `cllms.zai.baseUrl` 设为 `https://api.z.ai/api/coding/paas/v4`。
 
 ## 使用 MiniMax
 
@@ -250,10 +271,9 @@ Kimi K2.7 / K2.6 / K2.5 是原生多模态混合推理模型（256K 上下文）
 
 混元使用标准 OpenAI 兼容 Chat Completions API。HY 2.0 Think 和 T1 是深度思考模型，思考模式以 GLM 风格 `thinking: { type: "enabled" | "disabled" }` 发送；TurboS、A13B 与 HY 2.0 Instruct 是不带深度思考的指令模型。五个模型均支持工具调用；目前没有原生视觉模型，图片附件会走视觉代理回退方案。默认端点为 `https://api.hunyuan.cloud.tencent.com/v1`。
 
-
 ## 其他 OpenAI 兼容的 Provider
 
-除了内置的六个 Provider，由于请求走的是标准 OpenAI 兼容 Chat Completions 接口，你也可以把任意一个 Provider 的 `baseUrl` 指向其他兼容服务，并用对应的 `modelIdOverrides` 映射模型 ID。例如让 Qwen 的槽位转去调用 GLM：
+除了内置的七个 Provider，由于请求走的是标准 OpenAI 兼容 Chat Completions 接口，你也可以把任意一个 Provider 的 `baseUrl` 指向其他兼容服务，并用对应的 `modelIdOverrides` 映射模型 ID。例如让 Qwen 的槽位转去调用 GLM：
 
 ```json
 {

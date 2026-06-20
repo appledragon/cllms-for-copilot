@@ -26,6 +26,11 @@ export const EXTERNAL_URLS = {
 		usage: 'https://modelstudio.console.alibabacloud.com',
 		status: 'https://status.aliyun.com',
 	},
+	deepseek: {
+		apiKeys: 'https://platform.deepseek.com/api_keys',
+		usage: 'https://api-docs.deepseek.com/quick_start/pricing',
+		status: 'https://status.deepseek.com',
+	},
 	zai: {
 		apiKeys: 'https://z.ai/manage-apikey/apikey-list',
 		usage: 'https://docs.z.ai/guides/overview/pricing',
@@ -106,6 +111,19 @@ export const PROVIDERS: Readonly<Record<ProviderId, ProviderDefinition>> = {
 		officialHost: 'dashscope-intl.aliyuncs.com',
 		thinkingStyle: 'qwen',
 		externalUrls: EXTERNAL_URLS.qwenIntl,
+	},
+	deepseek: {
+		id: 'deepseek',
+		name: 'DeepSeek',
+		defaultBaseUrl: 'https://api.deepseek.com/v1',
+		baseUrlSetting: 'deepseek.baseUrl',
+		apiKeySecret: 'cllms.deepseek.apiKey',
+		apiKeySetting: 'deepseek.apiKey',
+		modelIdOverridesSetting: 'deepseek.modelIdOverrides',
+		officialHost: 'api.deepseek.com',
+		// DeepSeek uses `thinking: { type: 'enabled' | 'disabled' }` (GLM-style).
+		thinkingStyle: 'glm',
+		externalUrls: EXTERNAL_URLS.deepseek,
 	},
 	zai: {
 		id: 'zai',
@@ -553,6 +571,53 @@ export const MODELS: ModelDefinition[] = [
 		priceCategory: 'low',
 	},
 
+	// ---- DeepSeek ----
+	// DeepSeek uses the GLM-style `thinking: { type: 'enabled' | 'disabled' }`
+	// format. V4-Flash supports both non-thinking and thinking modes; V4-Pro
+	// thinks by default. Pricing per 1M tokens; CNY values are approximate.
+	{
+		id: 'deepseek-v4-flash',
+		name: 'DeepSeek-V4-Flash',
+		provider: 'deepseek',
+		family: 'deepseek',
+		version: 'deepseek-v4',
+		detail: 'Fast flagship, 1M context, thinking & non-thinking modes',
+		maxInputTokens: 1000000,
+		maxOutputTokens: 384000,
+		capabilities: {
+			toolCalling: LLM_TOOLS_LIMIT,
+			imageInput: false,
+			thinking: true,
+		},
+		requiresThinkingParam: false,
+		pricing: {
+			USD: { cacheHitInput: 0.0028, cacheMissInput: 0.14, output: 0.28 },
+			CNY: { cacheHitInput: 0.02, cacheMissInput: 1.0, output: 2.0 },
+		},
+		priceCategory: 'low',
+	},
+	{
+		id: 'deepseek-v4-pro',
+		name: 'DeepSeek-V4-Pro',
+		provider: 'deepseek',
+		family: 'deepseek',
+		version: 'deepseek-v4',
+		detail: 'Pro flagship, 1M context, deep thinking by default',
+		maxInputTokens: 1000000,
+		maxOutputTokens: 384000,
+		capabilities: {
+			toolCalling: LLM_TOOLS_LIMIT,
+			imageInput: false,
+			thinking: true,
+		},
+		requiresThinkingParam: false,
+		pricing: {
+			USD: { cacheHitInput: 0.003625, cacheMissInput: 0.435, output: 0.87 },
+			CNY: { cacheHitInput: 0.026, cacheMissInput: 3.1, output: 6.3 },
+		},
+		priceCategory: 'high',
+	},
+
 	// ---- z.ai (Zhipu GLM) ----
 	// Pricing is z.ai's public USD pricing per 1M tokens; CNY values are
 	// approximate conversions and only drive the picker's cost hints. GLM uses
@@ -640,27 +705,6 @@ export const MODELS: ModelDefinition[] = [
 			CNY: { cacheHitInput: 0.2, cacheMissInput: 1.5, output: 8 },
 		},
 		priceCategory: 'low',
-	},
-	{
-		id: 'glm-4.5v',
-		name: 'GLM-4.5V',
-		provider: 'zai',
-		family: 'glm',
-		version: 'glm-4.5v',
-		detail: 'Native vision model',
-		maxInputTokens: 65536,
-		maxOutputTokens: 16384,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: true,
-			thinking: true,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0.11, cacheMissInput: 0.6, output: 1.8 },
-			CNY: { cacheHitInput: 0.8, cacheMissInput: 4.3, output: 13 },
-		},
-		priceCategory: 'medium',
 	},
 	{
 		id: 'glm-5',

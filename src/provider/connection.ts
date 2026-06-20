@@ -83,7 +83,9 @@ export async function runConnectionTest(
 				// Report the outcome before presenting (possibly blocking) messages
 				// so the status dot updates immediately.
 				observe?.(provider.id, result.kind);
-				await presentConnectionSuccess(provider, result);
+				// Fire-and-forget: don't await the result dialog inside withProgress,
+				// otherwise the "Testing..." notification stays until the user dismisses it.
+				presentConnectionSuccess(provider, result);
 			} catch (error) {
 				if (token.isCancellationRequested) {
 					observe?.(provider.id, 'cancelled');
@@ -92,7 +94,8 @@ export async function runConnectionTest(
 				observe?.(provider.id, 'failed');
 				logger.warn(`Connection test failed for ${provider.id}`, error);
 				const detail = formatConnectionFailureDetail(error);
-				await showConnectionMessage(
+				// Fire-and-forget: same reason as above.
+				showConnectionMessage(
 					'error',
 					t('connection.failed', provider.name, detail),
 					provider,

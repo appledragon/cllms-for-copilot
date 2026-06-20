@@ -32,6 +32,7 @@
  *   MOONSHOT_API_KEY         — Moonshot (Kimi)
  *   MOONSHOT_INTL_API_KEY    — Moonshot International
  *   HUNYUAN_API_KEY          — Tencent Hunyuan
+ *   DEEPSEEK_API_KEY         — DeepSeek
  *
  *   Example:
  *     ZAI_API_KEY=xxx node scripts/test-providers.mjs glm
@@ -67,6 +68,12 @@ const PROVIDERS = {
 		envKey: 'DASHSCOPE_INTL_API_KEY',
 		baseUrl: 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1',
 		thinkingStyle: 'qwen',
+	},
+	deepseek: {
+		name: 'DeepSeek',
+		envKey: 'DEEPSEEK_API_KEY',
+		baseUrl: 'https://api.deepseek.com/v1',
+		thinkingStyle: 'glm',
 	},
 	zai: {
 		name: 'z.ai (Zhipu GLM)',
@@ -120,6 +127,7 @@ const ALIASES = {
 	dashscope: 'qwen',
 	tongyi: 'qwen',
 	'qwen-international': 'qwen-intl',
+	deepseek: 'deepseek',
 	mimo: 'xiaomi',
 	kimi: 'moonshot',
 	'kimi-intl': 'moonshot-intl',

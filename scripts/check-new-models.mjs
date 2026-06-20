@@ -15,6 +15,7 @@
  *   MIMO_API_KEY         — Xiaomi MiMo
  *   MOONSHOT_API_KEY     — Moonshot (Kimi)
  *   HUNYUAN_API_KEY      — Tencent Hunyuan
+ *   DEEPSEEK_API_KEY     — DeepSeek
  *
  *   Example:
  *     DASHSCOPE_API_KEY=sk-xxx ZAI_API_KEY=xxx node scripts/check-new-models.mjs
@@ -143,6 +144,14 @@ const PROVIDERS = {
 				)
 				.filter((id) => !/-\d{4}-\d{2}-\d{2}$/.test(id))
 				.filter((id) => !/-preview$/.test(id) && !/-thinking$/.test(id)),
+	},
+	deepseek: {
+		label: '🔵 DeepSeek',
+		envKey: 'DEEPSEEK_API_KEY',
+		apiUrl: 'https://api.deepseek.com/v1/models',
+		docUrl: 'https://api-docs.deepseek.com/quick_start/pricing',
+		filterCurrent: (ids) => ids.filter((id) => id.startsWith('deepseek-')),
+		filterRemote: (ids) => ids.filter((id) => /^deepseek-/.test(id)),
 	},
 	glm: {
 		label: '🟢 z.ai (Zhipu GLM)',

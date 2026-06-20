@@ -35,7 +35,7 @@ Install from the registry used by your editor:
 
 ## Models
 
-Six providers ship out of the box. Each model has its own API key and endpoint, so you can use Qwen, z.ai (GLM), MiniMax, Xiaomi MiMo, Moonshot Kimi, Tencent Hunyuan, or any combination at the same time from the Copilot model picker.
+Seven providers ship out of the box. Each model has its own API key and endpoint, so you can use Qwen, DeepSeek, z.ai (GLM), MiniMax, Xiaomi MiMo, Moonshot Kimi, Tencent Hunyuan, or any combination at the same time from the Copilot model picker.
 
 **Qwen (DashScope)**
 
@@ -49,6 +49,13 @@ Six providers ship out of the box. Each model has its own API key and endpoint, 
 | **Qwen3.7 Plus** | Balanced flagship, recommended default |
 | **Qwen3.6 Flash** | Lightweight, near-flagship quality, 1M context |
 
+**DeepSeek**
+
+| Model | Best For |
+|---|---|
+| **DeepSeek-V4-Flash** | Fast flagship, 1M context, thinking & non-thinking modes |
+| **DeepSeek-V4-Pro** | Pro flagship, 1M context, deep thinking by default |
+
 **z.ai (Zhipu GLM)**
 
 | Model | Best For |
@@ -57,7 +64,6 @@ Six providers ship out of the box. Each model has its own API key and endpoint, 
 | **GLM-5.1** | Flagship long-horizon coding & agents, 200K context, up to 8h autonomous work |
 | **GLM-4.6** | Flagship coding & agents, 200K context |
 | **GLM-4.5-Air** | Lightweight, faster, lower cost |
-| **GLM-4.5V** | Native vision (image input) |
 | **GLM-5** | High-intelligence base, coding aligned with Claude Opus 4.5, 200K context |
 | **GLM-5-Turbo** | Lobster-optimized base, long-task continuity, 200K context |
 | **GLM-4.7** | Upgraded general model, stronger coding, 200K context |
@@ -98,7 +104,7 @@ Six providers ship out of the box. Each model has its own API key and endpoint, 
 | **Hunyuan A13B** | Lightweight, fastest & lowest cost |
 | **Tencent HY 2.0 Instruct** | Instruction-following, creative & knowledge-accurate, 128K context |
 
-Model IDs are the official provider names and are fully configurable via `cllms.modelIdOverrides` / `cllms.zai.modelIdOverrides` / `cllms.minimax.modelIdOverrides` / `cllms.xiaomi.modelIdOverrides` / `cllms.moonshot.modelIdOverrides` / `cllms.hunyuan.modelIdOverrides` for third-party / self-hosted endpoints.
+Model IDs are the official provider names and are fully configurable via `cllms.modelIdOverrides` / `cllms.zai.modelIdOverrides` / `cllms.minimax.modelIdOverrides` / `cllms.xiaomi.modelIdOverrides` / `cllms.moonshot.modelIdOverrides` / `cllms.hunyuan.modelIdOverrides` / `cllms.deepseek.modelIdOverrides` for third-party / self-hosted endpoints.
 
 ## Adding a new model
 
@@ -110,7 +116,8 @@ Want to add your own model? See [Adding a new model](./docs/adding-a-model.md) f
 |---|---|---|
 | Qwen (DashScope China) | ✅ Tested | Qwen3 Coder Plus, Qwen Plus, Qwen3 Max, Qwen3-VL Plus — all verified. Qwen3.7 Max, Qwen3.7 Plus, and Qwen3.6 Flash ship enabled and are pending individual verification. |
 | Qwen (DashScope International) | ⚠️ Untested | API compatibility should match the domestic endpoint. Test tokens or test reports welcome! |
-| z.ai (Zhipu GLM) | ✅ Tested | GLM-5.2, GLM-5.1, GLM-4.6, GLM-4.5-Air, GLM-4.5V — all verified. GLM-5, GLM-5-Turbo, GLM-4.7, GLM-4.7-FlashX, and GLM-5V-Turbo ship enabled and are pending individual verification. |
+| DeepSeek | ⚠️ Untested | API compatibility follows the standard OpenAI-compatible Chat Completions API. Test tokens or test reports welcome! |
+| z.ai (Zhipu GLM) | ✅ Tested | GLM-5.2, GLM-5.1, GLM-4.6, GLM-4.5-Air — all verified. GLM-5, GLM-5-Turbo, GLM-4.7, GLM-4.7-FlashX, and GLM-5V-Turbo ship enabled and are pending individual verification. |
 | MiniMax (China) | ✅ Tested | MiniMax-M3, MiniMax-M2.7 — all verified. MiniMax-M2.5 ships enabled and is pending individual verification. |
 | MiniMax (International) | ⚠️ Untested | API compatibility should match the domestic endpoint. Test tokens or test reports welcome! |
 | Xiaomi MiMo | ✅ Tested | MiMo V2.5 Pro, MiMo V2.5 (Omni), MiMo V2 Flash — all verified. |
@@ -125,6 +132,8 @@ Want to add your own model? See [Adding a new model](./docs/adding-a-model.md) f
 | Setting | Default | Description |
 |---|---|---|
 | `cllms.baseUrl` | `https://dashscope-intl.aliyuncs.com/compatible-mode/v1` | Qwen OpenAI-compatible endpoint. Use `https://dashscope.aliyuncs.com/compatible-mode/v1` (Beijing), `https://dashscope-us.aliyuncs.com/compatible-mode/v1` (US), or any compatible third-party / self-hosted endpoint |
+| `cllms.qwenIntl.baseUrl` | `https://dashscope-intl.aliyuncs.com/compatible-mode/v1` | Qwen International OpenAI-compatible endpoint |
+| `cllms.deepseek.baseUrl` | `https://api.deepseek.com/v1` | DeepSeek OpenAI-compatible endpoint |
 | `cllms.zai.baseUrl` | `https://api.z.ai/api/paas/v4` | z.ai (GLM) OpenAI-compatible endpoint. Use `https://api.z.ai/api/coding/paas/v4` for a GLM Coding Plan subscription |
 | `cllms.minimax.baseUrl` | `https://api.minimax.io/v1` | MiniMax OpenAI-compatible endpoint. Use `https://api.minimaxi.com/v1` for mainland China |
 | `cllms.xiaomi.baseUrl` | `https://api.xiaomimimo.com/v1` | Xiaomi MiMo OpenAI-compatible endpoint (official open platform) |
@@ -133,6 +142,8 @@ Want to add your own model? See [Adding a new model](./docs/adding-a-model.md) f
 | `cllms.maxTokens` | `0` | Max output tokens (`0` = no limit). Useful for cost control |
 | `cllms.maxRetries` | `2` | Automatic retries for transient failures (HTTP 429, 5xx, network blips) before any output streams. Honors `Retry-After` and uses exponential backoff with jitter; retries stop once output starts, so a response is never duplicated. `0` disables |
 | `cllms.modelIdOverrides` | prefilled official ID map | API model IDs to send for each Qwen model. Change only for compatible third-party APIs with different model names |
+| `cllms.qwenIntl.modelIdOverrides` | prefilled official ID map | API model IDs to send for each Qwen (International) model |
+| `cllms.deepseek.modelIdOverrides` | prefilled official ID map | API model IDs to send for each DeepSeek model |
 | `cllms.zai.modelIdOverrides` | prefilled official ID map | API model IDs to send for each z.ai (GLM) model |
 | `cllms.minimax.modelIdOverrides` | prefilled official ID map | API model IDs to send for each MiniMax model |
 | `cllms.xiaomi.modelIdOverrides` | prefilled official ID map | API model IDs to send for each Xiaomi MiMo model |
@@ -203,6 +214,16 @@ Example `settings.json` override for compatible API proxies:
 }
 
 ```
+
+## Using DeepSeek
+
+DeepSeek works the same way:
+
+1. Run **`CLLMs: Set API Key`** and pick **DeepSeek**. Get an API key from the [DeepSeek platform](https://platform.deepseek.com/api_keys).
+2. Open the Copilot Chat model picker — **DeepSeek-V4-Flash** and **DeepSeek-V4-Pro** appear alongside the others.
+
+DeepSeek uses the standard OpenAI-compatible Chat Completions API. V4-Flash supports both thinking and non-thinking modes; V4-Pro thinks by default. Thinking is sent in GLM-style `thinking: { type: "enabled" | "disabled" }`. Both models have a 1M context, up to 384K output tokens, tool calling, and JSON output. The default endpoint is `https://api.deepseek.com/v1`.
+
 ## Using z.ai (Zhipu GLM)
 
 z.ai works out of the box — no proxy or model-ID hacking required:
@@ -210,7 +231,7 @@ z.ai works out of the box — no proxy or model-ID hacking required:
 1. Run **`CLLMs: Set API Key`** and pick **z.ai (Zhipu GLM)**. Get a key from the [z.ai API keys page](https://z.ai/manage-apikey/apikey-list).
 2. Open the Copilot Chat model picker — the GLM models appear alongside the Qwen ones.
 
-GLM thinking is sent in z.ai's native format (`thinking: { type: "enabled" }`), tool calling works, and `GLM-4.5V` and `GLM-5V-Turbo` are used as native vision models (images sent directly). If you have a GLM Coding Plan subscription, set `cllms.zai.baseUrl` to `https://api.z.ai/api/coding/paas/v4`.
+GLM thinking is sent in z.ai's native format (`thinking: { type: "enabled" }`), tool calling works, and `GLM-5V-Turbo` is used as the native vision model (images sent directly). If you have a GLM Coding Plan subscription, set `cllms.zai.baseUrl` to `https://api.z.ai/api/coding/paas/v4`.
 
 ## Using MiniMax
 
@@ -254,7 +275,7 @@ Hunyuan uses the standard OpenAI-compatible Chat Completions API. HY 2.0 Think a
 
 ## Other OpenAI-compatible providers
 
-Beyond the six built-in providers, requests go through a standard OpenAI-compatible Chat Completions endpoint, so you can repoint any provider at a compatible service via its `baseUrl` and map IDs with `modelIdOverrides`. For example, to serve GLM through the Qwen slots instead:
+Beyond the seven built-in providers, requests go through a standard OpenAI-compatible Chat Completions endpoint, so you can repoint any provider at a compatible service via its `baseUrl` and map IDs with `modelIdOverrides`. For example, to serve GLM through the Qwen slots instead:
 
 ```json
 {

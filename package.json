@@ -1,9 +1,9 @@
 {
   "name": "cllms-for-copilot",
   "displayName": "CLLMs for Copilot Chat",
-  "description": "Pick Qwen, GLM (z.ai), MiniMax, Xiaomi MiMo, Moonshot Kimi, and Tencent Hunyuan models from the Copilot Chat model picker. Vision, thinking mode, agent tools — zero config, BYOK.",
+  "description": "Pick Qwen, DeepSeek, GLM (z.ai), MiniMax, Xiaomi MiMo, Moonshot Kimi, and Tencent Hunyuan models from the Copilot Chat model picker. Vision, thinking mode, agent tools — zero config, BYOK.",
   "icon": "resources/icon.png",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "CuiLiAn",
   "license": "MIT",
   "repository": {
@@ -21,6 +21,7 @@
   ],
   "keywords": [
     "qwen",
+    "deepseek",
     "glm",
     "z.ai",
     "zhipu",
@@ -491,6 +492,30 @@
             }
           }
         },
+        "cllms.deepseek.baseUrl": {
+          "type": "string",
+          "default": "https://api.deepseek.com/v1",
+          "markdownDescription": "%cllms.config.deepseek.baseUrl.description%"
+        },
+        "cllms.deepseek.modelIdOverrides": {
+          "type": "object",
+          "default": {
+            "deepseek-v4-flash": "deepseek-v4-flash",
+            "deepseek-v4-pro": "deepseek-v4-pro"
+          },
+          "markdownDescription": "%cllms.config.deepseek.modelIdOverrides.description%",
+          "additionalProperties": false,
+          "properties": {
+            "deepseek-v4-flash": {
+              "type": "string",
+              "description": "%cllms.config.deepseek.modelIdOverrides.deepseek-v4-flash.description%"
+            },
+            "deepseek-v4-pro": {
+              "type": "string",
+              "description": "%cllms.config.deepseek.modelIdOverrides.deepseek-v4-pro.description%"
+            }
+          }
+        },
         "cllms.zai.baseUrl": {
           "type": "string",
           "default": "https://api.z.ai/api/paas/v4",
@@ -503,11 +528,10 @@
             "glm-5.1": "glm-5.1",
             "glm-4.6": "glm-4.6",
             "glm-4.5-air": "glm-4.5-air",
-            "glm-4.5v": "glm-4.5v",
             "glm-5": "glm-5",
             "glm-5-turbo": "glm-5-turbo",
             "glm-4.7": "glm-4.7",
-            "glm-4.7-flashx": "glm-4.7-flashx",
+            "glm-4.7-flashx": "glm-4.7",
             "glm-5v-turbo": "glm-5v-turbo"
           },
           "markdownDescription": "%cllms.config.zai.modelIdOverrides.description%",
@@ -528,10 +552,6 @@
             "glm-4.5-air": {
               "type": "string",
               "description": "%cllms.config.zai.modelIdOverrides.glm-4.5-air.description%"
-            },
-            "glm-4.5v": {
-              "type": "string",
-              "description": "%cllms.config.zai.modelIdOverrides.glm-4.5v.description%"
             },
             "glm-5": {
               "type": "string",

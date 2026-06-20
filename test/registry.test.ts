@@ -11,6 +11,7 @@ describe("provider registry", () => {
 
   it("ships the built-in providers", () => {
     assert.deepEqual(Object.keys(PROVIDERS).sort(), [
+      "deepseek",
       "hunyuan",
       "minimax",
       "minimax-intl",
@@ -59,6 +60,7 @@ describe("provider registry", () => {
 
   it("maps each provider to its expected thinking style", () => {
     assert.equal(PROVIDERS.qwen.thinkingStyle, "qwen");
+    assert.equal(PROVIDERS.deepseek.thinkingStyle, "glm");
     assert.equal(PROVIDERS.zai.thinkingStyle, "glm");
     assert.equal(PROVIDERS.minimax.thinkingStyle, "minimax");
     // MiMo and Kimi share GLM's `thinking: { type }` wire format.
@@ -106,6 +108,17 @@ describe("model registry", () => {
           `${model.id} ${currency}: cacheHit should not exceed cacheMiss`,
         );
       }
+    }
+  });
+
+  it("exposes the DeepSeek models on the deepseek provider", () => {
+    const deepseekIds = MODELS.filter((m) => m.provider === "deepseek")
+      .map((m) => m.id)
+      .sort();
+    assert.deepEqual(deepseekIds, ["deepseek-v4-flash", "deepseek-v4-pro"]);
+    for (const model of MODELS.filter((m) => m.provider === "deepseek")) {
+      assert.equal(model.capabilities.thinking, true, `${model.id} should be a thinking model`);
+      assert.equal(model.capabilities.imageInput, false, `${model.id} is text-only`);
     }
   });
 
@@ -157,7 +170,6 @@ describe("model registry", () => {
     assert.deepEqual(visionIds, [
       "MiniMax-M3",
       "MiniMax-M3-intl",
-      "glm-4.5v",
       "glm-5v-turbo",
       "kimi-k2.5",
       "kimi-k2.5-intl",

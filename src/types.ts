@@ -138,7 +138,8 @@ export type ProviderId =
 	| 'xiaomi'
 	| 'moonshot'
 	| 'moonshot-intl'
-	| 'hunyuan';
+	| 'hunyuan'
+	| 'deepseek';
 
 /**
  * How a provider serializes "thinking" / reasoning control on the request:

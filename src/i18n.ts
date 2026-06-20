@@ -56,6 +56,12 @@ const zh: Translations = {
 	'model.qwen3.6-flash-intl.detail': '轻量快速（国际站），接近旗舰质量',
 	'model.qwen3.6-flash-intl.tooltip':
 		'Qwen3.6 Flash 轻量模型（国际站），最高 1M 上下文，响应更快、成本更低，适合日常编码与 Agent 任务，支持思考模式与工具调用。',
+	'model.deepseek-v4-flash.detail': '旗舰极速，1M 上下文，支持思考与非思考模式',
+	'model.deepseek-v4-flash.tooltip':
+		'DeepSeek-V4-Flash 旗舰模型，1M 上下文，最高 384K 输出，支持思考与非思考两种模式、工具调用和 JSON 输出。',
+	'model.deepseek-v4-pro.detail': '旗舰专业，1M 上下文，默认深度思考',
+	'model.deepseek-v4-pro.tooltip':
+		'DeepSeek-V4-Pro 旗舰专业模型，1M 上下文，最高 384K 输出，默认深度思考模式，适合复杂推理与编码任务，支持工具调用和 JSON 输出。',
 	'model.glm-5.2.detail': '最新旗舰，1M 上下文，开源 SOTA 编码',
 	'model.glm-5.2.tooltip':
 		'z.ai GLM-5.2 最新旗舰模型，1M 上下文，支撑项目级工程上下文与复杂长程任务，从需求到多端部署的完整开发链路，支持深度思考模式与工具调用。',
@@ -68,8 +74,6 @@ const zh: Translations = {
 	'model.glm-4.5-air.detail': '轻量快速',
 	'model.glm-4.5-air.tooltip':
 		'z.ai GLM-4.5-Air 轻量模型，响应更快、成本更低，支持思考模式与工具调用。',
-	'model.glm-4.5v.detail': '原生视觉模型',
-	'model.glm-4.5v.tooltip': 'z.ai GLM-4.5V 视觉模型，支持原生图片输入，可直接理解图片。',
 	'model.glm-5.detail': '高智能基座，编码对齐 Claude Opus 4.5',
 	'model.glm-5.tooltip':
 		'z.ai GLM-5 高智能模型，200K 上下文，擅长编码、复杂推理与工具调用，支持思考模式。',
@@ -487,6 +491,12 @@ const en: Translations = {
 	'model.qwen3.6-flash-intl.detail': 'Lightweight (Intl), near-flagship quality',
 	'model.qwen3.6-flash-intl.tooltip':
 		'Qwen3.6 Flash lightweight model (international) with up to 1M context, faster responses and lower cost for everyday coding and agent tasks with thinking mode and tool calling.',
+	'model.deepseek-v4-flash.detail': 'Fast flagship, 1M context, thinking & non-thinking modes',
+	'model.deepseek-v4-flash.tooltip':
+		'DeepSeek-V4-Flash flagship with a 1M context and up to 384K output — supports both thinking and non-thinking modes, tool calling, and JSON output.',
+	'model.deepseek-v4-pro.detail': 'Pro flagship, 1M context, deep thinking by default',
+	'model.deepseek-v4-pro.tooltip':
+		'DeepSeek-V4-Pro flagship with a 1M context and up to 384K output — deep thinking by default, ideal for complex reasoning and coding, with tool calling and JSON output.',
 	'model.glm-5.2.detail': 'Latest flagship, 1M context, open-source SOTA coding',
 	'model.glm-5.2.tooltip':
 		'z.ai GLM-5.2 latest flagship with a 1M context — supports project-scale engineering context and complex long-horizon tasks, from requirements to multi-platform deployment in a single session, with deep thinking mode and tool calling.',
@@ -499,9 +509,6 @@ const en: Translations = {
 	'model.glm-4.5-air.detail': 'Lightweight & fast',
 	'model.glm-4.5-air.tooltip':
 		'z.ai GLM-4.5-Air, a lightweight model with faster responses and lower cost, plus thinking mode and tool calling.',
-	'model.glm-4.5v.detail': 'Native vision model',
-	'model.glm-4.5v.tooltip':
-		'z.ai GLM-4.5V vision model with native image input — understands images directly.',
 	'model.glm-5.detail': 'High-intelligence base, coding aligned with Claude Opus 4.5',
 	'model.glm-5.tooltip':
 		'z.ai GLM-5 high-intelligence model with a 200K context, strong at coding, complex reasoning, and tool calling with thinking mode.',
