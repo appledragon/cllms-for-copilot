@@ -1,6 +1,6 @@
 import vscode from 'vscode';
 import { getDebugLoggingEnabled } from '../../config';
-import { LANGUAGE_MODEL_CHAT_SYSTEM_ROLE } from '../../consts';
+import { LANGUAGE_MODEL_CHAT_SYSTEM_ROLE, MODELS } from '../../consts';
 import { logger } from '../../logger';
 import type { LlmRequest, LlmUsage } from '../../types';
 import {
@@ -681,7 +681,8 @@ function logUsage(
 				formatModelFields(context.vscodeModelId, context.apiModelId) +
 				` prompt=${usage.prompt_tokens} completion=${usage.completion_tokens}` +
 				` | cache: hit=${cacheHit} miss=${cacheMiss} rate=${getCacheHitRate(usage)}%` +
-				` | chars/tok=${charsPerToken.toFixed(2)}`,
+				` | chars/tok=${charsPerToken.toFixed(2)}` +
+				formatUsageCost(context.vscodeModelId, usage),
 		),
 	);
 }
@@ -690,6 +691,36 @@ function getCacheHitRate(usage: LlmUsage): string {
 	const cacheHit = usage.prompt_tokens_details?.cached_tokens ?? 0;
 	const cacheTotal = usage.prompt_tokens;
 	return cacheTotal > 0 ? ((cacheHit / cacheTotal) * 100).toFixed(0) : 'n/a';
+}
+
+const TOKENS_PER_PRICING_UNIT = 1_000_000;
+
+function getLocaleDisplayCurrency(): 'USD' | 'CNY' {
+	return vscode.env.language.toLowerCase().startsWith('zh') ? 'CNY' : 'USD';
+}
+
+function formatUsageCost(modelId: string, usage: LlmUsage): string {
+	const model = MODELS.find(m => m.id === modelId);
+	if (!model?.pricing) {
+		return '';
+	}
+
+	const currency = getLocaleDisplayCurrency();
+	const pricing = model.pricing[currency];
+	if (!pricing) {
+		return '';
+	}
+
+	const cacheHit = usage.prompt_tokens_details?.cached_tokens ?? 0;
+	const cacheMiss = Math.max(0, usage.prompt_tokens - cacheHit);
+	const cost =
+		(cacheMiss * pricing.cacheMissInput +
+			cacheHit * pricing.cacheHitInput +
+			usage.completion_tokens * pricing.output) /
+		TOKENS_PER_PRICING_UNIT;
+
+	const symbol = currency === 'CNY' ? '¥' : '$';
+	return ` | cost=${symbol}${cost.toFixed(4)}`;
 }
 
 function summarizeVisionResolution(
