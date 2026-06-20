@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- **Fix Hunyuan HY 2.0 Think API model ID** — corrected the default `modelIdOverrides` mapping from `hunyuan-2.0-think-20250516` to `hunyuan-2.0-think` (the versioned snapshot ID is no longer listed by the `/v1/models` endpoint, causing the connection test to flag it as stale).
+
 ## 0.3.0
 
 - **DeepSeek provider**: first-class DeepSeek support with DeepSeek-V4-Flash and DeepSeek-V4-Pro models.
