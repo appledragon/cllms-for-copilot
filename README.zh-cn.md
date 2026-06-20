@@ -2,7 +2,7 @@
 
 ## 致谢
 
-CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Vizards/deepseek-v4-for-copilot)（作者 [**Vizards**](https://github.com/Vizards)）面向 Qwen 的改编，原项目首创了通过原生 `LanguageModelChatProvider` API 将自带密钥（BYOK）的模型接入 Copilot Chat 选择器的方案；如今它已发展为支持 Qwen、z.ai（GLM）、MiniMax、小米 MiMo、Moonshot Kimi 与腾讯混元的多 Provider 扩展。在此向原作者致以诚挚感谢——本项目的 provider 流水线、视觉代理、思考模式处理与诊断能力，都深受 Vizards 打造并开源的那份基础工作的启发与帮助。
+CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Vizards/deepseek-v4-for-copilot)（作者 [**Vizards**](https://github.com/Vizards)）面向 Qwen 的改编，原项目首创了通过原生 `LanguageModelChatProvider` API 将自带密钥（BYOK）的模型接入 Copilot Chat 选择器的方案；如今它已发展为支持 Qwen、DeepSeek、z.ai（GLM）、MiniMax、小米 MiMo、Moonshot Kimi 与腾讯混元的多 Provider 扩展。在此向原作者致以诚挚感谢——本项目的 provider 流水线、视觉代理、思考模式处理与诊断能力，都深受 Vizards 打造并开源的那份基础工作的启发与帮助。
 
 ## 快速开始
 
@@ -12,6 +12,7 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 - GitHub Copilot 订阅（Free / Pro / Enterprise——免费版即可使用）
 - 至少一个 Provider 的 API Key：
   - **Qwen**：DashScope（阿里云百炼）Key，可在[百炼控制台](https://modelstudio.console.alibabacloud.com/?tab=model#/api-key)获取；使用自定义 `cllms.baseUrl` 时也可使用兼容的 provider token。
+  - **DeepSeek**：在 [DeepSeek 平台](https://platform.deepseek.com/api_keys) 获取 API Key。
   - **z.ai（GLM）**：在 [z.ai API Key 页面](https://z.ai/manage-apikey/apikey-list) 获取。
   - **MiniMax**：在 [MiniMax 平台](https://platform.minimax.io/user-center/basic-information/interface-key) 获取。
   - **小米 MiMo**：在 [小米 MiMo 开放平台](https://platform.xiaomimimo.com) 创建按量付费（`sk-...`）密钥。

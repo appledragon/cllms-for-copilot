@@ -4,7 +4,7 @@
 
 ## Thanks
 
-CLLMs began as a Qwen-focused adaptation of [**Vizards/deepseek-v4-for-copilot**](https://github.com/Vizards/deepseek-v4-for-copilot) by [**Vizards**](https://github.com/Vizards), which pioneered the approach of plugging a BYOK model into the Copilot Chat picker via the native `LanguageModelChatProvider` API, and has since grown into a multi-provider extension for Qwen, z.ai (GLM), MiniMax, Xiaomi MiMo, Moonshot Kimi, and Tencent Hunyuan. Huge thanks to the original author — the provider pipeline, vision proxy, thinking-mode handling, and diagnostics here are deeply inspired by the generous foundation that Vizards created and shared with the community.
+CLLMs began as a Qwen-focused adaptation of [**Vizards/deepseek-v4-for-copilot**](https://github.com/Vizards/deepseek-v4-for-copilot) by [**Vizards**](https://github.com/Vizards), which pioneered the approach of plugging a BYOK model into the Copilot Chat picker via the native `LanguageModelChatProvider` API, and has since grown into a multi-provider extension for Qwen, DeepSeek, z.ai (GLM), MiniMax, Xiaomi MiMo, Moonshot Kimi, and Tencent Hunyuan. Huge thanks to the original author — the provider pipeline, vision proxy, thinking-mode handling, and diagnostics here are deeply inspired by the generous foundation that Vizards created and shared with the community.
 
 ## Getting Started
 
@@ -14,6 +14,7 @@ CLLMs began as a Qwen-focused adaptation of [**Vizards/deepseek-v4-for-copilot**
 - GitHub Copilot subscription (Free / Pro / Enterprise — the free tier works)
 - An API key for at least one provider:
   - **Qwen**: a DashScope (Alibaba Cloud Model Studio) key from [Model Studio](https://modelstudio.console.alibabacloud.com/?tab=model#/api-key), or any compatible token when using a custom `cllms.baseUrl`.
+  - **DeepSeek**: an API key from the [DeepSeek platform](https://platform.deepseek.com/api_keys).
   - **z.ai (GLM)**: a key from the [z.ai API keys page](https://z.ai/manage-apikey/apikey-list).
   - **MiniMax**: a key from the [MiniMax platform](https://platform.minimax.io/user-center/basic-information/interface-key).
   - **Xiaomi MiMo**: a pay-as-you-go (`sk-...`) key from the [Xiaomi MiMo open platform](https://platform.xiaomimimo.com).

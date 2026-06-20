@@ -1,7 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.3.1
 
+- **Add DeepSeek to Prerequisites, walkthrough, and utility settings** — DeepSeek was missing from the Prerequisites list, walkthrough descriptions, and `cllms.utility.modelIdByProvider` provider key list in `package.json` / `package.nls.json` / `package.nls.zh-cn.json` / `README.md` / `README.zh-cn.md`.
 - **Fix Hunyuan HY 2.0 Think API model ID** — corrected the default `modelIdOverrides` mapping from `hunyuan-2.0-think-20250516` to `hunyuan-2.0-think` (the versioned snapshot ID is no longer listed by the `/v1/models` endpoint, causing the connection test to flag it as stale).
 
 ## 0.3.0
