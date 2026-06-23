@@ -13,6 +13,7 @@ export type AudioProxyErrorCode =
 	| 'cancelled'
 	| 'empty-response'
 	| 'unsupported-response'
+	| 'unsupported-audio-format'
 	| 'network';
 
 export class AudioProxyError extends Error {

@@ -36,6 +36,44 @@ describe("getAudioProviderAdapter", () => {
 		) as any;
 		assert.equal(Array.isArray(body.input), true);
 	});
+
+	it("maps common response-audio mime types to supported formats", () => {
+		const adapter = getAudioProviderAdapter({ ...baseConfig, apiType: "responses" });
+		const body = adapter.createBody(
+			{ ...baseConfig, apiType: "responses" },
+			{
+				prompt: "transcribe",
+				audios: [
+					{ mimeType: "audio/webm", data: new Uint8Array([1]) },
+					{ mimeType: "audio/m4a", data: new Uint8Array([2]) },
+				],
+				token: {} as any,
+			},
+		) as any;
+		const content = body.input[0].content;
+		assert.equal(content[1].input_audio.format, "webm");
+		assert.equal(content[2].input_audio.format, "mp4");
+	});
+
+	it("throws on unsupported response-audio mime type", () => {
+		const adapter = getAudioProviderAdapter({ ...baseConfig, apiType: "responses" });
+		assert.throws(
+			() =>
+				adapter.createBody(
+					{ ...baseConfig, apiType: "responses" },
+					{
+						prompt: "transcribe",
+						audios: [{ mimeType: "audio/aac", data: new Uint8Array([1, 2, 3]) }],
+						token: {} as any,
+					},
+				),
+			(error: unknown) => {
+				assert.ok(error instanceof AudioProxyError);
+				assert.equal(error.code, "unsupported-audio-format");
+				return true;
+			},
+		);
+	});
 });
 
 describe("audio responses parser", () => {

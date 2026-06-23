@@ -1,7 +1,11 @@
 import vscode from 'vscode';
 import { t } from '../../../i18n';
-import type { AudioProxyConfigStore } from '../sources/endpoint/config';
+import {
+	normalizeAudioProxyConfig,
+	type AudioProxyConfigStore,
+} from '../sources/endpoint/config';
 import type { AudioProxyApiType } from '../types';
+import { isAudioProxyError } from '../protocols/errors';
 
 export async function openAudioProxyQuickSetup(
 	store: AudioProxyConfigStore,
@@ -69,21 +73,31 @@ export async function openAudioProxyQuickSetup(
 		ignoreFocusOut: true,
 	});
 
-	await store.saveConfig({
-		providerFamily: 'openai-compatible',
-		apiType,
-		url: endpoint.trim(),
-		modelId: modelId.trim(),
-		updatedAt: Date.now(),
-	});
-	await store.saveSource('api-endpoint');
-	if (apiKey?.trim()) {
-		await store.setApiKey(apiKey);
+	try {
+		const config = normalizeAudioProxyConfig({
+			providerFamily: 'openai-compatible',
+			apiType,
+			url: endpoint.trim(),
+			modelId: modelId.trim(),
+			updatedAt: Date.now(),
+		});
+		await store.saveConfig(config);
+		await store.saveSource('api-endpoint');
+		if (apiKey?.trim()) {
+			await store.setApiKey(apiKey);
+		}
+		onDidChange();
+		void vscode.window.showInformationMessage(
+			apiKey?.trim()
+				? t('audio.panel.status.endpointSavedWithKey')
+				: t('audio.panel.status.endpointSaved'),
+		);
+	} catch (error) {
+		const message = isAudioProxyError(error)
+			? error.message
+			: error instanceof Error
+				? error.message
+				: String(error);
+		void vscode.window.showErrorMessage(message);
 	}
-	onDidChange();
-	void vscode.window.showInformationMessage(
-		apiKey?.trim()
-			? t('audio.panel.status.endpointSavedWithKey')
-			: t('audio.panel.status.endpointSaved'),
-	);
 }

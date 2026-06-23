@@ -162,6 +162,11 @@
 
 对于音频附件，音频代理可在主请求前先将音频转写为文本，供不支持原生音频输入的模型使用。可通过 `CLLMs: 配置音频代理` 打开与视觉代理同风格的面板进行配置。API 端点音频代理会复用 `cllms.maxRetries` 重试策略，并用 `cllms.audioProxy.timeoutMs` 控制每次尝试超时。
 
+最近的音频模块加固更新：
+- Quick Setup 在保存前会先校验并规范化音频代理端点配置（与面板保存路径一致）。
+- 自定义音频代理请求头不允许覆盖受保护请求头（`authorization`、`content-type`）。
+- Responses-audio 的 MIME 处理显式支持 `audio/webm` 与 `audio/m4a`/`audio/mp4`；不支持的 MIME 会返回明确的类型化错误。
+
 ### 辅助请求成本控制
 
 CLLMs 可以让一次性的 Copilot 辅助请求比真正的 agent 轮次跑得更便宜。这里有**两条相互独立的路径**，决策者不同。

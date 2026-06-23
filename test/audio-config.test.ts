@@ -59,4 +59,9 @@ describe("audio headers/url validation", () => {
 		expectAudioError(() => normalizeCustomHeaders({ "Bad Name": "x" }), "invalid-custom-headers");
 		assert.doesNotThrow(() => validateAudioEndpointUrl("https://api.example.com/v1/audio"));
 	});
+
+	it("rejects protected header overrides", () => {
+		expectAudioError(() => normalizeCustomHeaders({ authorization: "Bearer x" }), "invalid-custom-headers");
+		expectAudioError(() => normalizeCustomHeaders({ "Content-Type": "text/plain" }), "invalid-custom-headers");
+	});
 });

@@ -2,6 +2,8 @@ import { t } from '../../../i18n';
 import type { AudioProxyConfig } from '../types';
 import { AudioProxyError } from './errors';
 
+const PROTECTED_HEADER_NAMES = new Set(['authorization', 'content-type']);
+
 export function normalizeCustomHeaders(headers: unknown): Record<string, string> | undefined {
 	if (headers === undefined || headers === null) {
 		return undefined;
@@ -20,6 +22,12 @@ export function normalizeCustomHeaders(headers: unknown): Record<string, string>
 			);
 		}
 		if (!/^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/u.test(name)) {
+			throw new AudioProxyError(
+				'invalid-custom-headers',
+				t('audio.proxy.error.customHeaderNameInvalid', name),
+			);
+		}
+		if (PROTECTED_HEADER_NAMES.has(name.toLowerCase())) {
 			throw new AudioProxyError(
 				'invalid-custom-headers',
 				t('audio.proxy.error.customHeaderNameInvalid', name),

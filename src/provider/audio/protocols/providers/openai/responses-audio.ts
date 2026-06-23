@@ -67,7 +67,7 @@ function parseResponse(value: unknown): string {
 }
 
 function inferAudioFormat(mimeType: string): string {
-	switch (mimeType) {
+	switch (mimeType.toLowerCase()) {
 		case 'audio/wav':
 		case 'audio/x-wav':
 			return 'wav';
@@ -78,7 +78,16 @@ function inferAudioFormat(mimeType: string): string {
 			return 'flac';
 		case 'audio/ogg':
 			return 'ogg';
+		case 'audio/webm':
+			return 'webm';
+		case 'audio/mp4':
+		case 'audio/m4a':
+		case 'audio/x-m4a':
+			return 'mp4';
 		default:
-			return 'wav';
+			throw new AudioProxyError(
+				'unsupported-audio-format',
+				t('audio.proxy.error.invalidAudioPart', mimeType),
+			);
 	}
 }

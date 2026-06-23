@@ -164,6 +164,11 @@ For text-only models, the vision proxy resolves image attachments to text before
 
 For audio attachments, the audio proxy can transcribe audio into text before the main request for models that do not natively process audio parts. Configure it from `CLLMs: Configure Audio Proxy` (panel UI, similar to Vision Proxy). API-endpoint audio calls use the same retry policy (`cllms.maxRetries`) and `cllms.audioProxy.timeoutMs` per attempt.
 
+Recent audio hardening updates:
+- Quick Setup now validates and normalizes audio proxy endpoint config before saving (same behavior as the panel flow).
+- Custom audio proxy headers cannot override protected request headers (`authorization`, `content-type`).
+- Responses-audio MIME handling now supports `audio/webm` and `audio/m4a`/`audio/mp4` explicitly; unsupported MIME types return a clear typed error.
+
 ### Utility cost control
 
 CLLMs can run lightweight, one-shot Copilot helper requests more cheaply than your real agent turns. Two independent paths exist, with different decision-makers.
