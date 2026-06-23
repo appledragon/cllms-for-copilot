@@ -741,7 +741,7 @@
         "cllms.hunyuan.modelIdOverrides": {
           "type": "object",
           "default": {
-            "hunyuan-2.0-think": "hunyuan-2.0-think",
+            "hunyuan-2.0-think": "hunyuan-2.0-thinking-20251109",
             "hunyuan-turbos": "hunyuan-turbos-latest",
             "hunyuan-t1": "hunyuan-t1-latest",
             "hunyuan-a13b": "hunyuan-a13b",
