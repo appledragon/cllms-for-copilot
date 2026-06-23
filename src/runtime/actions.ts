@@ -2,11 +2,13 @@ import vscode from 'vscode';
 import { setErrorActionUrl, type ErrorActionUrls } from '../client';
 import {
 	CONFIGURE_API_KEY_URI_PATH,
+	SET_AUDIO_MODEL_URI_PATH,
 	SET_VISION_MODEL_URI_PATH,
 	SHOW_LOGS_URI_PATH,
 } from '../consts';
 import { logger } from '../logger';
 import {
+	setAudioProxyConfigurationUrl,
 	setProviderNoticeShowLogsUrl,
 	setVisionProxyConfigurationUrl,
 } from '../provider/tools/notices';
@@ -39,6 +41,12 @@ const ACTION_URLS: readonly ActionUrlDefinition[] = [
 		handle: () => vscode.commands.executeCommand('cllms.setVisionModel'),
 		resolveFailureMessage: 'Failed to resolve CLLMs set vision model URI',
 		setUrl: setVisionProxyConfigurationUrl,
+	},
+	{
+		path: SET_AUDIO_MODEL_URI_PATH,
+		handle: () => vscode.commands.executeCommand('cllms.setAudioModel'),
+		resolveFailureMessage: 'Failed to resolve CLLMs set audio model URI',
+		setUrl: setAudioProxyConfigurationUrl,
 	},
 ];
 

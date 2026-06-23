@@ -37,6 +37,10 @@ export const API_PROVIDER_HTTP_ERROR_LINKS: Readonly<
 			labelKey: 'error.action.createApiKey',
 			url: EXTERNAL_URLS.qwenIntl.apiKeys,
 		},
+		deepseek: {
+			labelKey: 'error.action.createApiKey',
+			url: EXTERNAL_URLS.deepseek.apiKeys,
+		},
 		zai: {
 			labelKey: 'error.action.createApiKey',
 			url: EXTERNAL_URLS.zai.apiKeys,
@@ -75,6 +79,10 @@ export const API_PROVIDER_HTTP_ERROR_LINKS: Readonly<
 			labelKey: 'error.action.viewUsage',
 			url: EXTERNAL_URLS.qwenIntl.usage,
 		},
+		deepseek: {
+			labelKey: 'error.action.viewUsage',
+			url: EXTERNAL_URLS.deepseek.usage,
+		},
 		zai: {
 			labelKey: 'error.action.viewUsage',
 			url: EXTERNAL_URLS.zai.usage,
@@ -112,6 +120,10 @@ export const API_PROVIDER_HTTP_ERROR_LINKS: Readonly<
 		'qwen-intl': {
 			labelKey: 'error.action.checkQwenStatus',
 			url: EXTERNAL_URLS.qwenIntl.status,
+		},
+		deepseek: {
+			labelKey: 'error.action.checkProviderStatus',
+			url: EXTERNAL_URLS.deepseek.status,
 		},
 		zai: {
 			labelKey: 'error.action.checkProviderStatus',

@@ -29,7 +29,11 @@ class EventEmitter {
 
 	fire(value) {
 		for (const listener of this.listeners) {
-			listener(value);
+			try {
+				listener(value);
+			} catch {
+				// Keep notifying remaining listeners when one callback throws.
+			}
 		}
 	}
 
@@ -446,6 +450,7 @@ function resetState() {
 	state.treeDataProviders.clear();
 	state.treeViews.length = 0;
 	state.webviewViewProviders.clear();
+	state.lmTools?.clear();
 	vscodeStub.env.language = 'en';
 	vscodeStub.env.remoteName = undefined;
 }
@@ -599,15 +604,36 @@ const vscodeStub = {
 	__setMessageResult: (value) => {
 		state.messageResult = value;
 	},
+	__installLoadHook: installLoadHook,
+	__restoreLoadHook: restoreLoadHook,
+	__isLoadHookInstalled: () => isLoadHookInstalled,
 };
 
 const originalLoad = Module._load;
-Module._load = function (request, parent, isMain) {
-	if (request === 'vscode') {
-		return vscodeStub;
+let isLoadHookInstalled = false;
+
+function installLoadHook() {
+	if (isLoadHookInstalled) {
+		return;
 	}
-	return originalLoad.call(this, request, parent, isMain);
-};
+	Module._load = function (request, parent, isMain) {
+		if (request === 'vscode') {
+			return vscodeStub;
+		}
+		return originalLoad.call(this, request, parent, isMain);
+	};
+	isLoadHookInstalled = true;
+}
+
+function restoreLoadHook() {
+	if (!isLoadHookInstalled) {
+		return;
+	}
+	Module._load = originalLoad;
+	isLoadHookInstalled = false;
+}
+
+installLoadHook();
 
 globalThis.__vscodeStub = vscodeStub;
 

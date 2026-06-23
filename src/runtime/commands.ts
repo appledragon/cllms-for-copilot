@@ -19,6 +19,7 @@ export function registerCommands(context: vscode.ExtensionContext): void {
 		vscode.commands.registerCommand('cllms.openSettings', () =>
 			vscode.commands.executeCommand('workbench.action.openSettings', 'cllms'),
 		),
+		vscode.commands.registerCommand('cllms.setAudioModel', () => configureAudioProxy(context)),
 	);
 }
 
@@ -110,6 +111,11 @@ async function openApiKeyPage(): Promise<void> {
 	if (provider) {
 		await vscode.env.openExternal(vscode.Uri.parse(provider.externalUrls.apiKeys));
 	}
+}
+
+async function configureAudioProxy(context: vscode.ExtensionContext): Promise<void> {
+	const { openAudioProxyPanel } = await import('../provider/audio/ui/panel');
+	openAudioProxyPanel(context, { onDidChange: () => {} });
 }
 
 async function openRequestDumpsFolder(context: vscode.ExtensionContext): Promise<void> {

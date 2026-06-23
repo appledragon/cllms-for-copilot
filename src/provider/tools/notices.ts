@@ -1,6 +1,8 @@
 import vscode from 'vscode';
 import { t } from '../../i18n';
 import {
+	AUDIO_PROXY_NOTICE_END,
+	AUDIO_PROXY_NOTICE_START,
 	TOOL_DRIFT_NOTICE_END,
 	TOOL_DRIFT_NOTICE_START,
 	VISION_PROXY_NOTICE_END,
@@ -12,10 +14,15 @@ type LanguageModelChatRequestMessagePart =
 	vscode.LanguageModelChatRequestMessage['content'][number];
 
 let visionProxyConfigurationUrl = 'command:cllms.setVisionModel';
+let audioProxyConfigurationUrl = 'command:cllms.setAudioModel';
 let showLogsUrl = 'command:cllms.showLogs';
 
 export function setVisionProxyConfigurationUrl(url: string): void {
 	visionProxyConfigurationUrl = url;
+}
+
+export function setAudioProxyConfigurationUrl(url: string): void {
+	audioProxyConfigurationUrl = url;
 }
 
 export function setProviderNoticeShowLogsUrl(url: string): void {
@@ -61,6 +68,37 @@ export function createVisionProxyFailureNotice(errorCode: string, errorMessage: 
 		),
 		'',
 		VISION_PROXY_NOTICE_END,
+		'',
+	].join('\n');
+}
+
+export function createAudioProxyMissingNotice(): string {
+	return [
+		'',
+		AUDIO_PROXY_NOTICE_START,
+		'',
+		createBlockquote(t('notice.audioProxyMissing', audioProxyConfigurationUrl)),
+		'',
+		AUDIO_PROXY_NOTICE_END,
+		'',
+	].join('\n');
+}
+
+export function createAudioProxyFailureNotice(errorCode: string, errorMessage: string): string {
+	return [
+		'',
+		AUDIO_PROXY_NOTICE_START,
+		'',
+		createBlockquote(
+			t(
+				'notice.audioProxyFailure',
+				escapeBoldText(`[${errorCode}] ${errorMessage}`),
+				createConfigureAudioProxyLink(),
+				createShowLogsLink(),
+			),
+		),
+		'',
+		AUDIO_PROXY_NOTICE_END,
 		'',
 	].join('\n');
 }
@@ -115,6 +153,7 @@ function stripProviderNotices(value: string): string {
 	for (const marker of [
 		{ start: TOOL_DRIFT_NOTICE_START, end: TOOL_DRIFT_NOTICE_END },
 		{ start: VISION_PROXY_NOTICE_START, end: VISION_PROXY_NOTICE_END },
+		{ start: AUDIO_PROXY_NOTICE_START, end: AUDIO_PROXY_NOTICE_END },
 	]) {
 		result = stripProviderNotice(result, marker.start, marker.end);
 	}
@@ -162,6 +201,10 @@ function createBlockquote(value: string): string {
 
 function createConfigureVisionProxyLink(): string {
 	return `[${t('vision.action.configureProxy')}](${visionProxyConfigurationUrl})`;
+}
+
+function createConfigureAudioProxyLink(): string {
+	return `[${t('audio.action.configureProxy')}](${audioProxyConfigurationUrl})`;
 }
 
 function createShowLogsLink(): string {

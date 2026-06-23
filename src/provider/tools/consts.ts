@@ -12,3 +12,5 @@ export const TOOL_DRIFT_NOTICE_START = '[cllms-tool-drift-notice-start]: #';
 export const TOOL_DRIFT_NOTICE_END = '[cllms-tool-drift-notice-end]: #';
 export const VISION_PROXY_NOTICE_START = '[cllms-vision-proxy-notice-start]: #';
 export const VISION_PROXY_NOTICE_END = '[cllms-vision-proxy-notice-end]: #';
+export const AUDIO_PROXY_NOTICE_START = '[cllms-audio-proxy-notice-start]: #';
+export const AUDIO_PROXY_NOTICE_END = '[cllms-audio-proxy-notice-end]: #';

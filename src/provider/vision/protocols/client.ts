@@ -1,17 +1,17 @@
 import type { CancellationToken } from 'vscode';
-import { RETRY_BASE_DELAY_MS, RETRY_MAX_DELAY_MS } from '../../../client/consts';
 import {
 	getNetworkErrorCategory,
 	getNetworkErrorCauseInfo,
 	getNetworkErrorCode,
 } from '../../../client/error/network';
 import { t } from '../../../i18n';
-import { safeStringify } from '../../../json';
+import { postJsonWithTimeout, runRetriableProxyTask } from '../../proxy/client';
 import type { VisionDescriptionRequest, VisionProxyConfig } from '../types';
 import {
 	addVisionProxyDiagnostics,
 	createHttpVisionProxyError,
 	createVisionProxyRequestError,
+	isVisionProxyError,
 	VisionProxyError,
 	type VisionProxyRequestDiagnostics,
 } from './errors';
@@ -37,27 +37,13 @@ export class VisionProxyClient {
 	): Promise<string> {
 		const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
 		const maxRetries = Math.max(0, options.maxRetries ?? 0);
-
-		let attempt = 0;
-		for (;;) {
-			try {
-				return await this.describeOnce(config, apiKey, request, timeoutMs);
-			} catch (error) {
-				attempt += 1;
-				if (
-					attempt > maxRetries ||
-					request.token.isCancellationRequested ||
-					!(error instanceof VisionProxyError) ||
-					!isRetryableVisionProxyError(error)
-				) {
-					throw error;
-				}
-				await delay(getVisionRetryDelayMs(attempt), request.token);
-				if (request.token.isCancellationRequested) {
-					throw error;
-				}
-			}
-		}
+		return runRetriableProxyTask({
+			token: request.token,
+			maxRetries,
+			task: () => this.describeOnce(config, apiKey, request, timeoutMs),
+			isTypedError: isVisionProxyError,
+			isRetryable: isRetryableVisionProxyError,
+		});
 	}
 
 	private async describeOnce(
@@ -83,12 +69,35 @@ export class VisionProxyClient {
 			apiKey,
 			timeoutMs,
 		);
-		const responseValue = await postJson(endpoint, {
-			context,
+		const responseValue = await postJsonWithTimeout(endpoint, {
 			headers,
 			body,
 			timeoutMs,
 			token: request.token,
+			onBodySerialized: (bodyText) => {
+				context.bodyBytes = Buffer.byteLength(bodyText, 'utf8');
+			},
+			readResponse: async (response) => {
+				const responseText = await response.text();
+				try {
+					return JSON.parse(responseText) as unknown;
+				} catch (error) {
+					throw createVisionProxyRequestError(
+						'unsupported-response',
+						getUnsupportedResponseMessage(context),
+						context,
+						error,
+					);
+				}
+			},
+			createHttpError: (response) => createHttpVisionProxyError(response, context),
+			isTypedError: isVisionProxyError,
+			createCancelledError: (error) =>
+				createVisionProxyRequestError('cancelled', t('vision.proxy.error.cancelled'), context, error),
+			createTimeoutError: (error) =>
+				createVisionProxyRequestError('timeout', t('vision.proxy.error.timeout'), context, error),
+			createAbortError: (error) => createVisionProxyNetworkError(error, context, 'aborted'),
+			createUnknownError: (error) => createVisionProxyNetworkError(error, context),
 		});
 
 		try {
@@ -124,117 +133,6 @@ function isRetryableVisionProxyError(error: VisionProxyError): boolean {
 	return false;
 }
 
-function getVisionRetryDelayMs(attempt: number): number {
-	const exponential = Math.min(RETRY_BASE_DELAY_MS * 2 ** (attempt - 1), RETRY_MAX_DELAY_MS);
-	return Math.round(Math.random() * exponential);
-}
-
-function delay(ms: number, token: CancellationToken): Promise<void> {
-	if (ms <= 0) {
-		return Promise.resolve();
-	}
-	return new Promise((resolve) => {
-		const timer = setTimeout(() => {
-			listener.dispose();
-			resolve();
-		}, ms);
-		const listener = token.onCancellationRequested(() => {
-			clearTimeout(timer);
-			listener.dispose();
-			resolve();
-		});
-	});
-}
-
-async function postJson(
-	endpoint: URL,
-	options: {
-		context: VisionProxyRequestDiagnostics;
-		headers: Record<string, string>;
-		body: object;
-		timeoutMs: number;
-		token: CancellationToken;
-	},
-): Promise<unknown> {
-	return postJsonRequest(endpoint, options, async (response) => {
-		const responseText = await response.text();
-		try {
-			return JSON.parse(responseText) as unknown;
-		} catch (error) {
-			throw createVisionProxyRequestError(
-				'unsupported-response',
-				getUnsupportedResponseMessage(options.context),
-				options.context,
-				error,
-			);
-		}
-	});
-}
-
-async function postJsonRequest<T>(
-	endpoint: URL,
-	options: {
-		context: VisionProxyRequestDiagnostics;
-		headers: Record<string, string>;
-		body: object;
-		timeoutMs: number;
-		token: CancellationToken;
-	},
-	readResponse: (response: Response) => Promise<T>,
-): Promise<T> {
-	const controller = new AbortController();
-	let timeoutReached = false;
-	const timeout = setTimeout(() => {
-		timeoutReached = true;
-		controller.abort();
-	}, options.timeoutMs);
-	const cancelListener = options.token.onCancellationRequested(() => {
-		controller.abort();
-	});
-
-	try {
-		const bodyText = safeStringify(options.body);
-		options.context.bodyBytes = Buffer.byteLength(bodyText, 'utf8');
-		const response = await fetch(endpoint, {
-			method: 'POST',
-			headers: options.headers,
-			body: bodyText,
-			signal: controller.signal,
-		});
-
-		if (!response.ok) {
-			throw await createHttpVisionProxyError(response, options.context);
-		}
-		return await readResponse(response);
-	} catch (error) {
-		if (options.token.isCancellationRequested) {
-			throw createVisionProxyRequestError(
-				'cancelled',
-				t('vision.proxy.error.cancelled'),
-				options.context,
-				error,
-			);
-		}
-		if (timeoutReached) {
-			throw createVisionProxyRequestError(
-				'timeout',
-				t('vision.proxy.error.timeout'),
-				options.context,
-				error,
-			);
-		}
-		if (error instanceof VisionProxyError) {
-			throw error;
-		}
-		if (isAbortError(error)) {
-			throw createVisionProxyNetworkError(error, options.context, 'aborted');
-		}
-		throw createVisionProxyNetworkError(error, options.context);
-	} finally {
-		clearTimeout(timeout);
-		cancelListener.dispose();
-	}
-}
 
 function createVisionProxyNetworkError(
 	error: unknown,
@@ -291,6 +189,3 @@ function getUnsupportedResponseMessage(context: VisionProxyRequestDiagnostics): 
 		: t('vision.proxy.error.unsupportedOpenAIResponse');
 }
 
-function isAbortError(error: unknown): boolean {
-	return error instanceof Error && error.name === 'AbortError';
-}

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.3
+
+- **Harden Audio Proxy configuration and protocol handling**:
+  - Quick Setup now validates and normalizes endpoint configuration before saving (same path as the web panel), so invalid URL/model settings fail fast with user-visible errors.
+  - Custom audio proxy headers can no longer override protected headers (`authorization`, `content-type`), preventing accidental auth/content-type breakage.
+  - OpenAI Responses audio adapter now explicitly supports `audio/webm` and `audio/m4a`/`audio/mp4`, and returns a typed `unsupported-audio-format` error for unsupported MIME types instead of silently defaulting to `wav`.
+- **Expand audio regression coverage** for protected headers and MIME-format mapping/error paths.
+- **Fix full-test consistency regressions**:
+  - Add missing `deepseek` entries in provider HTTP error next-step links (`401`/`402`/`5xx`).
+  - Update `docs/adding-a-model.md` provider/config-path coverage to include DeepSeek.
+
 ## 0.3.2
 
 - **Fix images silently dropped for text-only models** — when a text-only model (e.g. DeepSeek-V4-Pro) was selected, VS Code would show a strikethrough on pasted images and silently drop them before they reached the provider. The vision proxy never got a chance to run. Now all CLLMs models report `imageInput: true` to VS Code so images are always forwarded; internally, text-only models still route images through the vision proxy while native-vision models send them directly.

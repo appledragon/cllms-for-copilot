@@ -2,15 +2,11 @@
 
 <p align="center"><a href="README.zh-cn.md">中文</a></p>
 
-## Thanks
-
-CLLMs began as a Qwen-focused adaptation of [**Vizards/deepseek-v4-for-copilot**](https://github.com/Vizards/deepseek-v4-for-copilot) by [**Vizards**](https://github.com/Vizards), which pioneered the approach of plugging a BYOK model into the Copilot Chat picker via the native `LanguageModelChatProvider` API, and has since grown into a multi-provider extension for Qwen, DeepSeek, z.ai (GLM), MiniMax, Xiaomi MiMo, Moonshot Kimi, and Tencent Hunyuan. Huge thanks to the original author — the provider pipeline, vision proxy, thinking-mode handling, and diagnostics here are deeply inspired by the generous foundation that Vizards created and shared with the community.
-
 ## Getting Started
 
 ### Prerequisites
 
-- VS Code 1.116 or later. This extension relies on non-public Copilot Chat APIs that may break on newer VS Code versions — [report an issue](https://github.com/appledragon/cllms-for-copilot/issues) if you hit one.
+- VS Code 1.116 or later. This extension uses VS Code's Language Model Chat Provider integration. If you encounter compatibility issues with a specific VS Code/Copilot build, please [report an issue](https://github.com/appledragon/cllms-for-copilot/issues).
 - GitHub Copilot subscription (Free / Pro / Enterprise — the free tier works)
 - An API key for at least one provider:
   - **Qwen**: a DashScope (Alibaba Cloud Model Studio) key from [Model Studio](https://modelstudio.console.alibabacloud.com/?tab=model#/api-key), or any compatible token when using a custom `cllms.baseUrl`.
@@ -166,6 +162,13 @@ See [Advanced settings](./advanced-settings.md) for a focused guide to the cost 
 
 For text-only models, the vision proxy resolves image attachments to text before the main request. **All CLLMs models accept pasted images** — text-only models auto-route them through the vision proxy, while native-vision models (e.g. Qwen3-VL-Plus, GLM-5V-Turbo) receive images directly. If no explicit vision model is configured, the extension falls back to any available Copilot model (e.g. GPT-4o) as a vision describer. Identical image descriptions are cached for the current VS Code session by image bytes, prompt, and describer identity, so retries or re-attaching the same image avoid another description call. API-endpoint vision calls also use `cllms.maxRetries` for transient 429 / 5xx / network failures and `cllms.visionProxy.timeoutMs` for each attempt.
 
+For audio attachments, the audio proxy can transcribe audio into text before the main request for models that do not natively process audio parts. Configure it from `CLLMs: Configure Audio Proxy` (panel UI, similar to Vision Proxy). API-endpoint audio calls use the same retry policy (`cllms.maxRetries`) and `cllms.audioProxy.timeoutMs` per attempt.
+
+Recent audio hardening updates:
+- Quick Setup now validates and normalizes audio proxy endpoint config before saving (same behavior as the panel flow).
+- Custom audio proxy headers cannot override protected request headers (`authorization`, `content-type`).
+- Responses-audio MIME handling now supports `audio/webm` and `audio/m4a`/`audio/mp4` explicitly; unsupported MIME types return a clear typed error.
+
 ### Utility cost control
 
 CLLMs can run lightweight, one-shot Copilot helper requests more cheaply than your real agent turns. Two independent paths exist, with different decision-makers.
@@ -193,6 +196,7 @@ Run these from the Command Palette (`Cmd/Ctrl+Shift+P`):
 | `CLLMs: Get API Key` | Open a provider's API key page |
 | `CLLMs: Clear API Key` | Remove a provider's stored key |
 | `CLLMs: Configure Vision Proxy` | Pick the model used to describe images for text-only models |
+| `CLLMs: Configure Audio Proxy` | Configure the audio-transcription proxy endpoint and model |
 | `CLLMs: Test Provider Connection` | Verify a provider's key + endpoint via `/v1/models` and flag stale `modelIdOverrides` |
 | `CLLMs: Show Session Cost` | Show approximate spend per model for this session, with average context-cache hit rate, utility/agent cost split, and a reset action |
 | `CLLMs: Configure Utility Model` | Route lightweight Copilot helper requests to a cheaper model via VS Code's native `chat.utilityModel` / `chat.utilitySmallModel` |
@@ -215,6 +219,10 @@ Example `settings.json` override for compatible API proxies:
 }
 
 ```
+
+## Thanks
+
+CLLMs began as a Qwen-focused adaptation of [**Vizards/deepseek-v4-for-copilot**](https://github.com/Vizards/deepseek-v4-for-copilot) by [**Vizards**](https://github.com/Vizards), which pioneered the approach of plugging a BYOK model into the Copilot Chat picker via the native `LanguageModelChatProvider` API, and has since grown into a multi-provider extension for Qwen, DeepSeek, z.ai (GLM), MiniMax, Xiaomi MiMo, Moonshot Kimi, and Tencent Hunyuan. Huge thanks to the original author — the provider pipeline, vision proxy, thinking-mode handling, and diagnostics here are deeply inspired by the generous foundation that Vizards created and shared with the community.
 
 ## License
 

@@ -7,6 +7,7 @@ import { safeStringify } from '../../json';
 import { logger } from '../../logger';
 import type { LlmRequest } from '../../types';
 import { llmContentToText } from '../convert';
+import type { AudioProxySource, AudioResolutionStats } from '../audio';
 import {
 	classifyLlmRequestDetailed,
 	classifyProviderRequestDetailed,
@@ -92,6 +93,9 @@ export interface DumpLlmRequestOptions {
 	visionModelId?: string;
 	visionProxySource?: VisionProxySource;
 	visionStats?: VisionResolutionStats;
+	audioModelId?: string;
+	audioProxySource?: AudioProxySource;
+	audioStats?: AudioResolutionStats;
 }
 
 export interface DumpProviderInputOptions {
@@ -364,6 +368,14 @@ function createPipelineSnapshot(
 						stats: options.visionStats ?? null,
 					}
 				: undefined,
+		audio:
+			stage === 'resolved'
+				? {
+						modelId: options.audioModelId ?? null,
+						source: options.audioProxySource ?? null,
+						stats: options.audioStats ?? null,
+					}
+				: undefined,
 		deepSeekPromptSummary: summarizeLlmSystemPrompt(request.messages),
 		messages,
 		requestOptions: options.requestOptions,
@@ -377,6 +389,7 @@ function createDumpSnapshot(options: {
 	requestKind: RequestKind;
 	model: object;
 	vision?: object;
+	audio?: object;
 	deepSeekPromptSummary?: SystemPromptSummary;
 	messages: readonly vscode.LanguageModelChatRequestMessage[];
 	requestOptions: vscode.ProvideLanguageModelChatResponseOptions;
@@ -395,6 +408,7 @@ function createDumpSnapshot(options: {
 		options: summarizeRequestOptions(options.requestOptions),
 		hostSettings: summarizeHostSettings(),
 		vision: options.vision,
+		audio: options.audio,
 		systemPromptSummary: summarizeVscodeSystemPrompt(options.messages),
 		deepSeekPromptSummary: options.deepSeekPromptSummary,
 		messageStats: summarizeSerializedMessages(serializedMessages),

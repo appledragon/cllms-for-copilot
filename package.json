@@ -3,7 +3,7 @@
   "displayName": "CLLMs for Copilot Chat",
   "description": "Pick Qwen, DeepSeek, GLM (z.ai), MiniMax, Xiaomi MiMo, Moonshot Kimi, and Tencent Hunyuan models from the Copilot Chat model picker. Vision, thinking mode, agent tools — zero config, BYOK.",
   "icon": "resources/icon.png",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "publisher": "CuiLiAn",
   "license": "MIT",
   "repository": {
@@ -118,6 +118,11 @@
         "command": "cllms.setVisionModel",
         "title": "%cllms.command.setVisionModel%",
         "icon": "$(eye)"
+      },
+      {
+        "command": "cllms.setAudioModel",
+        "title": "CLLMs: Configure Audio Proxy",
+        "icon": "$(unmute)"
       },
       {
         "command": "cllms.testConnection",
@@ -253,6 +258,11 @@
           "command": "cllms.setVisionModel",
           "when": "view == cllms.providers",
           "group": "navigation@2"
+        },
+        {
+          "command": "cllms.setAudioModel",
+          "when": "view == cllms.providers",
+          "group": "navigation@3"
         },
         {
           "command": "cllms.openSettings",

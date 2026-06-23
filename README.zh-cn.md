@@ -1,14 +1,10 @@
 <h1 align="center">CLLMs for Copilot Chat</h1>
 
-## 致谢
-
-CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Vizards/deepseek-v4-for-copilot)（作者 [**Vizards**](https://github.com/Vizards)）面向 Qwen 的改编，原项目首创了通过原生 `LanguageModelChatProvider` API 将自带密钥（BYOK）的模型接入 Copilot Chat 选择器的方案；如今它已发展为支持 Qwen、DeepSeek、z.ai（GLM）、MiniMax、小米 MiMo、Moonshot Kimi 与腾讯混元的多 Provider 扩展。在此向原作者致以诚挚感谢——本项目的 provider 流水线、视觉代理、思考模式处理与诊断能力，都深受 Vizards 打造并开源的那份基础工作的启发与帮助。
-
 ## 快速开始
 
 ### 前置条件
 
-- VS Code 1.116 及以上版本。本扩展依赖非公开的 Copilot Chat API，较新的 VS Code 版本可能存在兼容性问题——如遇到请[提交 Issue](https://github.com/appledragon/cllms-for-copilot/issues)。
+- VS Code 1.116 及以上版本。本扩展基于 VS Code 的 Language Model Chat Provider 集成实现；如果你在特定 VS Code/Copilot 版本组合下遇到兼容性问题，请[提交 Issue](https://github.com/appledragon/cllms-for-copilot/issues)。
 - GitHub Copilot 订阅（Free / Pro / Enterprise——免费版即可使用）
 - 至少一个 Provider 的 API Key：
   - **Qwen**：DashScope（阿里云百炼）Key，可在[百炼控制台](https://modelstudio.console.alibabacloud.com/?tab=model#/api-key)获取；使用自定义 `cllms.baseUrl` 时也可使用兼容的 provider token。
@@ -164,6 +160,13 @@ CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Viza
 
 对于纯文本模型，视觉代理会在主请求前先把图片附件解析成文字。**所有 CLLMs 模型均接受粘贴图片**——纯文本模型会自动将图片路由到视觉代理，而原生视觉模型（如 Qwen3-VL-Plus、GLM-5V-Turbo）则直接接收图片。如果未配置显式的视觉模型，扩展会回退使用任意可用的 Copilot 模型（如 GPT-4o）作为视觉描述器。相同图片描述会在当前 VS Code 会话内按图片字节、提示词和描述器身份缓存，因此重试或重复附加同一张图片时不会再次调用描述模型。API 端点视觉代理还会对临时性 429 / 5xx / 网络失败复用 `cllms.maxRetries` 重试，并用 `cllms.visionProxy.timeoutMs` 控制每次尝试的超时。
 
+对于音频附件，音频代理可在主请求前先将音频转写为文本，供不支持原生音频输入的模型使用。可通过 `CLLMs: 配置音频代理` 打开与视觉代理同风格的面板进行配置。API 端点音频代理会复用 `cllms.maxRetries` 重试策略，并用 `cllms.audioProxy.timeoutMs` 控制每次尝试超时。
+
+最近的音频模块加固更新：
+- Quick Setup 在保存前会先校验并规范化音频代理端点配置（与面板保存路径一致）。
+- 自定义音频代理请求头不允许覆盖受保护请求头（`authorization`、`content-type`）。
+- Responses-audio 的 MIME 处理显式支持 `audio/webm` 与 `audio/m4a`/`audio/mp4`；不支持的 MIME 会返回明确的类型化错误。
+
 ### 辅助请求成本控制
 
 CLLMs 可以让一次性的 Copilot 辅助请求比真正的 agent 轮次跑得更便宜。这里有**两条相互独立的路径**，决策者不同。
@@ -191,6 +194,7 @@ CLLMs 可以让一次性的 Copilot 辅助请求比真正的 agent 轮次跑得�
 | `CLLMs: 获取 API Key` | 打开服务商的 API Key 页面 |
 | `CLLMs: 清除 API Key` | 移除已保存的服务商 Key |
 | `CLLMs: 配置视觉代理` | 选择用于为纯文本模型描述图片的模型 |
+| `CLLMs: 配置音频代理` | 配置音频转写代理端点与模型 |
 | `CLLMs: 测试服务商连接` | 通过 `/v1/models` 验证服务商 Key 与端点，并提示失效的 `modelIdOverrides` |
 | `CLLMs: 查看会话费用` | 按模型查看本次会话的大致花费，包含平均上下文缓存命中率、utility/agent 费用拆分，并可清零 |
 | `CLLMs: 配置辅助请求模型` | 通过 VS Code 原生 `chat.utilityModel` / `chat.utilitySmallModel` 将 Copilot 的轻量辅助请求路由到更便宜的模型 |
@@ -213,6 +217,10 @@ CLLMs 可以让一次性的 Copilot 辅助请求比真正的 agent 轮次跑得�
 }
 
 ```
+
+## 致谢
+
+CLLMs 起初是对 [**Vizards/deepseek-v4-for-copilot**](https://github.com/Vizards/deepseek-v4-for-copilot)（作者 [**Vizards**](https://github.com/Vizards)）面向 Qwen 的改编，原项目首创了通过原生 `LanguageModelChatProvider` API 将自带密钥（BYOK）的模型接入 Copilot Chat 选择器的方案；如今它已发展为支持 Qwen、DeepSeek、z.ai（GLM）、MiniMax、小米 MiMo、Moonshot Kimi 与腾讯混元的多 Provider 扩展。在此向原作者致以诚挚感谢——本项目的 provider 流水线、视觉代理、思考模式处理与诊断能力，都深受 Vizards 打造并开源的那份基础工作的启发与帮助。
 
 ## 许可证
 

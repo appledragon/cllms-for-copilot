@@ -5,6 +5,7 @@ import {
 	REPLAY_MARKER_PREFIXES,
 } from './consts';
 import type {
+	AudioMarkerTextIgnoredReason,
 	ReasoningMarkerTextIgnoredReason,
 	ReplayMarkerParseResult,
 	ReplayMarkerPayloadFormat,
@@ -13,7 +14,7 @@ import type {
 
 const textDecoder = new TextDecoder();
 
-type MarkerSectionKey = 'vision' | 'reasoning';
+type MarkerSectionKey = 'vision' | 'audio' | 'reasoning';
 
 export function parseReplayMarkerData(data: Uint8Array): ReplayMarkerParseResult {
 	const decoded = textDecoder.decode(data);
@@ -55,13 +56,17 @@ export function parseReplayMarkerData(data: Uint8Array): ReplayMarkerParseResult
 		}
 
 		const vision = parseVisionMarkerMetadata(value);
+		const audio = parseAudioMarkerMetadata(value);
 		const reasoning = parseReasoningMarkerMetadata(value);
 		return {
 			valid: true,
 			segmentId: segmentId.value,
 			...vision,
+			...audio,
 			...reasoning,
-			legacySegmentOnly: Boolean(segmentId.value && !vision.visionText && !reasoning.reasoningText),
+			legacySegmentOnly: Boolean(
+				segmentId.value && !vision.visionText && !audio.audioText && !reasoning.reasoningText,
+			),
 			payloadFormat: decodedPayload.format,
 		};
 	} catch {
@@ -132,6 +137,17 @@ function parseReasoningMarkerMetadata(value: object): {
 		return { reasoningTextIgnoredReason: ignoredReason };
 	}
 	return text ? { reasoningText: text } : {};
+}
+
+function parseAudioMarkerMetadata(value: object): {
+	audioText?: string;
+	audioTextIgnoredReason?: AudioMarkerTextIgnoredReason;
+} {
+	const { text, ignoredReason } = parseMarkerTextSection(value, 'audio');
+	if (ignoredReason) {
+		return { audioTextIgnoredReason: ignoredReason };
+	}
+	return text ? { audioText: text } : {};
 }
 
 function decodeReplayMarkerPayload(

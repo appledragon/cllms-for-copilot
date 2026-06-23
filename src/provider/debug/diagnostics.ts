@@ -15,6 +15,7 @@ import { ACTIVATE_TOOL_PREFIX } from '../tools/consts';
 import type { ActivatePreflightInspection } from '../tools/preflight';
 import { IMAGE_DESCRIPTION_UNAVAILABLE } from '../vision/consts';
 import type { VisionProxySource, VisionResolutionStats as VisionPipelineStats } from '../vision';
+import type { AudioProxySource, AudioResolutionStats as AudioPipelineStats } from '../audio';
 import { compareCacheTraceSnapshots, createCacheTraceSnapshot } from './cache-trace-snapshot';
 import {
 	formatCacheTraceComparison,
@@ -52,6 +53,9 @@ export interface BeginCacheDiagnosticsOptions {
 	visionModelId?: string;
 	visionProxySource?: VisionProxySource;
 	visionStats?: VisionPipelineStats;
+	audioModelId?: string;
+	audioProxySource?: AudioProxySource;
+	audioStats?: AudioPipelineStats;
 }
 
 export interface CacheDiagnosticsDoneInfo {
