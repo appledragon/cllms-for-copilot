@@ -5,13 +5,14 @@ import type { ReplayMarkerMetadata } from './types';
 
 const textEncoder = new TextEncoder();
 
-type MarkerSectionKey = 'vision' | 'reasoning';
+type MarkerSectionKey = 'vision' | 'audio' | 'reasoning';
 
 export function createReplayMarkerPart(
 	metadata: ReplayMarkerMetadata,
 ): vscode.LanguageModelDataPart {
 	const payload = encodeReplayMarkerJson({
 		...createMarkerTextSection('vision', metadata.visionText),
+		...createMarkerTextSection('audio', metadata.audioText),
 		...createMarkerTextSection('reasoning', metadata.reasoningText),
 	});
 	return new vscode.LanguageModelDataPart(

@@ -160,6 +160,18 @@ export function getVisionProxyTimeoutMs(): number {
 	);
 }
 
+export function getAudioProxyTimeoutMs(): number {
+	const config = vscode.workspace.getConfiguration(CONFIG_SECTION);
+	const value = config.get<number>('audioProxy.timeoutMs', DEFAULT_VISION_PROXY_TIMEOUT_MS);
+	if (!Number.isFinite(value) || value <= 0) {
+		return DEFAULT_VISION_PROXY_TIMEOUT_MS;
+	}
+	return Math.min(
+		MAX_VISION_PROXY_TIMEOUT_MS,
+		Math.max(MIN_VISION_PROXY_TIMEOUT_MS, Math.floor(value)),
+	);
+}
+
 /**
  * Migrate the legacy boolean `cllms.debug` setting to `debugMode`.
  *

@@ -30,6 +30,7 @@ import type { ReplayMarkerMetadata } from './replay';
 import type { ConversationSegment } from './segment';
 import { buildThinkingFields } from './thinking';
 import { collectTrailingToolResultIds, prepareRequestTools } from './tools/request';
+import { resolveAudioMessages, type AudioTranscriber } from './audio';
 import { resolveImageMessages, type VisionDescriber } from './vision';
 
 export interface PreparedChatRequest {
@@ -58,6 +59,7 @@ export interface PrepareChatRequestOptions {
 	token: vscode.CancellationToken;
 	cacheDiagnostics: CacheDiagnosticsRecorder;
 	getVisionDescriber: () => Promise<VisionDescriber | undefined>;
+	getAudioTranscriber?: () => Promise<AudioTranscriber | undefined>;
 }
 
 export async function prepareChatRequest({
@@ -70,6 +72,7 @@ export async function prepareChatRequest({
 	token,
 	cacheDiagnostics,
 	getVisionDescriber,
+	getAudioTranscriber = async () => undefined,
 }: PrepareChatRequestOptions): Promise<PreparedChatRequest> {
 	const modelDef = MODELS.find((m) => m.id === modelInfo.id);
 	const provider = modelDef ? getModelProvider(modelDef) : PROVIDERS.qwen;
@@ -92,7 +95,12 @@ export async function prepareChatRequest({
 	const visionResolution = await resolveImageMessages(messages, token, getVisionDescriber, {
 		nativeVision: isVisionModel,
 	});
-	const resolvedMessages = visionResolution.messages;
+	const audioResolution = await resolveAudioMessages(
+		visionResolution.messages,
+		token,
+		getAudioTranscriber,
+	);
+	const resolvedMessages = audioResolution.messages;
 	const llmMessages = convertMessages(
 		resolvedMessages,
 		isThinkingModel,
@@ -170,6 +178,9 @@ export async function prepareChatRequest({
 		visionModelId: visionResolution.visionModelId,
 		visionProxySource: visionResolution.visionProxySource,
 		visionStats: visionResolution.stats,
+		audioModelId: audioResolution.audioModelId,
+		audioProxySource: audioResolution.audioProxySource,
+		audioStats: audioResolution.stats,
 	});
 
 	const diagnosticsRun = cacheDiagnostics.beginRequest({
@@ -185,6 +196,9 @@ export async function prepareChatRequest({
 		visionModelId: visionResolution.visionModelId,
 		visionProxySource: visionResolution.visionProxySource,
 		visionStats: visionResolution.stats,
+		audioModelId: audioResolution.audioModelId,
+		audioProxySource: audioResolution.audioProxySource,
+		audioStats: audioResolution.stats,
 	});
 
 	return {
@@ -197,9 +211,12 @@ export async function prepareChatRequest({
 		requestKind,
 		segment,
 		billableModelId,
-		replayMarkerMetadata: visionResolution.replayMarkerMetadata,
+		replayMarkerMetadata: {
+			...visionResolution.replayMarkerMetadata,
+			...audioResolution.replayMarkerMetadata,
+		},
 		visionMarkerTextChars: visionResolution.stats.markerVisionTextChars || undefined,
-		initialResponseNotice: visionResolution.initialResponseNotice,
+		initialResponseNotice: visionResolution.initialResponseNotice ?? audioResolution.initialResponseNotice,
 	};
 }
 

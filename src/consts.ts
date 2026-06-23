@@ -235,6 +235,8 @@ export const CONFIGURE_API_KEY_URI_PATH = '/setApiKey';
 
 /** URI path handled by this extension to open vision model configuration. */
 export const SET_VISION_MODEL_URI_PATH = '/setVisionModel';
+/** URI path handled by this extension to open audio model configuration. */
+export const SET_AUDIO_MODEL_URI_PATH = '/setAudioModel';
 
 // VS Code's internal LanguageModelChatMessageRole.System is not exposed in @types/vscode.
 export const LANGUAGE_MODEL_CHAT_SYSTEM_ROLE = 3;

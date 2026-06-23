@@ -120,6 +120,11 @@
         "icon": "$(eye)"
       },
       {
+        "command": "cllms.setAudioModel",
+        "title": "CLLMs: Configure Audio Proxy",
+        "icon": "$(unmute)"
+      },
+      {
         "command": "cllms.testConnection",
         "title": "%cllms.command.testConnection%"
       },
@@ -253,6 +258,11 @@
           "command": "cllms.setVisionModel",
           "when": "view == cllms.providers",
           "group": "navigation@2"
+        },
+        {
+          "command": "cllms.setAudioModel",
+          "when": "view == cllms.providers",
+          "group": "navigation@3"
         },
         {
           "command": "cllms.openSettings",

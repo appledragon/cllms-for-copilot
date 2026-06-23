@@ -15,13 +15,18 @@ function encode(value: string): Uint8Array {
 
 describe("replay marker round-trip", () => {
   it("encodes and decodes reasoning + vision metadata", () => {
-    const part = createReplayMarkerPart({ reasoningText: "thought", visionText: "a picture" });
+    const part = createReplayMarkerPart({
+      reasoningText: "thought",
+      visionText: "a picture",
+      audioText: "an audio",
+    });
     assert.equal(part.mimeType, REPLAY_MARKER_MIME);
 
     const parsed = parseReplayMarkerData(part.data);
     assert.equal(parsed.valid, true);
     assert.equal(parsed.reasoningText, "thought");
     assert.equal(parsed.visionText, "a picture");
+    assert.equal(parsed.audioText, "an audio");
     assert.equal(parsed.payloadFormat, "json-base64url");
     assert.equal(parsed.legacySegmentOnly, false);
   });
@@ -69,6 +74,7 @@ describe("hasReplayMarkerMetadata", () => {
   it("is true when any payload text exists", () => {
     assert.equal(hasReplayMarkerMetadata({ reasoningText: "x" }), true);
     assert.equal(hasReplayMarkerMetadata({ visionText: "y" }), true);
+    assert.equal(hasReplayMarkerMetadata({ audioText: "z" }), true);
   });
 
   it("is false for empty metadata", () => {

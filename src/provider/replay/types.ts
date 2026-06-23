@@ -3,6 +3,8 @@ export interface ReplayMarkerParseResult {
 	segmentId?: string;
 	visionText?: string;
 	visionTextIgnoredReason?: VisionMarkerTextIgnoredReason;
+	audioText?: string;
+	audioTextIgnoredReason?: AudioMarkerTextIgnoredReason;
 	reasoningText?: string;
 	reasoningTextIgnoredReason?: ReasoningMarkerTextIgnoredReason;
 	legacySegmentOnly?: boolean;
@@ -36,7 +38,13 @@ export type ReasoningMarkerTextIgnoredReason =
 	| 'reasoning-text-not-string'
 	| 'reasoning-text-empty';
 
+export type AudioMarkerTextIgnoredReason =
+	| 'audio-not-object'
+	| 'audio-text-not-string'
+	| 'audio-text-empty';
+
 export interface ReplayMarkerMetadata {
 	visionText?: string;
+	audioText?: string;
 	reasoningText?: string;
 }
