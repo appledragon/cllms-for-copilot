@@ -6,7 +6,7 @@
 
 ### Prerequisites
 
-- VS Code 1.116 or later. This extension relies on non-public Copilot Chat APIs that may break on newer VS Code versions — [report an issue](https://github.com/appledragon/cllms-for-copilot/issues) if you hit one.
+- VS Code 1.116 or later. This extension uses VS Code's Language Model Chat Provider integration. If you encounter compatibility issues with a specific VS Code/Copilot build, please [report an issue](https://github.com/appledragon/cllms-for-copilot/issues).
 - GitHub Copilot subscription (Free / Pro / Enterprise — the free tier works)
 - An API key for at least one provider:
   - **Qwen**: a DashScope (Alibaba Cloud Model Studio) key from [Model Studio](https://modelstudio.console.alibabacloud.com/?tab=model#/api-key), or any compatible token when using a custom `cllms.baseUrl`.

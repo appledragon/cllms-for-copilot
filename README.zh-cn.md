@@ -4,7 +4,7 @@
 
 ### 前置条件
 
-- VS Code 1.116 及以上版本。本扩展依赖非公开的 Copilot Chat API，较新的 VS Code 版本可能存在兼容性问题——如遇到请[提交 Issue](https://github.com/appledragon/cllms-for-copilot/issues)。
+- VS Code 1.116 及以上版本。本扩展基于 VS Code 的 Language Model Chat Provider 集成实现；如果你在特定 VS Code/Copilot 版本组合下遇到兼容性问题，请[提交 Issue](https://github.com/appledragon/cllms-for-copilot/issues)。
 - GitHub Copilot 订阅（Free / Pro / Enterprise——免费版即可使用）
 - 至少一个 Provider 的 API Key：
   - **Qwen**：DashScope（阿里云百炼）Key，可在[百炼控制台](https://modelstudio.console.alibabacloud.com/?tab=model#/api-key)获取；使用自定义 `cllms.baseUrl` 时也可使用兼容的 provider token。
