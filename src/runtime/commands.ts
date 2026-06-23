@@ -114,10 +114,8 @@ async function openApiKeyPage(): Promise<void> {
 }
 
 async function configureAudioProxy(context: vscode.ExtensionContext): Promise<void> {
-	const { AudioProxyConfigStore } = await import('../provider/audio/sources/endpoint/config');
-	const { openAudioProxyQuickSetup } = await import('../provider/audio/ui/quick-setup');
-	const store = new AudioProxyConfigStore(context);
-	await openAudioProxyQuickSetup(store, () => {});
+	const { openAudioProxyPanel } = await import('../provider/audio/ui/panel');
+	openAudioProxyPanel(context, { onDidChange: () => {} });
 }
 
 async function openRequestDumpsFolder(context: vscode.ExtensionContext): Promise<void> {

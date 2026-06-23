@@ -57,8 +57,8 @@ export function createAudioService(context: vscode.ExtensionContext): {
 		},
 		reset,
 		async openConfiguration() {
-			const { openAudioProxyQuickSetup } = await import('./ui/quick-setup');
-			await openAudioProxyQuickSetup(store, reset);
+			const { openAudioProxyPanel } = await import('./ui/panel');
+			openAudioProxyPanel(context, { onDidChange: reset });
 		},
 	};
 }
