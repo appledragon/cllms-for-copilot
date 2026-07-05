@@ -30,6 +30,14 @@ Install from the registry used by your editor:
 3. Open Copilot Chat, click the model picker, pick a model
 4. That's it — chat away
 
+## Remote Development
+
+CLLMs works with **Remote - SSH**, **Dev Containers**, and **WSL**. The extension runs on the local client side, so:
+
+- Install the extension **locally** (no need to install it on the remote machine).
+- API keys stored in the local SecretStorage are used automatically — no reconfiguration needed.
+- Settings (`cllms.*`) are read from your local `settings.json`.
+
 ## Models
 
 Seven providers ship out of the box. Each model has its own API key and endpoint, so you can use Qwen, DeepSeek, z.ai (GLM), MiniMax, Xiaomi MiMo, Moonshot Kimi, Tencent Hunyuan, or any combination at the same time from the Copilot model picker.

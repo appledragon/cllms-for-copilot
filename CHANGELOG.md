@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.4
+
+- **Fix providers disappearing in Remote SSH / Dev Container / WSL** — add `"extensionKind": ["ui"]` to `package.json` so the extension always runs on the local client side. Previously, without this declaration, VS Code would assign the extension to the remote workspace host by default, causing it to never activate (and thus never register its language-model chat provider) when the extension was only installed locally.
+
 ## 0.3.3
 
 - **Harden Audio Proxy configuration and protocol handling**:

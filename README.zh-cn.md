@@ -28,6 +28,14 @@
 3. 打开 Copilot Chat，点击模型选择器，选择一个模型
 4. 搞定——开始聊天
 
+## 远程开发
+
+CLLMs 支持 **Remote - SSH**、**Dev Containers** 和 **WSL**。扩展运行在本地客户端侧，因此：
+
+- 只需在**本地**安装扩展即可（无需在远程机器上安装）。
+- 本地 SecretStorage 中保存的 API Key 自动生效，无需重新配置。
+- 设置项（`cllms.*`）从本地 `settings.json` 读取。
+
 ## 模型
 
 内置七个 Provider，每个模型自带独立的 API Key 与端点，因此你可以在 Copilot 模型选择器里同时使用 Qwen、DeepSeek、z.ai（GLM）、MiniMax、小米 MiMo、Moonshot Kimi、腾讯混元或任意组合。
