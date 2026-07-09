@@ -45,6 +45,7 @@ CLLMs 支持 **Remote - SSH**、**Dev Containers** 和 **WSL**。扩展运行在
 | 模型 | 适用场景 |
 |---|---|
 | **Qwen3 Coder Plus** | 智能编码、工具调用、大型重构 |
+| **Qwen3 Coder Flash** | 轻量编码，快速且经济 |
 | **Qwen Plus** | 日常均衡使用，支持混合思考 |
 | **Qwen3 Max** | 面向复杂任务的旗舰模型 |
 | **Qwen3-VL Plus** | 原生视觉（图片输入） |
@@ -67,9 +68,11 @@ CLLMs 支持 **Remote - SSH**、**Dev Containers** 和 **WSL**。扩展运行在
 | **GLM-5.1** | 旗舰长程编码与 Agent，200K 上下文，支持 8 小时自主编码 |
 | **GLM-4.6** | 旗舰编码与 Agent，200K 上下文 |
 | **GLM-4.5-Air** | 轻量、更快、成本更低 |
+| **GLM-4.5-AirX** | 超快轻量，低延迟 |
 | **GLM-5** | 高智能基座，编码对齐 Claude Opus 4.5，200K 上下文 |
 | **GLM-5-Turbo** | Lobster 优化基座，长任务连续性更强，200K 上下文 |
 | **GLM-4.7** | 升级通用模型，编码能力更强，200K 上下文 |
+| **GLM-4.7-Flash** | 免费通用模型 |
 | **GLM-4.7-FlashX** | 轻量快速，高性价比 |
 | **GLM-5V-Turbo** | 原生视觉（图片输入）并支持深度思考 |
 
@@ -94,6 +97,7 @@ CLLMs 支持 **Remote - SSH**、**Dev Containers** 和 **WSL**。扩展运行在
 | 模型 | 适用场景 |
 |---|---|
 | **Kimi K2.7** | 最新旗舰原生多模态、Agent 与编码，256K 上下文 |
+| **Kimi K2.7 Code HighSpeed** | Kimi K2.7 高速变体，约 180 tok/s |
 | **Kimi K2.6** | 旗舰原生多模态、Agent 与编码，256K 上下文 |
 | **Kimi K2.5** | 多模态默认模型，思考可开关 |
 
@@ -117,14 +121,14 @@ CLLMs 支持 **Remote - SSH**、**Dev Containers** 和 **WSL**。扩展运行在
 
 | 服务商 | 状态 | 备注 |
 |---|---|---|
-| Qwen（DashScope 国内） | ✅ 已测试 | Qwen3 Coder Plus、Qwen Plus、Qwen3 Max、Qwen3-VL Plus — 全部验证通过。Qwen3.7 Max、Qwen3.7 Plus、Qwen3.6 Flash 已启用，待单独验证。 |
+| Qwen（DashScope 国内） | ✅ 已测试 | Qwen3 Coder Plus、Qwen3 Coder Flash、Qwen Plus、Qwen3 Max、Qwen3-VL Plus — 全部验证通过。Qwen3.7 Max、Qwen3.7 Plus、Qwen3.6 Flash 已启用，待单独验证。 |
 | Qwen（DashScope International） | ⚠️ 未测试 | API 兼容性应与国内端点一致。欢迎提供测试 token 或测试反馈！ |
 | DeepSeek | ⚠️ 未测试 | API 兼容性遵循标准 OpenAI 兼容 Chat Completions API。欢迎提供测试 token 或测试反馈！ |
-| z.ai（智谱 GLM） | ✅ 已测试 | GLM-5.2、GLM-5.1、GLM-4.6、GLM-4.5-Air — 全部验证通过。GLM-5、GLM-5-Turbo、GLM-4.7、GLM-4.7-FlashX、GLM-5V-Turbo 已启用，待单独验证。 |
+| z.ai（智谱 GLM） | ✅ 已测试 | GLM-5.2、GLM-5.1、GLM-4.6、GLM-4.5-Air、GLM-4.5-AirX — 全部验证通过。GLM-5、GLM-5-Turbo、GLM-4.7、GLM-4.7-Flash、GLM-4.7-FlashX、GLM-5V-Turbo 已启用，待单独验证。 |
 | MiniMax（国内） | ✅ 已测试 | MiniMax-M3、MiniMax-M2.7 — 全部验证通过。MiniMax-M2.5 已启用，待单独验证。 |
 | MiniMax（International） | ⚠️ 未测试 | API 兼容性应与国内端点一致。欢迎提供测试 token 或测试反馈！ |
-| 小米 MiMo | ✅ 已测试 | MiMo V2.5 Pro、MiMo V2.5（Omni）、MiMo V2 Flash — 全部验证通过。 |
-| Moonshot（Kimi 国内） | ✅ 已测试 | Kimi K2.7、Kimi K2.6、Kimi K2.5 — 全部验证通过。 |
+| 小米 MiMo | ✅ 已测试 | MiMo V2.5 Pro、MiMo V2.5（Omni）、MiM V2 Flash — 全部验证通过。 |
+| Moonshot（Kimi 国内） | ✅ 已测试 | Kimi K2.7、Kimi K2.7 Code HighSpeed、Kimi K2.6、Kimi K2.5 — 全部验证通过。 |
 | Moonshot（Kimi International） | ⚠️ 未测试 | API 兼容性应与国内端点一致。欢迎提供测试 token 或测试反馈！ |
 | 腾讯混元 | ✅ 已测试 | 标准 OpenAI 兼容 API——全部验证通过。Tencent HY 2.0 Instruct 已启用，待单独验证。 |
 

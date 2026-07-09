@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.0
+
+- **Add new models**:
+  - **Qwen3 Coder Flash** — lightweight coding model, fast & affordable
+  - **Qwen3 Coder Flash (Intl)** — international version of Qwen3 Coder Flash
+  - **GLM-4.5-AirX** — ultra-fast lightweight model, low-latency
+  - **GLM-4.7-Flash** — free general-purpose model
+  - **Kimi K2.7 Code HighSpeed** — high-speed variant of Kimi K2.7, ~180 tok/s
+  - **Kimi K2.7 Code HighSpeed (Intl)** — international version of Kimi K2.7 Code HighSpeed
+
 ## 0.3.4
 
 - **Fix providers disappearing in Remote SSH / Dev Container / WSL** — add `"extensionKind": ["ui"]` to `package.json` so the extension always runs on the local client side. Previously, without this declaration, VS Code would assign the extension to the remote workspace host by default, causing it to never activate (and thus never register its language-model chat provider) when the extension was only installed locally.

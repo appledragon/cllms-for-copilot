@@ -47,6 +47,7 @@ Seven providers ship out of the box. Each model has its own API key and endpoint
 | Model | Best For |
 |---|---|
 | **Qwen3 Coder Plus** | Agentic coding, tool calls, large refactors |
+| **Qwen3 Coder Flash** | Lightweight coding, fast & affordable |
 | **Qwen Plus** | Balanced everyday use with hybrid thinking |
 | **Qwen3 Max** | Flagship model for hard tasks |
 | **Qwen3-VL Plus** | Native vision (image input) |
@@ -69,9 +70,11 @@ Seven providers ship out of the box. Each model has its own API key and endpoint
 | **GLM-5.1** | Flagship long-horizon coding & agents, 200K context, up to 8h autonomous work |
 | **GLM-4.6** | Flagship coding & agents, 200K context |
 | **GLM-4.5-Air** | Lightweight, faster, lower cost |
+| **GLM-4.5-AirX** | Ultra-fast lightweight, low-latency |
 | **GLM-5** | High-intelligence base, coding aligned with Claude Opus 4.5, 200K context |
 | **GLM-5-Turbo** | Lobster-optimized base, long-task continuity, 200K context |
 | **GLM-4.7** | Upgraded general model, stronger coding, 200K context |
+| **GLM-4.7-Flash** | Free model, general-purpose |
 | **GLM-4.7-FlashX** | Lightweight & fast, budget-friendly |
 | **GLM-5V-Turbo** | Native vision (image input) plus deep thinking |
 
@@ -96,6 +99,7 @@ Seven providers ship out of the box. Each model has its own API key and endpoint
 | Model | Best For |
 |---|---|
 | **Kimi K2.7** | Latest flagship native-multimodal agents & coding, 256K context |
+| **Kimi K2.7 Code HighSpeed** | High-speed variant of Kimi K2.7, ~180 tok/s |
 | **Kimi K2.6** | Flagship native-multimodal agents & coding, 256K context |
 | **Kimi K2.5** | Multimodal default with toggleable thinking |
 
@@ -119,14 +123,14 @@ Want to add your own model? See [Adding a new model](./docs/adding-a-model.md) f
 
 | Provider | Status | Notes |
 |---|---|---|
-| Qwen (DashScope China) | ✅ Tested | Qwen3 Coder Plus, Qwen Plus, Qwen3 Max, Qwen3-VL Plus — all verified. Qwen3.7 Max, Qwen3.7 Plus, and Qwen3.6 Flash ship enabled and are pending individual verification. |
+| Qwen (DashScope China) | ✅ Tested | Qwen3 Coder Plus, Qwen3 Coder Flash, Qwen Plus, Qwen3 Max, Qwen3-VL Plus — all verified. Qwen3.7 Max, Qwen3.7 Plus, and Qwen3.6 Flash ship enabled and are pending individual verification. |
 | Qwen (DashScope International) | ⚠️ Untested | API compatibility should match the domestic endpoint. Test tokens or test reports welcome! |
 | DeepSeek | ⚠️ Untested | API compatibility follows the standard OpenAI-compatible Chat Completions API. Test tokens or test reports welcome! |
-| z.ai (Zhipu GLM) | ✅ Tested | GLM-5.2, GLM-5.1, GLM-4.6, GLM-4.5-Air — all verified. GLM-5, GLM-5-Turbo, GLM-4.7, GLM-4.7-FlashX, and GLM-5V-Turbo ship enabled and are pending individual verification. |
+| z.ai (Zhipu GLM) | ✅ Tested | GLM-5.2, GLM-5.1, GLM-4.6, GLM-4.5-Air, GLM-4.5-AirX — all verified. GLM-5, GLM-5-Turbo, GLM-4.7, GLM-4.7-Flash, GLM-4.7-FlashX, and GLM-5V-Turbo ship enabled and are pending individual verification. |
 | MiniMax (China) | ✅ Tested | MiniMax-M3, MiniMax-M2.7 — all verified. MiniMax-M2.5 ships enabled and is pending individual verification. |
 | MiniMax (International) | ⚠️ Untested | API compatibility should match the domestic endpoint. Test tokens or test reports welcome! |
 | Xiaomi MiMo | ✅ Tested | MiMo V2.5 Pro, MiMo V2.5 (Omni), MiMo V2 Flash — all verified. |
-| Moonshot (Kimi China) | ✅ Tested | Kimi K2.7, Kimi K2.6, Kimi K2.5 — all verified. |
+| Moonshot (Kimi China) | ✅ Tested | Kimi K2.7, Kimi K2.7 Code HighSpeed, Kimi K2.6, Kimi K2.5 — all verified. |
 | Moonshot (Kimi International) | ⚠️ Untested | API compatibility should match the domestic endpoint. Test tokens or test reports welcome! |
 | Tencent Hunyuan (混元) | ✅ Tested | Standard OpenAI-compatible API — all verified. Tencent HY 2.0 Instruct ships enabled and is pending individual verification. |
 
