@@ -32,19 +32,19 @@ describe("toModelCostInfo", () => {
     assert.deepEqual(toModelCostInfo(model({ pricing: undefined }), "USD"), {});
   });
 
-  it("maps USD prices to the input/cache/output cost slots with a dollar sign", () => {
+  it("maps USD prices to the input/cache/output cost slots as numbers", () => {
     assert.deepEqual(toModelCostInfo(model(), "USD"), {
-      inputCost: "$1",
-      cacheCost: "$0.1",
-      outputCost: "$5",
+      inputCost: 1,
+      cacheCost: 0.1,
+      outputCost: 5,
     });
   });
 
-  it("formats CNY prices with a yuan sign", () => {
+  it("maps CNY prices as numbers", () => {
     assert.deepEqual(toModelCostInfo(model(), "CNY"), {
-      inputCost: "¥4",
-      cacheCost: "¥0.8",
-      outputCost: "¥16",
+      inputCost: 4,
+      cacheCost: 0.8,
+      outputCost: 16,
     });
   });
 

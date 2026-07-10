@@ -1,11 +1,9 @@
 import type { ModelDefinition, PriceCategory, PricingCurrency } from '../../types';
 
 /**
- * VS Code's proposed cost fields are documented as numeric credits, but the
- * current Copilot UI renders them textually. We intentionally pass formatted
- * currency labels here so BYOK prices appear in the native cost slots.
- * If a future UI parses these fields numerically, expect NaN or missing costs;
- * remove the formatted fields from this one mapping point when that happens.
+ * VS Code's proposed cost fields are numeric credits consumed by the Copilot UI.
+ * We pass raw per-1M-token prices from the model definition so BYOK costs render
+ * correctly in the model picker's native cost slots.
  *
  * Mapping:
  * - inputCost  <- cacheMissInput, the representative non-cached input price.
@@ -16,9 +14,9 @@ import type { ModelDefinition, PriceCategory, PricingCurrency } from '../../type
  * pricing intentionally suppresses all cost metadata.
  */
 export interface ModelCostInformation {
-	readonly inputCost?: string;
-	readonly outputCost?: string;
-	readonly cacheCost?: string;
+	readonly inputCost?: number;
+	readonly outputCost?: number;
+	readonly cacheCost?: number;
 	readonly priceCategory?: PriceCategory;
 }
 
@@ -43,6 +41,6 @@ export function toModelCostInfo(
 	};
 }
 
-function formatPriceValue(value: number, currency: PricingCurrency): string {
-	return `${currency === 'CNY' ? '¥' : '$'}${value}`;
+function formatPriceValue(value: number, _currency: PricingCurrency): number {
+	return value;
 }

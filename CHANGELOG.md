@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1
+
+- **Fix model cost fields rendering** — change `inputCost`, `outputCost`, and `cacheCost` from formatted currency strings (e.g. `"$1"`) to raw numeric values so they match VS Code's proposed cost API (numeric credits) and render correctly in the Copilot UI's native cost slots.
+
 ## 0.4.0
 
 - **Add new models**:

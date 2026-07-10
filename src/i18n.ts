@@ -21,6 +21,9 @@ const zh: Translations = {
 	// Model descriptions
 	'model.qwen3-coder-plus.detail': '智能编码与工具调用',
 	'model.qwen3-coder-plus.tooltip': '面向 Agent 编程与工具调用的 Qwen3 Coder 模型，擅长大型重构。',
+	'model.qwen3-coder-flash.detail': '轻量编码，快速且经济',
+	'model.qwen3-coder-flash.tooltip':
+		'Qwen3 Coder Flash 轻量编码模型，响应更快、成本更低，支持工具调用。',
 	'model.qwen-plus.detail': '均衡，支持混合思考',
 	'model.qwen-plus.tooltip': '日常均衡使用的 Qwen Plus 模型，支持开关思考模式。',
 	'model.qwen3-max.detail': '旗舰模型',
@@ -39,6 +42,9 @@ const zh: Translations = {
 	'model.qwen3-coder-plus-intl.detail': '智能编码与工具调用（国际站）',
 	'model.qwen3-coder-plus-intl.tooltip':
 		'面向 Agent 编程与工具调用的 Qwen3 Coder 模型（国际站），擅长大型重构。',
+	'model.qwen3-coder-flash-intl.detail': '轻量编码，快速且经济（国际站）',
+	'model.qwen3-coder-flash-intl.tooltip':
+		'Qwen3 Coder Flash 轻量编码模型（国际站），响应更快、成本更低，支持工具调用。',
 	'model.qwen-plus-intl.detail': '均衡，支持混合思考（国际站）',
 	'model.qwen-plus-intl.tooltip': '日常均衡使用的 Qwen Plus 模型（国际站），支持开关思考模式。',
 	'model.qwen3-max-intl.detail': '旗舰模型（国际站）',
@@ -74,6 +80,9 @@ const zh: Translations = {
 	'model.glm-4.5-air.detail': '轻量快速',
 	'model.glm-4.5-air.tooltip':
 		'z.ai GLM-4.5-Air 轻量模型，响应更快、成本更低，支持思考模式与工具调用。',
+	'model.glm-4.5-airx.detail': '超快轻量，低延迟',
+	'model.glm-4.5-airx.tooltip':
+		'z.ai GLM-4.5-AirX 超快轻量模型，极低延迟，支持思考模式与工具调用。',
 	'model.glm-5.detail': '高智能基座，编码对齐 Claude Opus 4.5',
 	'model.glm-5.tooltip':
 		'z.ai GLM-5 高智能模型，200K 上下文，擅长编码、复杂推理与工具调用，支持思考模式。',
@@ -83,6 +92,9 @@ const zh: Translations = {
 	'model.glm-4.7.detail': '升级通用模型，编码能力更强',
 	'model.glm-4.7.tooltip':
 		'z.ai GLM-4.7 通用模型，200K 上下文，编码能力更强，支持思考模式与工具调用。',
+	'model.glm-4.7-flash.detail': '免费通用模型',
+	'model.glm-4.7-flash.tooltip':
+		'z.ai GLM-4.7-Flash 免费通用模型，支持工具调用。',
 	'model.glm-4.7-flashx.detail': '轻量快速，高性价比',
 	'model.glm-4.7-flashx.tooltip':
 		'z.ai GLM-4.7-FlashX 轻量模型，200K 上下文，响应更快、成本更低，支持工具调用。',
@@ -125,9 +137,15 @@ const zh: Translations = {
 	'model.kimi-k2.5.detail': '多模态，灵活思考',
 	'model.kimi-k2.5.tooltip':
 		'Moonshot Kimi K2.5 原生多模态模型，256K 上下文，支持原生图片输入、可开关的思考模式与工具调用。',
+	'model.kimi-k2.7-code-highspeed.detail': 'K2.7 高速版，约 180 tok/s',
+	'model.kimi-k2.7-code-highspeed.tooltip':
+		'Moonshot Kimi K2.7 Code HighSpeed 高速变体，约 180 tok/s 输出速度，256K 上下文，支持原生图片输入、思考模式与工具调用。',
 	'model.kimi-k2.7-intl.detail': '最新旗舰多模态与 Agent（国际站）',
 	'model.kimi-k2.7-intl.tooltip':
 		'Moonshot Kimi K2.7 最新旗舰原生多模态混合推理模型（国际站），256K 上下文，支持原生图片输入、思考模式（默认开启）与工具调用。',
+	'model.kimi-k2.7-code-highspeed-intl.detail': 'K2.7 高速版（国际站）',
+	'model.kimi-k2.7-code-highspeed-intl.tooltip':
+		'Moonshot Kimi K2.7 Code HighSpeed 高速变体（国际站），约 180 tok/s 输出速度，256K 上下文，支持原生图片输入、思考模式与工具调用。',
 	'model.kimi-k2.6-intl.detail': '旗舰多模态与 Agent（国际站）',
 	'model.kimi-k2.6-intl.tooltip':
 		'Moonshot Kimi K2.6 旗舰原生多模态混合推理模型（国际站），256K 上下文，支持原生图片输入、思考模式（默认开启）与工具调用。',
@@ -523,6 +541,9 @@ const en: Translations = {
 	'model.qwen3-coder-plus.detail': 'Agentic coding & tool use',
 	'model.qwen3-coder-plus.tooltip':
 		'Qwen3 Coder model for agentic coding and tool calling, strong at large refactors.',
+	'model.qwen3-coder-flash.detail': 'Lightweight coding, fast & affordable',
+	'model.qwen3-coder-flash.tooltip':
+		'Qwen3 Coder Flash lightweight coding model with faster responses and lower cost, plus tool calling.',
 	'model.qwen-plus.detail': 'Balanced, hybrid thinking',
 	'model.qwen-plus.tooltip': 'Balanced everyday Qwen Plus model with toggleable thinking mode.',
 	'model.qwen3-max.detail': 'Flagship model',
@@ -543,6 +564,9 @@ const en: Translations = {
 	'model.qwen3-coder-plus-intl.detail': 'Agentic coding & tool use (Intl)',
 	'model.qwen3-coder-plus-intl.tooltip':
 		'Qwen3 Coder model for agentic programming and tool calling (international). Excels at large-scale refactoring.',
+	'model.qwen3-coder-flash-intl.detail': 'Lightweight coding, fast & affordable (Intl)',
+	'model.qwen3-coder-flash-intl.tooltip':
+		'Qwen3 Coder Flash lightweight coding model (international) with faster responses and lower cost, plus tool calling.',
 	'model.qwen-plus-intl.detail': 'Balanced, hybrid thinking (Intl)',
 	'model.qwen-plus-intl.tooltip':
 		'Qwen Plus model for everyday balanced use (international), with toggleable thinking mode.',
@@ -579,6 +603,9 @@ const en: Translations = {
 	'model.glm-4.5-air.detail': 'Lightweight & fast',
 	'model.glm-4.5-air.tooltip':
 		'z.ai GLM-4.5-Air, a lightweight model with faster responses and lower cost, plus thinking mode and tool calling.',
+	'model.glm-4.5-airx.detail': 'Ultra-fast lightweight, low-latency',
+	'model.glm-4.5-airx.tooltip':
+		'z.ai GLM-4.5-AirX ultra-fast lightweight model with extremely low latency, plus thinking mode and tool calling.',
 	'model.glm-5.detail': 'High-intelligence base, coding aligned with Claude Opus 4.5',
 	'model.glm-5.tooltip':
 		'z.ai GLM-5 high-intelligence model with a 200K context, strong at coding, complex reasoning, and tool calling with thinking mode.',
@@ -588,6 +615,9 @@ const en: Translations = {
 	'model.glm-4.7.detail': 'Upgraded general model, stronger coding',
 	'model.glm-4.7.tooltip':
 		'z.ai GLM-4.7 general model with a 200K context, stronger coding ability, thinking mode, and tool calling.',
+	'model.glm-4.7-flash.detail': 'Free general-purpose model',
+	'model.glm-4.7-flash.tooltip':
+		'z.ai GLM-4.7-Flash, a free general-purpose model with tool calling.',
 	'model.glm-4.7-flashx.detail': 'Lightweight & fast, budget-friendly',
 	'model.glm-4.7-flashx.tooltip':
 		'z.ai GLM-4.7-FlashX lightweight model with a 200K context, faster responses and lower cost, plus tool calling.',
@@ -630,9 +660,15 @@ const en: Translations = {
 	'model.kimi-k2.5.detail': 'Multimodal, flexible thinking',
 	'model.kimi-k2.5.tooltip':
 		'Moonshot Kimi K2.5 native-multimodal model with a 256K context — native image input, toggleable thinking mode, and tool calling.',
+	'model.kimi-k2.7-code-highspeed.detail': 'K2.7 high-speed, ~180 tok/s',
+	'model.kimi-k2.7-code-highspeed.tooltip':
+		'Moonshot Kimi K2.7 Code HighSpeed variant with ~180 tok/s output speed, 256K context — native image input, thinking mode, and tool calling.',
 	'model.kimi-k2.7-intl.detail': 'Latest flagship multimodal & agents (Intl)',
 	'model.kimi-k2.7-intl.tooltip':
 		'Moonshot Kimi K2.7 latest flagship native-multimodal hybrid-reasoning model (international) with a 256K context — native image input, thinking mode (on by default), and tool calling.',
+	'model.kimi-k2.7-code-highspeed-intl.detail': 'K2.7 high-speed (Intl)',
+	'model.kimi-k2.7-code-highspeed-intl.tooltip':
+		'Moonshot Kimi K2.7 Code HighSpeed variant (international) with ~180 tok/s output speed, 256K context — native image input, thinking mode, and tool calling.',
 	'model.kimi-k2.6-intl.detail': 'Flagship multimodal & agents (Intl)',
 	'model.kimi-k2.6-intl.tooltip':
 		'Moonshot Kimi K2.6 flagship native-multimodal hybrid-reasoning model (international) with a 256K context — native image input, thinking mode (on by default), and tool calling.',

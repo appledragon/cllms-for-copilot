@@ -100,6 +100,9 @@ describe("model registry", () => {
       if (!model.pricing) continue;
       for (const currency of ["USD", "CNY"] as const) {
         const price = model.pricing[currency];
+        const isFree =
+          price.cacheHitInput === 0 && price.cacheMissInput === 0 && price.output === 0;
+        if (isFree) continue; // free models have all-zero pricing
         assert.ok(price.cacheHitInput >= 0, `${model.id} ${currency} cacheHitInput`);
         assert.ok(price.cacheMissInput > 0, `${model.id} ${currency} cacheMissInput`);
         assert.ok(price.output > 0, `${model.id} ${currency} output`);
@@ -156,7 +159,7 @@ describe("model registry", () => {
     const moonshotIds = MODELS.filter((m) => m.provider === "moonshot")
       .map((m) => m.id)
       .sort();
-    assert.deepEqual(moonshotIds, ["kimi-k2.5", "kimi-k2.6", "kimi-k2.7"]);
+    assert.deepEqual(moonshotIds, ["kimi-k2.5", "kimi-k2.6", "kimi-k2.7", "kimi-k2.7-code-highspeed"]);
     for (const model of MODELS.filter((m) => m.provider === "moonshot")) {
       assert.equal(model.capabilities.thinking, true, `${model.id} should be a thinking model`);
       assert.equal(model.capabilities.imageInput, true, `${model.id} is natively multimodal`);
@@ -176,6 +179,8 @@ describe("model registry", () => {
       "kimi-k2.6",
       "kimi-k2.6-intl",
       "kimi-k2.7",
+      "kimi-k2.7-code-highspeed",
+      "kimi-k2.7-code-highspeed-intl",
       "kimi-k2.7-intl",
       "mimo-v2.5",
       "qwen3-vl-plus",
