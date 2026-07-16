@@ -159,7 +159,7 @@ describe("model registry", () => {
     const moonshotIds = MODELS.filter((m) => m.provider === "moonshot")
       .map((m) => m.id)
       .sort();
-    assert.deepEqual(moonshotIds, ["kimi-k2.5", "kimi-k2.6", "kimi-k2.7", "kimi-k2.7-code-highspeed"]);
+    assert.deepEqual(moonshotIds, ["kimi-k2.5", "kimi-k2.6", "kimi-k2.7", "kimi-k2.7-code-highspeed", "kimi-k3"]);
     for (const model of MODELS.filter((m) => m.provider === "moonshot")) {
       assert.equal(model.capabilities.thinking, true, `${model.id} should be a thinking model`);
       assert.equal(model.capabilities.imageInput, true, `${model.id} is natively multimodal`);
@@ -182,6 +182,8 @@ describe("model registry", () => {
       "kimi-k2.7-code-highspeed",
       "kimi-k2.7-code-highspeed-intl",
       "kimi-k2.7-intl",
+      "kimi-k3",
+      "kimi-k3-intl",
       "mimo-v2.5",
       "qwen3-vl-plus",
       "qwen3-vl-plus-intl",

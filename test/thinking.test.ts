@@ -70,4 +70,28 @@ describe("buildThinkingFields", () => {
       }
     });
   });
+
+  describe("reasoning_effort style (top-level reasoning_effort for Kimi K3)", () => {
+    it('maps "none" to "none"', () => {
+      assert.deepEqual(buildThinkingFields("reasoning_effort", "none"), { reasoning_effort: "none" });
+    });
+
+    it('maps "high" to "max" (API only supports max)', () => {
+      assert.deepEqual(buildThinkingFields("reasoning_effort", "high"), { reasoning_effort: "max" });
+    });
+
+    it('maps "max" to "max"', () => {
+      assert.deepEqual(buildThinkingFields("reasoning_effort", "max"), { reasoning_effort: "max" });
+    });
+
+    it("never emits enable_thinking / thinking / reasoning_split", () => {
+      for (const effort of ["none", "high", "max"] as const) {
+        const fields = buildThinkingFields("reasoning_effort", effort);
+        assert.equal("enable_thinking" in fields, false);
+        assert.equal("thinking" in fields, false);
+        assert.equal("thinking_budget" in fields, false);
+        assert.equal("reasoning_split" in fields, false);
+      }
+    });
+  });
 });

@@ -98,6 +98,7 @@ Seven providers ship out of the box. Each model has its own API key and endpoint
 
 | Model | Best For |
 |---|---|
+| **Kimi K3** | Flagship 2.8T, 1M context, always-thinking, native vision |
 | **Kimi K2.7** | Latest flagship native-multimodal agents & coding, 256K context |
 | **Kimi K2.7 Code HighSpeed** | High-speed variant of Kimi K2.7, ~180 tok/s |
 | **Kimi K2.6** | Flagship native-multimodal agents & coding, 256K context |

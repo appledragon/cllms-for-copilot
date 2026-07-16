@@ -96,6 +96,7 @@ CLLMs 支持 **Remote - SSH**、**Dev Containers** 和 **WSL**。扩展运行在
 
 | 模型 | 适用场景 |
 |---|---|
+| **Kimi K3** | 旗舰 2.8T 参数，1M 上下文，始终思考，原生视觉 |
 | **Kimi K2.7** | 最新旗舰原生多模态、Agent 与编码，256K 上下文 |
 | **Kimi K2.7 Code HighSpeed** | Kimi K2.7 高速变体，约 180 tok/s |
 | **Kimi K2.6** | 旗舰原生多模态、Agent 与编码，256K 上下文 |

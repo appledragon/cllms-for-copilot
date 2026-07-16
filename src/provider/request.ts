@@ -156,11 +156,14 @@ export async function prepareChatRequest({
 		options as ModelConfigurationOptions,
 	);
 	const thinkingEffort = shouldForceThinkingNone(requestKind) ? 'none' : configuredThinkingEffort;
-	// Thinking control differs per provider (see buildThinkingFields). Streamed
+	// Thinking control differs per provider (see buildThinkingFields). Models
+	// may override the provider-level thinking style (e.g. Kimi K3 uses
+	// `reasoning_effort` while K2.x uses GLM-style `thinking`). Streamed
 	// reasoning arrives in `delta.reasoning_content` regardless of provider.
+	const thinkingStyle = modelDef?.thinkingStyle ?? provider.thinkingStyle;
 	const request: LlmRequest = {
 		...baseRequest,
-		...(isThinkingModel ? buildThinkingFields(provider.thinkingStyle, thinkingEffort) : {}),
+		...(isThinkingModel ? buildThinkingFields(thinkingStyle, thinkingEffort) : {}),
 		model: effectiveModel,
 		max_tokens: effectiveMaxTokens,
 	};

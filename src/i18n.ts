@@ -128,6 +128,9 @@ const zh: Translations = {
 	'model.mimo-v2-flash.detail': '快速、低成本',
 	'model.mimo-v2-flash.tooltip':
 		'小米 MiMo V2 Flash 模型，响应更快、成本更低，支持思考模式与工具调用。',
+	'model.kimi-k3.detail': '旗舰 2.8T，1M 上下文，始终思考',
+	'model.kimi-k3.tooltip':
+		'Moonshot Kimi K3 旗舰模型，2.8 万亿参数，1M token 上下文，原生视觉理解，始终开启思考模式（reasoning_effort），面向长程编程与知识工作。',
 	'model.kimi-k2.7.detail': '最新旗舰多模态与 Agent',
 	'model.kimi-k2.7.tooltip':
 		'Moonshot Kimi K2.7 最新旗舰原生多模态混合推理模型，256K 上下文，支持原生图片输入、思考模式（默认开启）与工具调用。',
@@ -140,6 +143,9 @@ const zh: Translations = {
 	'model.kimi-k2.7-code-highspeed.detail': 'K2.7 高速版，约 180 tok/s',
 	'model.kimi-k2.7-code-highspeed.tooltip':
 		'Moonshot Kimi K2.7 Code HighSpeed 高速变体，约 180 tok/s 输出速度，256K 上下文，支持原生图片输入、思考模式与工具调用。',
+	'model.kimi-k3-intl.detail': '旗舰 2.8T，1M 上下文，始终思考（国际站）',
+	'model.kimi-k3-intl.tooltip':
+		'Moonshot Kimi K3 旗舰模型（国际站），2.8 万亿参数，1M token 上下文，原生视觉理解，始终开启思考模式（reasoning_effort）。',
 	'model.kimi-k2.7-intl.detail': '最新旗舰多模态与 Agent（国际站）',
 	'model.kimi-k2.7-intl.tooltip':
 		'Moonshot Kimi K2.7 最新旗舰原生多模态混合推理模型（国际站），256K 上下文，支持原生图片输入、思考模式（默认开启）与工具调用。',
@@ -651,6 +657,9 @@ const en: Translations = {
 	'model.mimo-v2-flash.detail': 'Fast & low cost',
 	'model.mimo-v2-flash.tooltip':
 		'Xiaomi MiMo V2 Flash model with faster responses and lower cost, plus thinking mode and tool calling.',
+	'model.kimi-k3.detail': 'Flagship 2.8T, 1M ctx, always-thinking',
+	'model.kimi-k3.tooltip':
+		'Moonshot Kimi K3 flagship model with 2.8T parameters, 1M-token context, native vision, and always-on thinking (reasoning_effort) — built for long-range coding and knowledge work.',
 	'model.kimi-k2.7.detail': 'Latest flagship multimodal & agents',
 	'model.kimi-k2.7.tooltip':
 		'Moonshot Kimi K2.7 latest flagship native-multimodal hybrid-reasoning model with a 256K context — native image input, thinking mode (on by default), and tool calling.',
@@ -663,6 +672,9 @@ const en: Translations = {
 	'model.kimi-k2.7-code-highspeed.detail': 'K2.7 high-speed, ~180 tok/s',
 	'model.kimi-k2.7-code-highspeed.tooltip':
 		'Moonshot Kimi K2.7 Code HighSpeed variant with ~180 tok/s output speed, 256K context — native image input, thinking mode, and tool calling.',
+	'model.kimi-k3-intl.detail': 'Flagship 2.8T, 1M ctx, always-thinking (Intl)',
+	'model.kimi-k3-intl.tooltip':
+		'Moonshot Kimi K3 flagship model (international) with 2.8T parameters, 1M-token context, native vision, and always-on thinking (reasoning_effort).',
 	'model.kimi-k2.7-intl.detail': 'Latest flagship multimodal & agents (Intl)',
 	'model.kimi-k2.7-intl.tooltip':
 		'Moonshot Kimi K2.7 latest flagship native-multimodal hybrid-reasoning model (international) with a 256K context — native image input, thinking mode (on by default), and tool calling.',

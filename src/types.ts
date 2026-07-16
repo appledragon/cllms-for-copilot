@@ -84,6 +84,12 @@ export interface LlmRequest {
 	 * in `content` wrapped in `<think>` tags.
 	 */
 	reasoning_split?: boolean;
+	/**
+	 * Kimi K3 top-level reasoning effort control. K3 always thinks; currently
+	 * only `"max"` is supported by the API.  Mutually exclusive with
+	 * `enable_thinking` / `thinking` / `thinking_budget`.
+	 */
+	reasoning_effort?: 'none' | 'medium' | 'max';
 	stream_options?: {
 		include_usage: boolean;
 	};
@@ -149,8 +155,11 @@ export type ProviderId =
  *               wire format)
  *  - `minimax`: nested `thinking: { type: 'adaptive' | 'disabled' }` plus
  *               `reasoning_split: true` so reasoning streams in `reasoning_content`
+ *  - `reasoning_effort`: top-level `reasoning_effort` ("none" | "medium" | "max") —
+ *               used by Kimi K3.  K3 always thinks; currently only "max" is
+ *               supported by the API.
  */
-export type ThinkingStyle = 'qwen' | 'glm' | 'minimax';
+export type ThinkingStyle = 'qwen' | 'glm' | 'minimax' | 'reasoning_effort';
 
 /**
  * Result of the most recent connection test for a provider, surfaced by the
@@ -211,6 +220,9 @@ export interface ModelDefinition {
 	name: string;
 	/** Owning provider; selects endpoint, credentials, and thinking style. */
 	provider: ProviderId;
+	/** Override the provider-level thinking serialization (e.g. K3 uses
+	 *  `reasoning_effort` while K2.x uses GLM-style `thinking`). */
+	thinkingStyle?: ThinkingStyle;
 	family: string;
 	version: string;
 	detail: string;

@@ -21,6 +21,8 @@ export type ThinkingRequestFields = Pick<
  *    `adaptive`; `reasoning_split` keeps reasoning in `reasoning_content` rather
  *    than embedding `<think>` tags in `content`. (M2.x models ignore `disabled`
  *    and always think; M3 honors it.)
+ *  - `reasoning_effort` (top-level `reasoning_effort`): used by Kimi K3. The
+ *    API currently only supports `"max"`, so all non-none efforts map to `max`.
  */
 export function buildThinkingFields(
 	style: ThinkingStyle,
@@ -35,6 +37,14 @@ export function buildThinkingFields(
 			thinking: { type: effort === 'none' ? 'disabled' : 'adaptive' },
 			reasoning_split: true,
 		};
+	}
+
+	if (style === 'reasoning_effort') {
+		// Kimi K3 always thinks; `reasoning_effort` only supports "max" today.
+		// Map none/high/max accordingly so the UI toggle still works.
+		return {
+			reasoning_effort: effort === 'none' ? ('none' as const) : ('max' as const),
+		} as ThinkingRequestFields;
 	}
 
 	return {

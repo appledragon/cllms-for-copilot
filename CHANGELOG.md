@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.2
+
+- **Add Kimi K3** — Moonshot's flagship 2.8T-parameter model with 1M-token context, native vision, and always-on thinking via top-level `reasoning_effort`. Available on both domestic (`kimi-k3`) and international (`kimi-k3-intl`) endpoints.
+- **Add `reasoning_effort` thinking style** — new `ThinkingStyle` for models that use top-level `reasoning_effort` instead of GLM-style `thinking: { type }`. Models can now override the provider-level thinking serialization via `ModelDefinition.thinkingStyle`.
+
 ## 0.4.1
 
 - **Fix model cost fields rendering** — change `inputCost`, `outputCost`, and `cacheCost` from formatted currency strings (e.g. `"$1"`) to raw numeric values so they match VS Code's proposed cost API (numeric credits) and render correctly in the Copilot UI's native cost slots.

@@ -1108,13 +1108,35 @@ export const MODELS: ModelDefinition[] = [
 	},
 
 	// ---- Moonshot (Kimi) ----
-	// Kimi K2.7 / K2.6 / K2.5 are native-multimodal hybrid-reasoning models on the
-	// official open platform (international `api.moonshot.ai`; mainland China
-	// `api.moonshot.cn`). Thinking is on by default and toggled with the
-	// GLM-style `thinking: { type: 'enabled' | 'disabled' }`, with reasoning in
-	// `reasoning_content`. The deprecated `kimi-k2-*` series was retired on
-	// 2026-05-25. USD = official per-1M-token pricing; CNY is an approximate
-	// conversion that only drives the picker cost hints.
+	// Kimi K3 is the flagship 2.8T-param model with 1M-token context, native
+	// vision, and always-on thinking controlled via top-level `reasoning_effort`
+	// (currently only `"max"`).  K2.7 / K2.6 / K2.5 are native-multimodal
+	// hybrid-reasoning models that use the GLM-style
+	// `thinking: { type: 'enabled' | 'disabled' }` wire format.
+	// International endpoint: `api.moonshot.ai`; mainland China: `api.moonshot.cn`.
+	// USD = official per-1M-token pricing; CNY is approximate (picker cost hints).
+	{
+		id: 'kimi-k3',
+		name: 'Kimi K3',
+		provider: 'moonshot',
+		thinkingStyle: 'reasoning_effort',
+		family: 'kimi',
+		version: 'kimi-k3',
+		detail: 'Flagship 2.8T, 1M ctx, always-thinking',
+		maxInputTokens: 1048576,
+		maxOutputTokens: 131072,
+		capabilities: {
+			toolCalling: LLM_TOOLS_LIMIT,
+			imageInput: true,
+			thinking: true,
+		},
+		requiresThinkingParam: false,
+		pricing: {
+			USD: { cacheHitInput: 0.3, cacheMissInput: 3, output: 15 },
+			CNY: { cacheHitInput: 2.1, cacheMissInput: 21, output: 105 },
+		},
+		priceCategory: 'very_high',
+	},
 	{
 		id: 'kimi-k2.7',
 		name: 'Kimi K2.7',
@@ -1203,6 +1225,28 @@ export const MODELS: ModelDefinition[] = [
 	// ---- Moonshot (Kimi International) ----
 	// Models are identical to the domestic Kimi lineup but connect to the
 	// international endpoint with a separate API key.
+	{
+		id: 'kimi-k3-intl',
+		name: 'Kimi K3 (Intl)',
+		provider: 'moonshot-intl',
+		thinkingStyle: 'reasoning_effort',
+		family: 'kimi',
+		version: 'kimi-k3',
+		detail: 'Flagship 2.8T, 1M ctx, always-thinking',
+		maxInputTokens: 1048576,
+		maxOutputTokens: 131072,
+		capabilities: {
+			toolCalling: LLM_TOOLS_LIMIT,
+			imageInput: true,
+			thinking: true,
+		},
+		requiresThinkingParam: false,
+		pricing: {
+			USD: { cacheHitInput: 0.3, cacheMissInput: 3, output: 15 },
+			CNY: { cacheHitInput: 2.1, cacheMissInput: 21, output: 105 },
+		},
+		priceCategory: 'very_high',
+	},
 	{
 		id: 'kimi-k2.7-intl',
 		name: 'Kimi K2.7 (Intl)',
