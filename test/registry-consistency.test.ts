@@ -31,6 +31,11 @@ describe("i18n model coverage", () => {
       const result = t(`model.${modelId}.detail`);
       assert.notEqual(result, `model.${modelId}.detail`, `missing zh detail for ${modelId}`);
       assert.ok(result.length > 0, `empty zh detail for ${modelId}`);
+      // Keep picker details short so model names stay visible.
+      assert.ok(
+        [...result].length <= 10,
+        `zh detail for ${modelId} is too long for the model picker (${[...result].length} > 10): ${result}`,
+      );
     });
 
     it(`has zh tooltip for ${modelId}`, () => {
@@ -45,6 +50,11 @@ describe("i18n model coverage", () => {
       const result = t(`model.${modelId}.detail`);
       assert.notEqual(result, `model.${modelId}.detail`, `missing en detail for ${modelId}`);
       assert.ok(result.length > 0, `empty en detail for ${modelId}`);
+      // Copilot model picker truncates the name when detail is too long.
+      assert.ok(
+        result.length <= 24,
+        `en detail for ${modelId} is too long for the model picker (${result.length} > 24): ${result}`,
+      );
     });
 
     it(`has en tooltip for ${modelId}`, () => {

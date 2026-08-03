@@ -274,7 +274,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'qwen',
 		family: 'qwen',
 		version: 'qwen3',
-		detail: 'Agentic coding & tool use',
+		detail: 'Agentic coding',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 65536,
 		capabilities: {
@@ -295,7 +295,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'qwen',
 		family: 'qwen',
 		version: 'qwen3',
-		detail: 'Lightweight coding, fast & affordable',
+		detail: 'Fast coding',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 65536,
 		capabilities: {
@@ -316,7 +316,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'qwen',
 		family: 'qwen',
 		version: 'qwen-plus',
-		detail: 'Balanced, hybrid thinking',
+		detail: 'Balanced',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 32768,
 		capabilities: {
@@ -337,7 +337,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'qwen',
 		family: 'qwen',
 		version: 'qwen3',
-		detail: 'Flagship model',
+		detail: 'Flagship',
 		maxInputTokens: 262144,
 		maxOutputTokens: 65536,
 		capabilities: {
@@ -362,7 +362,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'qwen',
 		family: 'qwen',
 		version: 'qwen3-vl',
-		detail: 'Native vision model',
+		detail: 'Native vision',
 		maxInputTokens: 262144,
 		maxOutputTokens: 32768,
 		capabilities: {
@@ -378,12 +378,33 @@ export const MODELS: ModelDefinition[] = [
 		priceCategory: 'medium',
 	},
 	{
+		id: 'qwen3.8-max',
+		name: 'Qwen3.8 Max',
+		provider: 'qwen',
+		family: 'qwen',
+		version: 'qwen3.8',
+		detail: 'Latest flagship',
+		maxInputTokens: 1000000,
+		maxOutputTokens: 131072,
+		capabilities: {
+			toolCalling: LLM_TOOLS_LIMIT,
+			imageInput: true,
+			thinking: true,
+		},
+		requiresThinkingParam: true,
+		pricing: {
+			USD: { cacheHitInput: 0.25, cacheMissInput: 2, output: 6 },
+			CNY: { cacheHitInput: 2.4, cacheMissInput: 12, output: 36 },
+		},
+		priceCategory: 'high',
+	},
+	{
 		id: 'qwen3.7-max',
 		name: 'Qwen3.7 Max',
 		provider: 'qwen',
 		family: 'qwen',
 		version: 'qwen3.7',
-		detail: 'Latest flagship, aligned with GPT-5.5 / Claude Opus 4.7',
+		detail: 'Flagship',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 65536,
 		capabilities: {
@@ -404,7 +425,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'qwen',
 		family: 'qwen',
 		version: 'qwen3.7',
-		detail: 'Balanced flagship, recommended default',
+		detail: 'Balanced flagship',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 65536,
 		capabilities: {
@@ -425,7 +446,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'qwen',
 		family: 'qwen',
 		version: 'qwen3.6',
-		detail: 'Lightweight, near-flagship quality',
+		detail: 'Fast & light',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 65536,
 		capabilities: {
@@ -452,7 +473,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'qwen-intl',
 		family: 'qwen',
 		version: 'qwen3',
-		detail: 'Agentic coding & tool use',
+		detail: 'Agentic coding',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 65536,
 		capabilities: {
@@ -473,7 +494,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'qwen-intl',
 		family: 'qwen',
 		version: 'qwen3',
-		detail: 'Lightweight coding, fast & affordable',
+		detail: 'Fast coding',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 65536,
 		capabilities: {
@@ -494,7 +515,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'qwen-intl',
 		family: 'qwen',
 		version: 'qwen-plus',
-		detail: 'Balanced, hybrid thinking',
+		detail: 'Balanced',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 32768,
 		capabilities: {
@@ -515,7 +536,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'qwen-intl',
 		family: 'qwen',
 		version: 'qwen3',
-		detail: 'Flagship model',
+		detail: 'Flagship',
 		maxInputTokens: 262144,
 		maxOutputTokens: 65536,
 		capabilities: {
@@ -536,7 +557,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'qwen-intl',
 		family: 'qwen',
 		version: 'qwen3-vl',
-		detail: 'Native vision model',
+		detail: 'Native vision',
 		maxInputTokens: 262144,
 		maxOutputTokens: 32768,
 		capabilities: {
@@ -552,12 +573,33 @@ export const MODELS: ModelDefinition[] = [
 		priceCategory: 'medium',
 	},
 	{
+		id: 'qwen3.8-max-intl',
+		name: 'Qwen3.8 Max (Intl)',
+		provider: 'qwen-intl',
+		family: 'qwen',
+		version: 'qwen3.8',
+		detail: 'Latest flagship',
+		maxInputTokens: 1000000,
+		maxOutputTokens: 131072,
+		capabilities: {
+			toolCalling: LLM_TOOLS_LIMIT,
+			imageInput: true,
+			thinking: true,
+		},
+		requiresThinkingParam: true,
+		pricing: {
+			USD: { cacheHitInput: 0.25, cacheMissInput: 2, output: 6 },
+			CNY: { cacheHitInput: 2.4, cacheMissInput: 12, output: 36 },
+		},
+		priceCategory: 'high',
+	},
+	{
 		id: 'qwen3.7-max-intl',
 		name: 'Qwen3.7 Max (Intl)',
 		provider: 'qwen-intl',
 		family: 'qwen',
 		version: 'qwen3.7',
-		detail: 'Latest flagship, aligned with GPT-5.5 / Claude Opus 4.7',
+		detail: 'Flagship',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 65536,
 		capabilities: {
@@ -578,7 +620,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'qwen-intl',
 		family: 'qwen',
 		version: 'qwen3.7',
-		detail: 'Balanced flagship, recommended default',
+		detail: 'Balanced flagship',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 65536,
 		capabilities: {
@@ -599,7 +641,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'qwen-intl',
 		family: 'qwen',
 		version: 'qwen3.6',
-		detail: 'Lightweight, near-flagship quality',
+		detail: 'Fast & light',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 65536,
 		capabilities: {
@@ -625,7 +667,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'deepseek',
 		family: 'deepseek',
 		version: 'deepseek-v4',
-		detail: 'Fast flagship, 1M context, thinking & non-thinking modes',
+		detail: 'Fast flagship',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 384000,
 		capabilities: {
@@ -646,7 +688,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'deepseek',
 		family: 'deepseek',
 		version: 'deepseek-v4',
-		detail: 'Pro flagship, 1M context, deep thinking by default',
+		detail: 'Pro flagship',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 384000,
 		capabilities: {
@@ -672,7 +714,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'zai',
 		family: 'glm',
 		version: 'glm-5.2',
-		detail: 'Latest flagship, 1M context, open-source SOTA coding',
+		detail: 'Latest flagship',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 128000,
 		capabilities: {
@@ -693,7 +735,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'zai',
 		family: 'glm',
 		version: 'glm-5.1',
-		detail: 'Flagship long-horizon coding & agents',
+		detail: 'Long-horizon coding',
 		maxInputTokens: 200000,
 		maxOutputTokens: 128000,
 		capabilities: {
@@ -714,7 +756,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'zai',
 		family: 'glm',
 		version: 'glm-4.6',
-		detail: 'Flagship coding & agents',
+		detail: 'Coding & agents',
 		maxInputTokens: 200000,
 		maxOutputTokens: 128000,
 		capabilities: {
@@ -756,7 +798,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'zai',
 		family: 'glm',
 		version: 'glm-4.5',
-		detail: 'Ultra-fast lightweight, low-latency',
+		detail: 'Ultra-fast',
 		maxInputTokens: 128000,
 		maxOutputTokens: 96000,
 		capabilities: {
@@ -777,7 +819,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'zai',
 		family: 'glm',
 		version: 'glm-5',
-		detail: 'High-intelligence base, coding aligned with Claude Opus 4.5',
+		detail: 'High-intelligence',
 		maxInputTokens: 200000,
 		maxOutputTokens: 128000,
 		capabilities: {
@@ -798,7 +840,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'zai',
 		family: 'glm',
 		version: 'glm-5-turbo',
-		detail: 'Lobster-optimized base, long-task continuity',
+		detail: 'Long-task optimized',
 		maxInputTokens: 200000,
 		maxOutputTokens: 128000,
 		capabilities: {
@@ -819,7 +861,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'zai',
 		family: 'glm',
 		version: 'glm-4.7',
-		detail: 'Upgraded general model, stronger coding',
+		detail: 'Stronger coding',
 		maxInputTokens: 200000,
 		maxOutputTokens: 128000,
 		capabilities: {
@@ -840,7 +882,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'zai',
 		family: 'glm',
 		version: 'glm-4.7-flashx',
-		detail: 'Lightweight & fast, budget-friendly',
+		detail: 'Fast & affordable',
 		maxInputTokens: 200000,
 		maxOutputTokens: 128000,
 		capabilities: {
@@ -861,7 +903,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'zai',
 		family: 'glm',
 		version: 'glm-4.7',
-		detail: 'Free model, general-purpose',
+		detail: 'Free model',
 		maxInputTokens: 200000,
 		maxOutputTokens: 128000,
 		capabilities: {
@@ -882,7 +924,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'zai',
 		family: 'glm',
 		version: 'glm-5v-turbo',
-		detail: 'Multimodal coding base, vision + deep thinking',
+		detail: 'Vision + thinking',
 		maxInputTokens: 200000,
 		maxOutputTokens: 128000,
 		capabilities: {
@@ -911,7 +953,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'minimax',
 		family: 'minimax',
 		version: 'minimax-m3',
-		detail: 'Flagship agentic, long context & vision',
+		detail: 'Flagship agentic',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 65536,
 		capabilities: {
@@ -932,7 +974,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'minimax',
 		family: 'minimax',
 		version: 'minimax-m2.7',
-		detail: 'Fast coding & agents',
+		detail: 'Fast coding',
 		maxInputTokens: 204800,
 		maxOutputTokens: 65536,
 		capabilities: {
@@ -953,7 +995,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'minimax',
 		family: 'minimax',
 		version: 'minimax-m2.5',
-		detail: 'Cost-effective reasoning & coding',
+		detail: 'Cost-effective',
 		maxInputTokens: 192000,
 		maxOutputTokens: 32768,
 		capabilities: {
@@ -978,7 +1020,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'minimax-intl',
 		family: 'minimax',
 		version: 'minimax-m3',
-		detail: 'Flagship agentic, long context & vision',
+		detail: 'Flagship agentic',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 65536,
 		capabilities: {
@@ -999,7 +1041,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'minimax-intl',
 		family: 'minimax',
 		version: 'minimax-m2.7',
-		detail: 'Fast coding & agents',
+		detail: 'Fast coding',
 		maxInputTokens: 204800,
 		maxOutputTokens: 65536,
 		capabilities: {
@@ -1020,7 +1062,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'minimax-intl',
 		family: 'minimax',
 		version: 'minimax-m2.5',
-		detail: 'Cost-effective reasoning & coding',
+		detail: 'Cost-effective',
 		maxInputTokens: 192000,
 		maxOutputTokens: 32768,
 		capabilities: {
@@ -1049,7 +1091,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'xiaomi',
 		family: 'mimo',
 		version: 'mimo-v2.5',
-		detail: 'Flagship reasoning & coding',
+		detail: 'Flagship coding',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 131072,
 		capabilities: {
@@ -1070,7 +1112,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'xiaomi',
 		family: 'mimo',
 		version: 'mimo-v2.5',
-		detail: 'Native multimodal & thinking',
+		detail: 'Multimodal',
 		maxInputTokens: 1000000,
 		maxOutputTokens: 131072,
 		capabilities: {
@@ -1122,7 +1164,7 @@ export const MODELS: ModelDefinition[] = [
 		thinkingStyle: 'reasoning_effort',
 		family: 'kimi',
 		version: 'kimi-k3',
-		detail: 'Flagship 2.8T, 1M ctx, always-thinking',
+		detail: 'Flagship 2.8T',
 		maxInputTokens: 1048576,
 		maxOutputTokens: 131072,
 		capabilities: {
@@ -1143,7 +1185,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'moonshot',
 		family: 'kimi',
 		version: 'kimi-k2.7-code',
-		detail: 'Latest flagship multimodal & agents',
+		detail: 'Latest flagship',
 		maxInputTokens: 262144,
 		maxOutputTokens: 131072,
 		capabilities: {
@@ -1164,7 +1206,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'moonshot',
 		family: 'kimi',
 		version: 'kimi-k2.7-code',
-		detail: 'K2.7 high-speed variant, ~180 tok/s',
+		detail: 'High-speed coding',
 		maxInputTokens: 262144,
 		maxOutputTokens: 131072,
 		capabilities: {
@@ -1185,7 +1227,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'moonshot',
 		family: 'kimi',
 		version: 'kimi-k2.6',
-		detail: 'Flagship multimodal & agents',
+		detail: 'Flagship multimodal',
 		maxInputTokens: 262144,
 		maxOutputTokens: 131072,
 		capabilities: {
@@ -1206,7 +1248,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'moonshot',
 		family: 'kimi',
 		version: 'kimi-k2.5',
-		detail: 'Multimodal, flexible thinking',
+		detail: 'Multimodal',
 		maxInputTokens: 262144,
 		maxOutputTokens: 131072,
 		capabilities: {
@@ -1232,7 +1274,7 @@ export const MODELS: ModelDefinition[] = [
 		thinkingStyle: 'reasoning_effort',
 		family: 'kimi',
 		version: 'kimi-k3',
-		detail: 'Flagship 2.8T, 1M ctx, always-thinking',
+		detail: 'Flagship 2.8T',
 		maxInputTokens: 1048576,
 		maxOutputTokens: 131072,
 		capabilities: {
@@ -1253,7 +1295,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'moonshot-intl',
 		family: 'kimi',
 		version: 'kimi-k2.7-code',
-		detail: 'Latest flagship multimodal & agents',
+		detail: 'Latest flagship',
 		maxInputTokens: 262144,
 		maxOutputTokens: 131072,
 		capabilities: {
@@ -1274,7 +1316,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'moonshot-intl',
 		family: 'kimi',
 		version: 'kimi-k2.7-code',
-		detail: 'K2.7 high-speed variant, ~180 tok/s',
+		detail: 'High-speed coding',
 		maxInputTokens: 262144,
 		maxOutputTokens: 131072,
 		capabilities: {
@@ -1295,7 +1337,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'moonshot-intl',
 		family: 'kimi',
 		version: 'kimi-k2.6',
-		detail: 'Flagship multimodal & agents',
+		detail: 'Flagship multimodal',
 		maxInputTokens: 262144,
 		maxOutputTokens: 131072,
 		capabilities: {
@@ -1316,7 +1358,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'moonshot-intl',
 		family: 'kimi',
 		version: 'kimi-k2.5',
-		detail: 'Multimodal, flexible thinking',
+		detail: 'Multimodal',
 		maxInputTokens: 262144,
 		maxOutputTokens: 131072,
 		capabilities: {
@@ -1344,7 +1386,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'hunyuan',
 		family: 'hunyuan',
 		version: 'hunyuan-2.0',
-		detail: 'Flagship deep-thinking & coding',
+		detail: 'Deep thinking',
 		maxInputTokens: 131072,
 		maxOutputTokens: 16384,
 		capabilities: {
@@ -1365,7 +1407,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'hunyuan',
 		family: 'hunyuan',
 		version: 'hunyuan-turbos',
-		detail: 'Fast & balanced everyday',
+		detail: 'Fast & balanced',
 		maxInputTokens: 32768,
 		maxOutputTokens: 8192,
 		capabilities: {
@@ -1386,7 +1428,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'hunyuan',
 		family: 'hunyuan',
 		version: 'hunyuan-t1',
-		detail: 'Deep thinking, affordable',
+		detail: 'Deep thinking',
 		maxInputTokens: 32768,
 		maxOutputTokens: 8192,
 		capabilities: {
@@ -1407,7 +1449,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'hunyuan',
 		family: 'hunyuan',
 		version: 'hunyuan-a13b',
-		detail: 'Lightweight, fast & low cost',
+		detail: 'Lightweight & fast',
 		maxInputTokens: 32768,
 		maxOutputTokens: 8192,
 		capabilities: {
@@ -1428,7 +1470,7 @@ export const MODELS: ModelDefinition[] = [
 		provider: 'hunyuan',
 		family: 'hunyuan',
 		version: 'hunyuan-2.0',
-		detail: 'Instruction-following, creative & knowledge-accurate',
+		detail: 'Instruction-following',
 		maxInputTokens: 131072,
 		maxOutputTokens: 16384,
 		capabilities: {

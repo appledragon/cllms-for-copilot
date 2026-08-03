@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.0
+
+- **Add Qwen3.8 Max** — Alibaba's latest 2.4T MoE flagship (95B active) with up to 1M context, native vision, hybrid thinking, and tool calling. Available on both domestic (`qwen3.8-max`) and international (`qwen3.8-max-intl`) DashScope endpoints.
+- **Shorten model picker details** — keep Copilot Chat model-selector `detail` strings brief so long descriptions no longer crowd out model names; full copy remains in tooltips.
+
 ## 0.4.2
 
 - **Add Kimi K3** — Moonshot's flagship 2.8T-parameter model with 1M-token context, native vision, and always-on thinking via top-level `reasoning_effort`. Available on both domestic (`kimi-k3`) and international (`kimi-k3-intl`) endpoints.

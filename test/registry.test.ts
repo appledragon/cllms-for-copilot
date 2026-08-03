@@ -187,6 +187,8 @@ describe("model registry", () => {
       "mimo-v2.5",
       "qwen3-vl-plus",
       "qwen3-vl-plus-intl",
+      "qwen3.8-max",
+      "qwen3.8-max-intl",
     ]);
   });
 });

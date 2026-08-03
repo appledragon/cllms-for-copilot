@@ -3,7 +3,7 @@
   "displayName": "CLLMs for Copilot Chat",
   "description": "Pick Qwen, DeepSeek, GLM (z.ai), MiniMax, Xiaomi MiMo, Moonshot Kimi, and Tencent Hunyuan models from the Copilot Chat model picker. Vision, thinking mode, agent tools — zero config, BYOK.",
   "icon": "resources/icon.png",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "publisher": "CuiLiAn",
   "license": "MIT",
   "repository": {
@@ -423,6 +423,7 @@
             "qwen-plus": "qwen-plus",
             "qwen3-max": "qwen3-max",
             "qwen3-vl-plus": "qwen3-vl-plus",
+            "qwen3.8-max": "qwen3.8-max",
             "qwen3.7-max": "qwen3.7-max",
             "qwen3.7-plus": "qwen3.7-plus",
             "qwen3.6-flash": "qwen3.6-flash"
@@ -445,6 +446,10 @@
             "qwen3-vl-plus": {
               "type": "string",
               "description": "%cllms.config.modelIdOverrides.qwen3-vl-plus.description%"
+            },
+            "qwen3.8-max": {
+              "type": "string",
+              "description": "%cllms.config.modelIdOverrides.qwen3.8-max.description%"
             },
             "qwen3.7-max": {
               "type": "string",
@@ -477,6 +482,7 @@
             "qwen-plus-intl": "qwen-plus",
             "qwen3-max-intl": "qwen3-max",
             "qwen3-vl-plus-intl": "qwen3-vl-plus",
+            "qwen3.8-max-intl": "qwen3.8-max",
             "qwen3.7-max-intl": "qwen3.7-max",
             "qwen3.7-plus-intl": "qwen3.7-plus",
             "qwen3.6-flash-intl": "qwen3.6-flash"
@@ -499,6 +505,10 @@
             "qwen3-vl-plus-intl": {
               "type": "string",
               "description": "%cllms.config.qwenIntl.modelIdOverrides.qwen3-vl-plus-intl.description%"
+            },
+            "qwen3.8-max-intl": {
+              "type": "string",
+              "description": "%cllms.config.qwenIntl.modelIdOverrides.qwen3.8-max-intl.description%"
             },
             "qwen3.7-max-intl": {
               "type": "string",

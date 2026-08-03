@@ -49,7 +49,8 @@ CLLMs 支持 **Remote - SSH**、**Dev Containers** 和 **WSL**。扩展运行在
 | **Qwen Plus** | 日常均衡使用，支持混合思考 |
 | **Qwen3 Max** | 面向复杂任务的旗舰模型 |
 | **Qwen3-VL Plus** | 原生视觉（图片输入） |
-| **Qwen3.7 Max** | 最新旗舰，对标 GPT-5.5 / Claude Opus 4.7 |
+| **Qwen3.8 Max** | 最新旗舰，2.4T MoE，原生视觉，1M 上下文 |
+| **Qwen3.7 Max** | 旗舰模型，对标 GPT-5.5 / Claude Opus 4.7 |
 | **Qwen3.7 Plus** | 均衡旗舰，推荐默认选择 |
 | **Qwen3.6 Flash** | 轻量快速，接近旗舰质量，1M 上下文 |
 
@@ -122,7 +123,7 @@ CLLMs 支持 **Remote - SSH**、**Dev Containers** 和 **WSL**。扩展运行在
 
 | 服务商 | 状态 | 备注 |
 |---|---|---|
-| Qwen（DashScope 国内） | ✅ 已测试 | Qwen3 Coder Plus、Qwen3 Coder Flash、Qwen Plus、Qwen3 Max、Qwen3-VL Plus — 全部验证通过。Qwen3.7 Max、Qwen3.7 Plus、Qwen3.6 Flash 已启用，待单独验证。 |
+| Qwen（DashScope 国内） | ✅ 已测试 | Qwen3 Coder Plus、Qwen3 Coder Flash、Qwen Plus、Qwen3 Max、Qwen3-VL Plus — 全部验证通过。Qwen3.8 Max、Qwen3.7 Max、Qwen3.7 Plus、Qwen3.6 Flash 已启用，待单独验证。 |
 | Qwen（DashScope International） | ⚠️ 未测试 | API 兼容性应与国内端点一致。欢迎提供测试 token 或测试反馈！ |
 | DeepSeek | ⚠️ 未测试 | API 兼容性遵循标准 OpenAI 兼容 Chat Completions API。欢迎提供测试 token 或测试反馈！ |
 | z.ai（智谱 GLM） | ✅ 已测试 | GLM-5.2、GLM-5.1、GLM-4.6、GLM-4.5-Air、GLM-4.5-AirX — 全部验证通过。GLM-5、GLM-5-Turbo、GLM-4.7、GLM-4.7-Flash、GLM-4.7-FlashX、GLM-5V-Turbo 已启用，待单独验证。 |
@@ -171,7 +172,7 @@ CLLMs 支持 **Remote - SSH**、**Dev Containers** 和 **WSL**。扩展运行在
 
 参见[高级设置](./advanced-settings.nls.zh-cn.md)，了解上方成本与缓存控制项的集中说明。
 
-对于纯文本模型，视觉代理会在主请求前先把图片附件解析成文字。**所有 CLLMs 模型均接受粘贴图片**——纯文本模型会自动将图片路由到视觉代理，而原生视觉模型（如 Qwen3-VL-Plus、GLM-5V-Turbo）则直接接收图片。如果未配置显式的视觉模型，扩展会回退使用任意可用的 Copilot 模型（如 GPT-4o）作为视觉描述器。相同图片描述会在当前 VS Code 会话内按图片字节、提示词和描述器身份缓存，因此重试或重复附加同一张图片时不会再次调用描述模型。API 端点视觉代理还会对临时性 429 / 5xx / 网络失败复用 `cllms.maxRetries` 重试，并用 `cllms.visionProxy.timeoutMs` 控制每次尝试的超时。
+对于纯文本模型，视觉代理会在主请求前先把图片附件解析成文字。**所有 CLLMs 模型均接受粘贴图片**——纯文本模型会自动将图片路由到视觉代理，而原生视觉模型（如 Qwen3.8 Max、Qwen3-VL-Plus、GLM-5V-Turbo）则直接接收图片。如果未配置显式的视觉模型，扩展会回退使用任意可用的 Copilot 模型（如 GPT-4o）作为视觉描述器。相同图片描述会在当前 VS Code 会话内按图片字节、提示词和描述器身份缓存，因此重试或重复附加同一张图片时不会再次调用描述模型。API 端点视觉代理还会对临时性 429 / 5xx / 网络失败复用 `cllms.maxRetries` 重试，并用 `cllms.visionProxy.timeoutMs` 控制每次尝试的超时。
 
 对于音频附件，音频代理可在主请求前先将音频转写为文本，供不支持原生音频输入的模型使用。可通过 `CLLMs: 配置音频代理` 打开与视觉代理同风格的面板进行配置。API 端点音频代理会复用 `cllms.maxRetries` 重试策略，并用 `cllms.audioProxy.timeoutMs` 控制每次尝试超时。
 
