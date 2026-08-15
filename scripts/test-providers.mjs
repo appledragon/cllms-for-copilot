@@ -73,7 +73,7 @@ const PROVIDERS = {
 		name: 'DeepSeek',
 		envKey: 'DEEPSEEK_API_KEY',
 		baseUrl: 'https://api.deepseek.com/v1',
-		thinkingStyle: 'glm',
+		thinkingStyle: 'deepseek',
 	},
 	zai: {
 		name: 'z.ai (Zhipu GLM)',
@@ -167,12 +167,14 @@ function parseModels() {
 	const byProvider = {};
 	let m;
 	while ((m = re.exec(slice)) !== null) {
-		const [, id, provider, imageInput, thinking] = m;
+		const [block, id, provider, imageInput, thinking] = m;
+		const styleMatch = /thinkingStyle:\s*'([^']+)'/.exec(block);
 		(byProvider[provider] ??= []).push({
 			id,
 			provider,
 			imageInput: imageInput === 'true',
 			thinking: thinking === 'true',
+			thinkingStyle: styleMatch?.[1],
 		});
 	}
 	return byProvider;
@@ -203,8 +205,17 @@ function buildThinkingFields(style) {
 	if (style === 'glm') {
 		return { thinking: { type: 'enabled' } };
 	}
+	if (style === 'deepseek') {
+		return { thinking: { type: 'enabled' }, reasoning_effort: 'high' };
+	}
 	if (style === 'minimax') {
 		return { thinking: { type: 'adaptive' }, reasoning_split: true };
+	}
+	if (style === 'reasoning_effort') {
+		return { reasoning_effort: 'high' };
+	}
+	if (style === 'qwen_effort') {
+		return { enable_thinking: true, reasoning_effort: 'xhigh' };
 	}
 	return { enable_thinking: true };
 }
@@ -630,7 +641,10 @@ async function runProvider(pid, opts, modelsByProvider) {
 				ms: 0,
 			};
 		} else {
-			result.checks.thinking = await timed(() => runThinking(ctx, thinkingModel, p.thinkingStyle));
+			const modelStyle = models.find((m) => m.id === thinkingModel)?.thinkingStyle;
+			result.checks.thinking = await timed(() =>
+				runThinking(ctx, thinkingModel, modelStyle ?? p.thinkingStyle),
+			);
 		}
 	}
 	if (wanted('tools')) {

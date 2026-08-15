@@ -62,7 +62,7 @@ z.ai 区块里，依此类推。
 - **`capabilities.thinking`** —— 为 `true` 时会出现按模型的**思考深度**下拉
   （`none` / `high` / `max`），并自动在请求中加入该服务商的思考参数
   （见 `src/provider/thinking.ts`）。你**无需**编写任何序列化代码——由该 Provider 的
-  `thinkingStyle`（`qwen` / `glm` / `minimax`）决定格式。
+  `thinkingStyle`（`qwen` / `qwen_effort` / `glm` / `deepseek` / `minimax`）决定格式。
 - **`capabilities.imageInput`** —— 仅当模型原生支持图片输入时设为 `true`，
   否则图片会走视觉代理回退方案。
 - **`pricing`** 为可选且为近似值，只影响成本提示。
@@ -166,7 +166,7 @@ ZAI_API_KEY=xxx npm run test:providers glm   # 或：node scripts/test-providers
      `baseUrlSetting`、`apiKeySecret`、`apiKeySetting`、`modelIdOverridesSetting`、
      `officialHost`、`thinkingStyle`、`externalUrls`）。
 3. **`src/provider/thinking.ts`** —— 在 `buildThinkingFields` 中处理新的
-   `thinkingStyle`（仅当它不是 `qwen` / `glm` / `minimax` 时）。
+   `thinkingStyle`（仅当它不是 `qwen` / `qwen_effort` / `glm` / `deepseek` / `minimax` 时）。
 4. **`src/client/consts.ts`** —— 新增 `OFFICIAL_<NAME>_API_HOST` 以及
    `API_PROVIDER_HTTP_ERROR_LINKS` 条目（401 / 402 / 5xx）。
 5. **`src/client/error/index.ts`** —— 在 `identifyApiProvider` 中识别新的 host。

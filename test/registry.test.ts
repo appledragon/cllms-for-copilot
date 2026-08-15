@@ -60,12 +60,28 @@ describe("provider registry", () => {
 
   it("maps each provider to its expected thinking style", () => {
     assert.equal(PROVIDERS.qwen.thinkingStyle, "qwen");
-    assert.equal(PROVIDERS.deepseek.thinkingStyle, "glm");
+    assert.equal(PROVIDERS.deepseek.thinkingStyle, "deepseek");
     assert.equal(PROVIDERS.zai.thinkingStyle, "glm");
     assert.equal(PROVIDERS.minimax.thinkingStyle, "minimax");
     // MiMo and Kimi share GLM's `thinking: { type }` wire format.
     assert.equal(PROVIDERS.xiaomi.thinkingStyle, "glm");
     assert.equal(PROVIDERS.moonshot.thinkingStyle, "glm");
+  });
+});
+
+describe("per-model thinking style overrides", () => {
+  it("sends reasoning_effort for GLM-5.2, Qwen3.8 Max, and Kimi K3", () => {
+    assert.equal(MODELS.find((m) => m.id === "glm-5.2")?.thinkingStyle, "deepseek");
+    assert.equal(MODELS.find((m) => m.id === "qwen3.8-max")?.thinkingStyle, "qwen_effort");
+    assert.equal(MODELS.find((m) => m.id === "qwen3.8-max-intl")?.thinkingStyle, "qwen_effort");
+    assert.equal(MODELS.find((m) => m.id === "kimi-k3")?.thinkingStyle, "reasoning_effort");
+    assert.equal(MODELS.find((m) => m.id === "kimi-k3-intl")?.thinkingStyle, "reasoning_effort");
+  });
+
+  it("leaves older GLM / Qwen / Kimi models on the provider default", () => {
+    assert.equal(MODELS.find((m) => m.id === "glm-5.1")?.thinkingStyle, undefined);
+    assert.equal(MODELS.find((m) => m.id === "qwen3.7-max")?.thinkingStyle, undefined);
+    assert.equal(MODELS.find((m) => m.id === "kimi-k2.7")?.thinkingStyle, undefined);
   });
 });
 

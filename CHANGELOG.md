@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0
+
+- **Send DeepSeek thinking effort** — DeepSeek now uses its own thinking style: `thinking: { type }` plus `reasoning_effort` (`high` / `max`). The picker Max setting no longer silently falls back to DeepSeek's default `high`.
+- **Send GLM-5.2 thinking effort** — GLM-5.2 reuses the DeepSeek thinking style so High/Max map to `reasoning_effort` instead of both becoming the API default `max`.
+- **Send Kimi K3 thinking effort** — K3 now maps None/High/Max to `low` / `high` / `max`. Thinking cannot be disabled; None no longer sends `none`.
+- **Fix Qwen3.8 Max thinking depth** — Max now sends `reasoning_effort: "xhigh"` instead of a 38K `thinking_budget` that made Max shallower than High.
+
 ## 0.5.0
 
 - **Add Qwen3.8 Max** — Alibaba's latest 2.4T MoE flagship (95B active) with up to 1M context, native vision, hybrid thinking, and tool calling. Available on both domestic (`qwen3.8-max`) and international (`qwen3.8-max-intl`) DashScope endpoints.

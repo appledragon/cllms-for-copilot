@@ -85,11 +85,11 @@ export interface LlmRequest {
 	 */
 	reasoning_split?: boolean;
 	/**
-	 * Kimi K3 top-level reasoning effort control. K3 always thinks; currently
-	 * only `"max"` is supported by the API.  Mutually exclusive with
-	 * `enable_thinking` / `thinking` / `thinking_budget`.
+	 * Top-level reasoning effort. DeepSeek / GLM-5.2 send this together with
+	 * `thinking: { type }` (`high` / `max`). Kimi K3 uses it alone
+	 * (`low` / `high` / `max`). Qwen3.8 Max uses `xhigh` for the deepest tier.
 	 */
-	reasoning_effort?: 'none' | 'medium' | 'max';
+	reasoning_effort?: 'none' | 'low' | 'medium' | 'high' | 'max' | 'xhigh';
 	stream_options?: {
 		include_usage: boolean;
 	};
@@ -150,16 +150,26 @@ export type ProviderId =
 /**
  * How a provider serializes "thinking" / reasoning control on the request:
  *  - `qwen`:    flat `enable_thinking` boolean (+ optional `thinking_budget`)
+ *  - `qwen_effort`: `enable_thinking` plus `reasoning_effort: "xhigh"` for Max
+ *               (Qwen3.8 Max). Do not send `thinking_budget` — the API rejects
+ *               both at once.
  *  - `glm`:     nested `thinking: { type: 'enabled' | 'disabled' }` — used by
- *               z.ai / Zhipu GLM, Xiaomi MiMo, and Moonshot Kimi (identical
- *               wire format)
+ *               older GLM, Xiaomi MiMo, and Moonshot Kimi K2.x
+ *  - `deepseek`: GLM-style `thinking: { type }` plus top-level
+ *               `reasoning_effort` (`high` / `max`) when thinking is on —
+ *               used by DeepSeek and GLM-5.2
  *  - `minimax`: nested `thinking: { type: 'adaptive' | 'disabled' }` plus
  *               `reasoning_split: true` so reasoning streams in `reasoning_content`
- *  - `reasoning_effort`: top-level `reasoning_effort` ("none" | "medium" | "max") —
- *               used by Kimi K3.  K3 always thinks; currently only "max" is
- *               supported by the API.
+ *  - `reasoning_effort`: top-level `reasoning_effort` (`low` / `high` / `max`) —
+ *               used by Kimi K3. K3 always thinks; `none` maps to `low`.
  */
-export type ThinkingStyle = 'qwen' | 'glm' | 'minimax' | 'reasoning_effort';
+export type ThinkingStyle =
+	| 'qwen'
+	| 'qwen_effort'
+	| 'glm'
+	| 'deepseek'
+	| 'minimax'
+	| 'reasoning_effort';
 
 /**
  * Result of the most recent connection test for a provider, surfaced by the

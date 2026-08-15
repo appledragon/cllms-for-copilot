@@ -121,8 +121,8 @@ export const PROVIDERS: Readonly<Record<ProviderId, ProviderDefinition>> = {
 		apiKeySetting: 'deepseek.apiKey',
 		modelIdOverridesSetting: 'deepseek.modelIdOverrides',
 		officialHost: 'api.deepseek.com',
-		// DeepSeek uses `thinking: { type: 'enabled' | 'disabled' }` (GLM-style).
-		thinkingStyle: 'glm',
+		// DeepSeek: `thinking: { type }` plus `reasoning_effort` (`high` / `max`).
+		thinkingStyle: 'deepseek',
 		externalUrls: EXTERNAL_URLS.deepseek,
 	},
 	zai: {
@@ -381,6 +381,8 @@ export const MODELS: ModelDefinition[] = [
 		id: 'qwen3.8-max',
 		name: 'Qwen3.8 Max',
 		provider: 'qwen',
+		// Official Max is `reasoning_effort: "xhigh"`; do not send thinking_budget.
+		thinkingStyle: 'qwen_effort',
 		family: 'qwen',
 		version: 'qwen3.8',
 		detail: 'Latest flagship',
@@ -576,6 +578,7 @@ export const MODELS: ModelDefinition[] = [
 		id: 'qwen3.8-max-intl',
 		name: 'Qwen3.8 Max (Intl)',
 		provider: 'qwen-intl',
+		thinkingStyle: 'qwen_effort',
 		family: 'qwen',
 		version: 'qwen3.8',
 		detail: 'Latest flagship',
@@ -658,9 +661,9 @@ export const MODELS: ModelDefinition[] = [
 	},
 
 	// ---- DeepSeek ----
-	// DeepSeek uses the GLM-style `thinking: { type: 'enabled' | 'disabled' }`
-	// format. V4-Flash supports both non-thinking and thinking modes; V4-Pro
-	// thinks by default. Pricing per 1M tokens; CNY values are approximate.
+	// Both V4 models default to thinking on and accept `thinking: { type }` plus
+	// `reasoning_effort` (`high` / `max`). Pricing per 1M tokens; CNY values
+	// are approximate.
 	{
 		id: 'deepseek-v4-flash',
 		name: 'DeepSeek-V4-Flash',
@@ -706,12 +709,14 @@ export const MODELS: ModelDefinition[] = [
 
 	// ---- z.ai (Zhipu GLM) ----
 	// Pricing is z.ai's public USD pricing per 1M tokens; CNY values are
-	// approximate conversions and only drive the picker's cost hints. GLM uses
-	// `thinking: { type: 'enabled' | 'disabled' }` (handled via provider style).
+	// approximate conversions and only drive the picker's cost hints. GLM-5.1
+	// and older use `thinking: { type }` only. GLM-5.2 also accepts
+	// `reasoning_effort` (`high` / `max`) via the DeepSeek thinking style.
 	{
 		id: 'glm-5.2',
 		name: 'GLM-5.2',
 		provider: 'zai',
+		thinkingStyle: 'deepseek',
 		family: 'glm',
 		version: 'glm-5.2',
 		detail: 'Latest flagship',
@@ -1152,8 +1157,8 @@ export const MODELS: ModelDefinition[] = [
 	// ---- Moonshot (Kimi) ----
 	// Kimi K3 is the flagship 2.8T-param model with 1M-token context, native
 	// vision, and always-on thinking controlled via top-level `reasoning_effort`
-	// (currently only `"max"`).  K2.7 / K2.6 / K2.5 are native-multimodal
-	// hybrid-reasoning models that use the GLM-style
+	// (`low` / `high` / `max`; UI None maps to `low`).  K2.7 / K2.6 / K2.5 are
+	// native-multimodal hybrid-reasoning models that use the GLM-style
 	// `thinking: { type: 'enabled' | 'disabled' }` wire format.
 	// International endpoint: `api.moonshot.ai`; mainland China: `api.moonshot.cn`.
 	// USD = official per-1M-token pricing; CNY is approximate (picker cost hints).

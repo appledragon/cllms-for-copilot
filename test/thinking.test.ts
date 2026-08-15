@@ -47,6 +47,33 @@ describe("buildThinkingFields", () => {
     });
   });
 
+  describe("deepseek style (thinking.type + reasoning_effort)", () => {
+    it('maps "none" to disabled without reasoning_effort', () => {
+      assert.deepEqual(buildThinkingFields("deepseek", "none"), { thinking: { type: "disabled" } });
+    });
+
+    it('maps "high" to enabled + reasoning_effort high', () => {
+      assert.deepEqual(buildThinkingFields("deepseek", "high"), {
+        thinking: { type: "enabled" },
+        reasoning_effort: "high",
+      });
+    });
+
+    it('maps "max" to enabled + reasoning_effort max', () => {
+      assert.deepEqual(buildThinkingFields("deepseek", "max"), {
+        thinking: { type: "enabled" },
+        reasoning_effort: "max",
+      });
+    });
+
+    it("never emits qwen/minimax-only fields", () => {
+      const fields = buildThinkingFields("deepseek", "high");
+      assert.equal("enable_thinking" in fields, false);
+      assert.equal("thinking_budget" in fields, false);
+      assert.equal("reasoning_split" in fields, false);
+    });
+  });
+
   describe("minimax style (nested thinking.type adaptive + reasoning_split)", () => {
     it('maps "none" to disabled but still sets reasoning_split', () => {
       assert.deepEqual(buildThinkingFields("minimax", "none"), {
@@ -72,12 +99,12 @@ describe("buildThinkingFields", () => {
   });
 
   describe("reasoning_effort style (top-level reasoning_effort for Kimi K3)", () => {
-    it('maps "none" to "none"', () => {
-      assert.deepEqual(buildThinkingFields("reasoning_effort", "none"), { reasoning_effort: "none" });
+    it('maps "none" to "low" (K3 cannot disable thinking)', () => {
+      assert.deepEqual(buildThinkingFields("reasoning_effort", "none"), { reasoning_effort: "low" });
     });
 
-    it('maps "high" to "max" (API only supports max)', () => {
-      assert.deepEqual(buildThinkingFields("reasoning_effort", "high"), { reasoning_effort: "max" });
+    it('maps "high" to "high"', () => {
+      assert.deepEqual(buildThinkingFields("reasoning_effort", "high"), { reasoning_effort: "high" });
     });
 
     it('maps "max" to "max"', () => {
@@ -90,6 +117,32 @@ describe("buildThinkingFields", () => {
         assert.equal("enable_thinking" in fields, false);
         assert.equal("thinking" in fields, false);
         assert.equal("thinking_budget" in fields, false);
+        assert.equal("reasoning_split" in fields, false);
+      }
+    });
+  });
+
+  describe("qwen_effort style (enable_thinking + reasoning_effort xhigh)", () => {
+    it('maps "none" to enable_thinking false', () => {
+      assert.deepEqual(buildThinkingFields("qwen_effort", "none"), { enable_thinking: false });
+    });
+
+    it('maps "high" to enable_thinking without a budget or effort', () => {
+      assert.deepEqual(buildThinkingFields("qwen_effort", "high"), { enable_thinking: true });
+    });
+
+    it('maps "max" to enable_thinking + reasoning_effort xhigh', () => {
+      assert.deepEqual(buildThinkingFields("qwen_effort", "max"), {
+        enable_thinking: true,
+        reasoning_effort: "xhigh",
+      });
+    });
+
+    it("never emits thinking_budget (API rejects it together with reasoning_effort)", () => {
+      for (const effort of ["none", "high", "max"] as const) {
+        const fields = buildThinkingFields("qwen_effort", effort);
+        assert.equal("thinking_budget" in fields, false);
+        assert.equal("thinking" in fields, false);
         assert.equal("reasoning_split" in fields, false);
       }
     });

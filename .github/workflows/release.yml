@@ -1,0 +1,102 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name for the release (e.g., v0.6.0)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get package version
+        id: package-version
+        run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Package extension
+        run: npm run package
+
+      - name: Locate VSIX
+        id: vsix
+        run: |
+          shopt -s nullglob
+          files=( dist/*.vsix )
+          if [ "${#files[@]}" -ne 1 ]; then
+            echo "::error::期望 dist/ 下恰好 1 个 VSIX，实际找到 ${#files[@]} 个"
+            exit 1
+          fi
+          echo "path=${files[0]}" >> "$GITHUB_OUTPUT"
+          echo "name=$(basename "${files[0]}")" >> "$GITHUB_OUTPUT"
+
+      - name: Extract changelog
+        id: changelog
+        run: |
+          {
+            echo "changelog<<EOF"
+            awk '
+              /^## / {
+                if (found) exit
+                found = 1
+                next
+              }
+              found { print }
+            ' CHANGELOG.md
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
+          name: "CLLMs for Copilot Chat v${{ steps.package-version.outputs.version }}"
+          body: |
+            ## CLLMs for Copilot Chat v${{ steps.package-version.outputs.version }}
+
+            ${{ steps.changelog.outputs.changelog }}
+
+            ### Installation
+            - Download the `.vsix` file from the assets below
+            - In VS Code / Cursor, open the Extensions view
+            - Click the "..." menu and select "Install from VSIX..."
+            - Choose the downloaded `.vsix` file
+          files: ${{ steps.vsix.outputs.path }}
+          draft: false
+          prerelease: ${{ github.event.inputs.prerelease || contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') || contains(github.ref_name, 'rc') }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-cllms-for-copilot-${{ steps.package-version.outputs.version }}
+          path: ${{ steps.vsix.outputs.path }}
+          retention-days: 90

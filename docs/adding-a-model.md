@@ -65,7 +65,7 @@ Field notes:
   dropdown (`none` / `high` / `max`) appears, and the request includes the
   provider's thinking parameters automatically (see `src/provider/thinking.ts`).
   You do **not** need to write any serialization code — the provider's
-  `thinkingStyle` (`qwen` / `glm` / `minimax`) decides the format.
+  `thinkingStyle` (`qwen` / `qwen_effort` / `glm` / `deepseek` / `minimax`) decides the format.
 - **`capabilities.imageInput`** — set `true` only if the model accepts images
   natively. Otherwise images are handled by the vision proxy fallback.
 - **`pricing`** is optional and approximate; it only affects cost hints.
@@ -177,7 +177,7 @@ If the model belongs to a vendor not yet supported, first register the
      `baseUrlSetting`, `apiKeySecret`, `apiKeySetting`, `modelIdOverridesSetting`,
      `officialHost`, `thinkingStyle`, `externalUrls`).
 3. **`src/provider/thinking.ts`** — handle the new `thinkingStyle` in
-   `buildThinkingFields` (only if it isn't `qwen` / `glm` / `minimax`).
+   `buildThinkingFields` (only if it isn't `qwen` / `qwen_effort` / `glm` / `deepseek` / `minimax`).
 4. **`src/client/consts.ts`** — add `OFFICIAL_<NAME>_API_HOST` and the
    `API_PROVIDER_HTTP_ERROR_LINKS` entries (401 / 402 / 5xx).
 5. **`src/client/error/index.ts`** — recognize the new host in
