@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- **Update DeepSeek pricing** — V4 Flash / Pro now use the official off-peak rates from 2026-08-16 (peak is 2× during Beijing 09:00–12:00 and 14:00–18:00). Session cost remains a single-rate estimate.
+
 ## 0.6.0
 
 - **Send DeepSeek thinking effort** — DeepSeek now uses its own thinking style: `thinking: { type }` plus `reasoning_effort` (`high` / `max`). The picker Max setting no longer silently falls back to DeepSeek's default `high`.

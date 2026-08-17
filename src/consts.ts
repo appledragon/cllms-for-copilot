@@ -662,8 +662,10 @@ export const MODELS: ModelDefinition[] = [
 
 	// ---- DeepSeek ----
 	// Both V4 models default to thinking on and accept `thinking: { type }` plus
-	// `reasoning_effort` (`high` / `max`). Pricing per 1M tokens; CNY values
-	// are approximate.
+	// `reasoning_effort` (`high` / `max`). Pricing per 1M tokens is the official
+	// off-peak (idle) rate effective 2026-08-16 16:00 UTC; peak is 2× during
+	// 09:00–12:00 and 14:00–18:00 Beijing time (01:00–04:00 and 06:00–10:00 UTC).
+	// https://api-docs.deepseek.com/quick_start/pricing
 	{
 		id: 'deepseek-v4-flash',
 		name: 'DeepSeek-V4-Flash',
@@ -680,8 +682,8 @@ export const MODELS: ModelDefinition[] = [
 		},
 		requiresThinkingParam: false,
 		pricing: {
-			USD: { cacheHitInput: 0.0028, cacheMissInput: 0.14, output: 0.28 },
-			CNY: { cacheHitInput: 0.02, cacheMissInput: 1.0, output: 2.0 },
+			USD: { cacheHitInput: 0.007, cacheMissInput: 0.22, output: 0.66 },
+			CNY: { cacheHitInput: 0.05, cacheMissInput: 1.5, output: 4.5 },
 		},
 		priceCategory: 'low',
 	},
@@ -701,8 +703,8 @@ export const MODELS: ModelDefinition[] = [
 		},
 		requiresThinkingParam: false,
 		pricing: {
-			USD: { cacheHitInput: 0.003625, cacheMissInput: 0.435, output: 0.87 },
-			CNY: { cacheHitInput: 0.026, cacheMissInput: 3.1, output: 6.3 },
+			USD: { cacheHitInput: 0.022, cacheMissInput: 0.66, output: 1.98 },
+			CNY: { cacheHitInput: 0.15, cacheMissInput: 4.5, output: 13.5 },
 		},
 		priceCategory: 'high',
 	},
