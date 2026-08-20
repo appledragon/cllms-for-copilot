@@ -46,13 +46,9 @@ CLLMs 支持 **Remote - SSH**、**Dev Containers** 和 **WSL**。扩展运行在
 |---|---|
 | **Qwen3 Coder Plus** | 智能编码、工具调用、大型重构 |
 | **Qwen3 Coder Flash** | 轻量编码，快速且经济 |
-| **Qwen Plus** | 日常均衡使用，支持混合思考 |
-| **Qwen3 Max** | 面向复杂任务的旗舰模型 |
-| **Qwen3-VL Plus** | 原生视觉（图片输入） |
 | **Qwen3.8 Max** | 最新旗舰，2.4T MoE，原生视觉，1M 上下文 |
 | **Qwen3.7 Max** | 旗舰模型，对标 GPT-5.5 / Claude Opus 4.7 |
 | **Qwen3.7 Plus** | 均衡旗舰，推荐默认选择 |
-| **Qwen3.6 Flash** | 轻量快速，接近旗舰质量，1M 上下文 |
 
 **DeepSeek**
 
@@ -65,16 +61,11 @@ CLLMs 支持 **Remote - SSH**、**Dev Containers** 和 **WSL**。扩展运行在
 
 | 模型 | 适用场景 |
 |---|---|
+| **GLM-5.3** | 最新旗舰，1M 上下文，编程与智能体能力更强 |
 | **GLM-5.2** | 最新旗舰，1M 上下文，开源 SOTA 编码，支撑项目级工程上下文 |
 | **GLM-5.1** | 旗舰长程编码与 Agent，200K 上下文，支持 8 小时自主编码 |
-| **GLM-4.6** | 旗舰编码与 Agent，200K 上下文 |
-| **GLM-4.5-Air** | 轻量、更快、成本更低 |
-| **GLM-4.5-AirX** | 超快轻量，低延迟 |
 | **GLM-5** | 高智能基座，编码对齐 Claude Opus 4.5，200K 上下文 |
 | **GLM-5-Turbo** | Lobster 优化基座，长任务连续性更强，200K 上下文 |
-| **GLM-4.7** | 升级通用模型，编码能力更强，200K 上下文 |
-| **GLM-4.7-Flash** | 免费通用模型 |
-| **GLM-4.7-FlashX** | 轻量快速，高性价比 |
 | **GLM-5V-Turbo** | 原生视觉（图片输入）并支持深度思考 |
 
 **MiniMax**
@@ -82,8 +73,6 @@ CLLMs 支持 **Remote - SSH**、**Dev Containers** 和 **WSL**。扩展运行在
 | 模型 | 适用场景 |
 |---|---|
 | **MiniMax-M3** | 旗舰 Agent 与编码，原生视觉，最高 1M 上下文 |
-| **MiniMax-M2.7** | 快速编码与 Agent，成本更低 |
-| **MiniMax-M2.5** | 高性价比推理与编码 |
 
 **小米 MiMo**
 
@@ -91,7 +80,6 @@ CLLMs 支持 **Remote - SSH**、**Dev Containers** 和 **WSL**。扩展运行在
 |---|---|
 | **MiMo V2.5 Pro** | 旗舰混合推理与编码，最高 1M 上下文 |
 | **MiMo V2.5（Omni）** | 原生视觉（图片输入）并支持思考 |
-| **MiMo V2 Flash** | 快速、低成本的日常任务 |
 
 **Moonshot（Kimi）**
 
@@ -108,9 +96,6 @@ CLLMs 支持 **Remote - SSH**、**Dev Containers** 和 **WSL**。扩展运行在
 | 模型 | 适用场景 |
 |---|---|
 | **Tencent HY 2.0 Think** | 旗舰深度思考与编码，128K 上下文 |
-| **Hunyuan TurboS** | 快速均衡，日常使用 |
-| **Hunyuan T1** | 深度思考，高性价比 |
-| **Hunyuan A13B** | 轻量快速，成本最低 |
 | **Tencent HY 2.0 Instruct** | 指令跟随，创作与知识准确，128K 上下文 |
 
 模型 ID 即各服务商官方模型名，可通过 `cllms.modelIdOverrides` / `cllms.zai.modelIdOverrides` / `cllms.minimax.modelIdOverrides` / `cllms.xiaomi.modelIdOverrides` / `cllms.moonshot.modelIdOverrides` / `cllms.hunyuan.modelIdOverrides` / `cllms.deepseek.modelIdOverrides` 完全自定义，以对接第三方 / 自托管端点。
@@ -123,13 +108,13 @@ CLLMs 支持 **Remote - SSH**、**Dev Containers** 和 **WSL**。扩展运行在
 
 | 服务商 | 状态 | 备注 |
 |---|---|---|
-| Qwen（DashScope 国内） | ✅ 已测试 | Qwen3 Coder Plus、Qwen3 Coder Flash、Qwen Plus、Qwen3 Max、Qwen3-VL Plus — 全部验证通过。Qwen3.8 Max、Qwen3.7 Max、Qwen3.7 Plus、Qwen3.6 Flash 已启用，待单独验证。 |
+| Qwen（DashScope 国内） | ✅ 已测试 | Qwen3 Coder Plus、Qwen3 Coder Flash — 全部验证通过。Qwen3.8 Max、Qwen3.7 Max、Qwen3.7 Plus 已启用，待单独验证。 |
 | Qwen（DashScope International） | ⚠️ 未测试 | API 兼容性应与国内端点一致。欢迎提供测试 token 或测试反馈！ |
 | DeepSeek | ⚠️ 未测试 | API 兼容性遵循标准 OpenAI 兼容 Chat Completions API。欢迎提供测试 token 或测试反馈！ |
-| z.ai（智谱 GLM） | ✅ 已测试 | GLM-5.2、GLM-5.1、GLM-4.6、GLM-4.5-Air、GLM-4.5-AirX — 全部验证通过。GLM-5、GLM-5-Turbo、GLM-4.7、GLM-4.7-Flash、GLM-4.7-FlashX、GLM-5V-Turbo 已启用，待单独验证。 |
-| MiniMax（国内） | ✅ 已测试 | MiniMax-M3、MiniMax-M2.7 — 全部验证通过。MiniMax-M2.5 已启用，待单独验证。 |
+| z.ai（智谱 GLM） | ✅ 已测试 | GLM-5.2、GLM-5.1 — 全部验证通过。GLM-5.3、GLM-5、GLM-5-Turbo、GLM-5V-Turbo 已启用，待单独验证。 |
+| MiniMax（国内） | ✅ 已测试 | MiniMax-M3 — 全部验证通过。 |
 | MiniMax（International） | ⚠️ 未测试 | API 兼容性应与国内端点一致。欢迎提供测试 token 或测试反馈！ |
-| 小米 MiMo | ✅ 已测试 | MiMo V2.5 Pro、MiMo V2.5（Omni）、MiM V2 Flash — 全部验证通过。 |
+| 小米 MiMo | ✅ 已测试 | MiMo V2.5 Pro、MiMo V2.5（Omni）— 全部验证通过。 |
 | Moonshot（Kimi 国内） | ✅ 已测试 | Kimi K2.7、Kimi K2.7 Code HighSpeed、Kimi K2.6、Kimi K2.5 — 全部验证通过。 |
 | Moonshot（Kimi International） | ⚠️ 未测试 | API 兼容性应与国内端点一致。欢迎提供测试 token 或测试反馈！ |
 | 腾讯混元 | ✅ 已测试 | 标准 OpenAI 兼容 API——全部验证通过。Tencent HY 2.0 Instruct 已启用，待单独验证。 |
@@ -172,7 +157,7 @@ CLLMs 支持 **Remote - SSH**、**Dev Containers** 和 **WSL**。扩展运行在
 
 参见[高级设置](./advanced-settings.nls.zh-cn.md)，了解上方成本与缓存控制项的集中说明。
 
-对于纯文本模型，视觉代理会在主请求前先把图片附件解析成文字。**所有 CLLMs 模型均接受粘贴图片**——纯文本模型会自动将图片路由到视觉代理，而原生视觉模型（如 Qwen3.8 Max、Qwen3-VL-Plus、GLM-5V-Turbo）则直接接收图片。如果未配置显式的视觉模型，扩展会回退使用任意可用的 Copilot 模型（如 GPT-4o）作为视觉描述器。相同图片描述会在当前 VS Code 会话内按图片字节、提示词和描述器身份缓存，因此重试或重复附加同一张图片时不会再次调用描述模型。API 端点视觉代理还会对临时性 429 / 5xx / 网络失败复用 `cllms.maxRetries` 重试，并用 `cllms.visionProxy.timeoutMs` 控制每次尝试的超时。
+对于纯文本模型，视觉代理会在主请求前先把图片附件解析成文字。**所有 CLLMs 模型均接受粘贴图片**——纯文本模型会自动将图片路由到视觉代理，而原生视觉模型（如 Qwen3.8 Max、GLM-5V-Turbo、MiniMax-M3）则直接接收图片。如果未配置显式的视觉模型，扩展会回退使用任意可用的 Copilot 模型（如 GPT-4o）作为视觉描述器。相同图片描述会在当前 VS Code 会话内按图片字节、提示词和描述器身份缓存，因此重试或重复附加同一张图片时不会再次调用描述模型。API 端点视觉代理还会对临时性 429 / 5xx / 网络失败复用 `cllms.maxRetries` 重试，并用 `cllms.visionProxy.timeoutMs` 控制每次尝试的超时。
 
 对于音频附件，音频代理可在主请求前先将音频转写为文本，供不支持原生音频输入的模型使用。可通过 `CLLMs: 配置音频代理` 打开与视觉代理同风格的面板进行配置。API 端点音频代理会复用 `cllms.maxRetries` 重试策略，并用 `cllms.audioProxy.timeoutMs` 控制每次尝试超时。
 
@@ -224,9 +209,8 @@ CLLMs 可以让一次性的 Copilot 辅助请求比真正的 agent 轮次跑得�
 {
   "cllms.modelIdOverrides": {
     "qwen3-coder-plus": "your-coder-model-id",
-    "qwen-plus": "your-plus-model-id",
-    "qwen3-max": "your-max-model-id",
-    "qwen3-vl-plus": "your-vl-model-id"
+    "qwen3-coder-flash": "your-coder-flash-model-id",
+    "qwen3.8-max": "your-max-model-id"
   }
 }
 

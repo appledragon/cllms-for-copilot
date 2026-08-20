@@ -48,13 +48,9 @@ Seven providers ship out of the box. Each model has its own API key and endpoint
 |---|---|
 | **Qwen3 Coder Plus** | Agentic coding, tool calls, large refactors |
 | **Qwen3 Coder Flash** | Lightweight coding, fast & affordable |
-| **Qwen Plus** | Balanced everyday use with hybrid thinking |
-| **Qwen3 Max** | Flagship model for hard tasks |
-| **Qwen3-VL Plus** | Native vision (image input) |
 | **Qwen3.8 Max** | Latest flagship, 2.4T MoE with native vision, 1M context |
 | **Qwen3.7 Max** | Flagship, aligned with GPT-5.5 / Claude Opus 4.7 |
 | **Qwen3.7 Plus** | Balanced flagship, recommended default |
-| **Qwen3.6 Flash** | Lightweight, near-flagship quality, 1M context |
 
 **DeepSeek**
 
@@ -67,16 +63,11 @@ Seven providers ship out of the box. Each model has its own API key and endpoint
 
 | Model | Best For |
 |---|---|
+| **GLM-5.3** | Latest flagship, 1M context, stronger coding & agentic capabilities |
 | **GLM-5.2** | Latest flagship, 1M context, open-source SOTA coding, project-scale engineering |
 | **GLM-5.1** | Flagship long-horizon coding & agents, 200K context, up to 8h autonomous work |
-| **GLM-4.6** | Flagship coding & agents, 200K context |
-| **GLM-4.5-Air** | Lightweight, faster, lower cost |
-| **GLM-4.5-AirX** | Ultra-fast lightweight, low-latency |
 | **GLM-5** | High-intelligence base, coding aligned with Claude Opus 4.5, 200K context |
 | **GLM-5-Turbo** | Lobster-optimized base, long-task continuity, 200K context |
-| **GLM-4.7** | Upgraded general model, stronger coding, 200K context |
-| **GLM-4.7-Flash** | Free model, general-purpose |
-| **GLM-4.7-FlashX** | Lightweight & fast, budget-friendly |
 | **GLM-5V-Turbo** | Native vision (image input) plus deep thinking |
 
 **MiniMax**
@@ -84,8 +75,6 @@ Seven providers ship out of the box. Each model has its own API key and endpoint
 | Model | Best For |
 |---|---|
 | **MiniMax-M3** | Flagship agentic & coding, native vision, up to 1M context |
-| **MiniMax-M2.7** | Fast coding & agents, lower cost |
-| **MiniMax-M2.5** | Cost-effective reasoning & coding |
 
 **Xiaomi MiMo**
 
@@ -93,7 +82,6 @@ Seven providers ship out of the box. Each model has its own API key and endpoint
 |---|---|
 | **MiMo V2.5 Pro** | Flagship hybrid reasoning & coding, up to 1M context |
 | **MiMo V2.5 (Omni)** | Native vision (image input) plus thinking |
-| **MiMo V2 Flash** | Fast, low-cost everyday tasks |
 
 **Moonshot (Kimi)**
 
@@ -110,9 +98,6 @@ Seven providers ship out of the box. Each model has its own API key and endpoint
 | Model | Best For |
 |---|---|
 | **Tencent HY 2.0 Think** | Flagship deep-thinking & coding, 128K context |
-| **Hunyuan TurboS** | Fast & balanced everyday |
-| **Hunyuan T1** | Deep thinking, affordable |
-| **Hunyuan A13B** | Lightweight, fastest & lowest cost |
 | **Tencent HY 2.0 Instruct** | Instruction-following, creative & knowledge-accurate, 128K context |
 
 Model IDs are the official provider names and are fully configurable via `cllms.modelIdOverrides` / `cllms.zai.modelIdOverrides` / `cllms.minimax.modelIdOverrides` / `cllms.xiaomi.modelIdOverrides` / `cllms.moonshot.modelIdOverrides` / `cllms.hunyuan.modelIdOverrides` / `cllms.deepseek.modelIdOverrides` for third-party / self-hosted endpoints.
@@ -125,13 +110,13 @@ Want to add your own model? See [Adding a new model](./docs/adding-a-model.md) f
 
 | Provider | Status | Notes |
 |---|---|---|
-| Qwen (DashScope China) | ✅ Tested | Qwen3 Coder Plus, Qwen3 Coder Flash, Qwen Plus, Qwen3 Max, Qwen3-VL Plus — all verified. Qwen3.8 Max, Qwen3.7 Max, Qwen3.7 Plus, and Qwen3.6 Flash ship enabled and are pending individual verification. |
+| Qwen (DashScope China) | ✅ Tested | Qwen3 Coder Plus, Qwen3 Coder Flash — all verified. Qwen3.8 Max, Qwen3.7 Max, and Qwen3.7 Plus ship enabled and are pending individual verification. |
 | Qwen (DashScope International) | ⚠️ Untested | API compatibility should match the domestic endpoint. Test tokens or test reports welcome! |
 | DeepSeek | ⚠️ Untested | API compatibility follows the standard OpenAI-compatible Chat Completions API. Test tokens or test reports welcome! |
-| z.ai (Zhipu GLM) | ✅ Tested | GLM-5.2, GLM-5.1, GLM-4.6, GLM-4.5-Air, GLM-4.5-AirX — all verified. GLM-5, GLM-5-Turbo, GLM-4.7, GLM-4.7-Flash, GLM-4.7-FlashX, and GLM-5V-Turbo ship enabled and are pending individual verification. |
-| MiniMax (China) | ✅ Tested | MiniMax-M3, MiniMax-M2.7 — all verified. MiniMax-M2.5 ships enabled and is pending individual verification. |
+| z.ai (Zhipu GLM) | ✅ Tested | GLM-5.2, GLM-5.1 — all verified. GLM-5.3, GLM-5, GLM-5-Turbo, and GLM-5V-Turbo ship enabled and are pending individual verification. |
+| MiniMax (China) | ✅ Tested | MiniMax-M3 — verified. |
 | MiniMax (International) | ⚠️ Untested | API compatibility should match the domestic endpoint. Test tokens or test reports welcome! |
-| Xiaomi MiMo | ✅ Tested | MiMo V2.5 Pro, MiMo V2.5 (Omni), MiMo V2 Flash — all verified. |
+| Xiaomi MiMo | ✅ Tested | MiMo V2.5 Pro, MiMo V2.5 (Omni) — all verified. |
 | Moonshot (Kimi China) | ✅ Tested | Kimi K2.7, Kimi K2.7 Code HighSpeed, Kimi K2.6, Kimi K2.5 — all verified. |
 | Moonshot (Kimi International) | ⚠️ Untested | API compatibility should match the domestic endpoint. Test tokens or test reports welcome! |
 | Tencent Hunyuan (混元) | ✅ Tested | Standard OpenAI-compatible API — all verified. Tencent HY 2.0 Instruct ships enabled and is pending individual verification. |
@@ -174,7 +159,7 @@ Thinking Effort is configured from Copilot Chat's model picker for each thinking
 
 See [Advanced settings](./advanced-settings.md) for a focused guide to the cost and cache controls above.
 
-For text-only models, the vision proxy resolves image attachments to text before the main request. **All CLLMs models accept pasted images** — text-only models auto-route them through the vision proxy, while native-vision models (e.g. Qwen3.8 Max, Qwen3-VL-Plus, GLM-5V-Turbo) receive images directly. If no explicit vision model is configured, the extension falls back to any available Copilot model (e.g. GPT-4o) as a vision describer. Identical image descriptions are cached for the current VS Code session by image bytes, prompt, and describer identity, so retries or re-attaching the same image avoid another description call. API-endpoint vision calls also use `cllms.maxRetries` for transient 429 / 5xx / network failures and `cllms.visionProxy.timeoutMs` for each attempt.
+For text-only models, the vision proxy resolves image attachments to text before the main request. **All CLLMs models accept pasted images** — text-only models auto-route them through the vision proxy, while native-vision models (e.g. Qwen3.8 Max, GLM-5V-Turbo, MiniMax-M3) receive images directly. If no explicit vision model is configured, the extension falls back to any available Copilot model (e.g. GPT-4o) as a vision describer. Identical image descriptions are cached for the current VS Code session by image bytes, prompt, and describer identity, so retries or re-attaching the same image avoid another description call. API-endpoint vision calls also use `cllms.maxRetries` for transient 429 / 5xx / network failures and `cllms.visionProxy.timeoutMs` for each attempt.
 
 For audio attachments, the audio proxy can transcribe audio into text before the main request for models that do not natively process audio parts. Configure it from `CLLMs: Configure Audio Proxy` (panel UI, similar to Vision Proxy). API-endpoint audio calls use the same retry policy (`cllms.maxRetries`) and `cllms.audioProxy.timeoutMs` per attempt.
 
@@ -226,9 +211,8 @@ Example `settings.json` override for compatible API proxies:
 {
   "cllms.modelIdOverrides": {
     "qwen3-coder-plus": "your-coder-model-id",
-    "qwen-plus": "your-plus-model-id",
-    "qwen3-max": "your-max-model-id",
-    "qwen3-vl-plus": "your-vl-model-id"
+    "qwen3-coder-flash": "your-coder-flash-model-id",
+    "qwen3.8-max": "your-max-model-id"
   }
 }
 

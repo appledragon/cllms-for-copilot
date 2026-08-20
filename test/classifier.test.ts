@@ -43,7 +43,7 @@ function tool(name: string): vscode.LanguageModelChatTool {
 
 function llmRequest(firstText: string, latestUserText = firstText): LlmRequest {
   return {
-    model: "qwen3-max",
+    model: "qwen3.7-max",
     stream: true,
     messages: [
       { role: "system", content: firstText },
@@ -136,11 +136,11 @@ describe("classifier helpers", () => {
   });
 
   it("formats model fields, hiding redundant api model ids", () => {
-    assert.equal(formatModelFields("qwen3-max"), "model=qwen3-max");
-    assert.equal(formatModelFields("qwen3-max", "qwen3-max"), "model=qwen3-max");
+    assert.equal(formatModelFields("qwen3.7-max"), "model=qwen3.7-max");
+    assert.equal(formatModelFields("qwen3.7-max", "qwen3.7-max"), "model=qwen3.7-max");
     assert.equal(
-      formatModelFields("qwen3-max", "qwen-max-latest"),
-      "model=qwen3-max apiModel=qwen-max-latest",
+      formatModelFields("qwen3.7-max", "qwen-max-latest"),
+      "model=qwen3.7-max apiModel=qwen-max-latest",
     );
   });
 

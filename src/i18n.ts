@@ -24,12 +24,6 @@ const zh: Translations = {
 	'model.qwen3-coder-flash.detail': '轻量快速',
 	'model.qwen3-coder-flash.tooltip':
 		'Qwen3 Coder Flash 轻量编码模型，响应更快、成本更低，支持工具调用。',
-	'model.qwen-plus.detail': '均衡通用',
-	'model.qwen-plus.tooltip': '日常均衡使用的 Qwen Plus 模型，支持开关思考模式。',
-	'model.qwen3-max.detail': '旗舰模型',
-	'model.qwen3-max.tooltip': 'Qwen3 旗舰模型，面向广泛世界知识与复杂任务（默认不开启思考模式）。',
-	'model.qwen3-vl-plus.detail': '原生视觉',
-	'model.qwen3-vl-plus.tooltip': '支持原生图片输入的 Qwen3-VL 模型，可直接理解图片。',
 	'model.qwen3.8-max.detail': '最新旗舰',
 	'model.qwen3.8-max.tooltip':
 		'Qwen3.8 Max 最新旗舰模型，总参数 2.4T、激活 95B，最高 1M 上下文，原生视觉理解，面向高难度编码、专业办公与长程 Agent 任务，支持思考模式与工具调用。',
@@ -39,23 +33,12 @@ const zh: Translations = {
 	'model.qwen3.7-plus.detail': '均衡旗舰',
 	'model.qwen3.7-plus.tooltip':
 		'Qwen3.7 Plus 均衡旗舰模型，最高 1M 上下文，在质量、速度和成本之间取得平衡，支持思考模式与工具调用。',
-	'model.qwen3.6-flash.detail': '轻量快速',
-	'model.qwen3.6-flash.tooltip':
-		'Qwen3.6 Flash 轻量模型，最高 1M 上下文，响应更快、成本更低，适合日常编码与 Agent 任务，支持思考模式与工具调用。',
 	'model.qwen3-coder-plus-intl.detail': '智能编码',
 	'model.qwen3-coder-plus-intl.tooltip':
 		'面向 Agent 编程与工具调用的 Qwen3 Coder 模型（国际站），擅长大型重构。',
 	'model.qwen3-coder-flash-intl.detail': '轻量快速',
 	'model.qwen3-coder-flash-intl.tooltip':
 		'Qwen3 Coder Flash 轻量编码模型（国际站），响应更快、成本更低，支持工具调用。',
-	'model.qwen-plus-intl.detail': '均衡通用',
-	'model.qwen-plus-intl.tooltip': '日常均衡使用的 Qwen Plus 模型（国际站），支持开关思考模式。',
-	'model.qwen3-max-intl.detail': '旗舰模型',
-	'model.qwen3-max-intl.tooltip':
-		'Qwen3 旗舰模型（国际站），面向广泛世界知识与复杂任务（默认不开启思考模式）。',
-	'model.qwen3-vl-plus-intl.detail': '原生视觉',
-	'model.qwen3-vl-plus-intl.tooltip':
-		'支持原生图片输入的 Qwen3-VL 模型（国际站），可直接理解图片。',
 	'model.qwen3.8-max-intl.detail': '最新旗舰',
 	'model.qwen3.8-max-intl.tooltip':
 		'Qwen3.8 Max 最新旗舰模型（国际站），总参数 2.4T、激活 95B，最高 1M 上下文，原生视觉理解，面向高难度编码、专业办公与长程 Agent 任务，支持思考模式与工具调用。',
@@ -65,75 +48,42 @@ const zh: Translations = {
 	'model.qwen3.7-plus-intl.detail': '均衡旗舰',
 	'model.qwen3.7-plus-intl.tooltip':
 		'Qwen3.7 Plus 均衡旗舰模型（国际站），最高 1M 上下文，在质量、速度和成本之间取得平衡，支持思考模式与工具调用。',
-	'model.qwen3.6-flash-intl.detail': '轻量快速',
-	'model.qwen3.6-flash-intl.tooltip':
-		'Qwen3.6 Flash 轻量模型（国际站），最高 1M 上下文，响应更快、成本更低，适合日常编码与 Agent 任务，支持思考模式与工具调用。',
 	'model.deepseek-v4-flash.detail': '旗舰极速',
 	'model.deepseek-v4-flash.tooltip':
 		'DeepSeek-V4-Flash 旗舰模型，1M 上下文，最高 384K 输出，支持思考与非思考两种模式、工具调用和 JSON 输出。',
 	'model.deepseek-v4-pro.detail': '旗舰专业',
 	'model.deepseek-v4-pro.tooltip':
 		'DeepSeek-V4-Pro 旗舰专业模型，1M 上下文，最高 384K 输出，默认深度思考模式，适合复杂推理与编码任务，支持工具调用和 JSON 输出。',
+	'model.glm-5.3.detail': '最新旗舰',
+	'model.glm-5.3.tooltip':
+		'z.ai GLM-5.3 最新旗舰模型，1M 上下文，编程与智能体能力更强，擅长长程任务与复杂环境下的开发，支持深度思考模式与工具调用。',
 	'model.glm-5.2.detail': '最新旗舰',
 	'model.glm-5.2.tooltip':
 		'z.ai GLM-5.2 最新旗舰模型，1M 上下文，支撑项目级工程上下文与复杂长程任务，从需求到多端部署的完整开发链路，支持深度思考模式与工具调用。',
 	'model.glm-5.1.detail': '长程编码',
 	'model.glm-5.1.tooltip':
 		'z.ai GLM-5.1 旗舰模型，200K 上下文，支持长达 8 小时的自主编码与 Agent，擅长复杂工程优化与长程任务，支持思考模式与工具调用。',
-	'model.glm-4.6.detail': '旗舰编码',
-	'model.glm-4.6.tooltip':
-		'z.ai GLM-4.6 旗舰模型，200K 上下文，擅长编码与 Agent，支持思考模式与工具调用。',
-	'model.glm-4.5-air.detail': '轻量快速',
-	'model.glm-4.5-air.tooltip':
-		'z.ai GLM-4.5-Air 轻量模型，响应更快、成本更低，支持思考模式与工具调用。',
-	'model.glm-4.5-airx.detail': '超快轻量',
-	'model.glm-4.5-airx.tooltip':
-		'z.ai GLM-4.5-AirX 超快轻量模型，极低延迟，支持思考模式与工具调用。',
 	'model.glm-5.detail': '高智能基座',
 	'model.glm-5.tooltip':
 		'z.ai GLM-5 高智能模型，200K 上下文，擅长编码、复杂推理与工具调用，支持思考模式。',
 	'model.glm-5-turbo.detail': '长任务优化',
 	'model.glm-5-turbo.tooltip':
 		'z.ai GLM-5-Turbo 模型，200K 上下文，面向长任务连续编码与 Agent 场景优化，支持思考模式与工具调用。',
-	'model.glm-4.7.detail': '编码更强',
-	'model.glm-4.7.tooltip':
-		'z.ai GLM-4.7 通用模型，200K 上下文，编码能力更强，支持思考模式与工具调用。',
-	'model.glm-4.7-flash.detail': '免费通用',
-	'model.glm-4.7-flash.tooltip':
-		'z.ai GLM-4.7-Flash 免费通用模型，支持工具调用。',
-	'model.glm-4.7-flashx.detail': '轻量高性价比',
-	'model.glm-4.7-flashx.tooltip':
-		'z.ai GLM-4.7-FlashX 轻量模型，200K 上下文，响应更快、成本更低，支持工具调用。',
 	'model.glm-5v-turbo.detail': '原生视觉',
 	'model.glm-5v-turbo.tooltip':
 		'z.ai GLM-5V-Turbo 多模态模型，200K 上下文，支持原生图片输入、深度思考和工具调用。',
 	'model.MiniMax-M3.detail': '旗舰 Agent',
 	'model.MiniMax-M3.tooltip':
 		'MiniMax-M3 旗舰模型，最高 1M 上下文，擅长 Agent 推理、编码与长上下文，支持思考模式与工具调用。',
-	'model.MiniMax-M2.7.detail': '快速编码',
-	'model.MiniMax-M2.7.tooltip':
-		'MiniMax-M2.7 模型，编码与 Agent 能力强、推理速度更快（思考模式默认开启）。',
-	'model.MiniMax-M2.5.detail': '高性价比',
-	'model.MiniMax-M2.5.tooltip':
-		'MiniMax-M2.5 模型，面向高性价比推理、编码和 Agent 任务，支持思考模式与工具调用。',
 	'model.MiniMax-M3-intl.detail': '旗舰 Agent',
 	'model.MiniMax-M3-intl.tooltip':
 		'MiniMax-M3 旗舰模型（国际站），最高 1M 上下文，擅长 Agent 推理、编码与长上下文，支持思考模式与工具调用。',
-	'model.MiniMax-M2.7-intl.detail': '快速编码',
-	'model.MiniMax-M2.7-intl.tooltip':
-		'MiniMax-M2.7 模型（国际站），编码与 Agent 能力强、推理速度更快（思考模式默认开启）。',
-	'model.MiniMax-M2.5-intl.detail': '高性价比',
-	'model.MiniMax-M2.5-intl.tooltip':
-		'MiniMax-M2.5 模型（国际站），面向高性价比推理、编码和 Agent 任务，支持思考模式与工具调用。',
 	'model.mimo-v2.5-pro.detail': '旗舰编码',
 	'model.mimo-v2.5-pro.tooltip':
 		'小米 MiMo V2.5 Pro 旗舰混合推理模型，最高 1M 上下文，擅长复杂推理与编码，支持思考模式与工具调用。',
 	'model.mimo-v2.5.detail': '原生多模态',
 	'model.mimo-v2.5.tooltip':
 		'小米 MiMo V2.5 全模态模型，支持原生图片输入，可直接理解图片，并支持思考模式与工具调用。',
-	'model.mimo-v2-flash.detail': '快速低成本',
-	'model.mimo-v2-flash.tooltip':
-		'小米 MiMo V2 Flash 模型，响应更快、成本更低，支持思考模式与工具调用。',
 	'model.kimi-k3.detail': '旗舰 2.8T',
 	'model.kimi-k3.tooltip':
 		'Moonshot Kimi K3 旗舰模型，2.8 万亿参数，1M token 上下文，原生视觉理解，始终开启思考模式（reasoning_effort），面向长程编程与知识工作。',
@@ -167,13 +117,6 @@ const zh: Translations = {
 	'model.hunyuan-2.0-think.detail': '深度思考',
 	'model.hunyuan-2.0-think.tooltip':
 		'腾讯混元 HY 2.0 Think 旗舰模型，128K 上下文，擅长编码与深度推理，支持思考模式与工具调用。',
-	'model.hunyuan-turbos.detail': '快速均衡',
-	'model.hunyuan-turbos.tooltip': '腾讯混元 TurboS 快速模型，响应更快、成本更低，支持工具调用。',
-	'model.hunyuan-t1.detail': '深度思考',
-	'model.hunyuan-t1.tooltip':
-		'腾讯混元 T1 深度思考模型，编码与推理能力强、价格实惠，支持思考模式与工具调用。',
-	'model.hunyuan-a13b.detail': '轻量快速',
-	'model.hunyuan-a13b.tooltip': '腾讯混元 A13B 轻量模型，响应最快、成本最低，支持工具调用。',
 	'model.hunyuan-2.0-instruct.detail': '指令跟随',
 	'model.hunyuan-2.0-instruct.tooltip':
 		'腾讯混元 HY 2.0 Instruct 模型，128K 上下文，适合指令跟随、创作和知识准确性场景，支持工具调用。',
@@ -249,8 +192,7 @@ const zh: Translations = {
 	'vision.proxyError': '视觉代理异常：',
 	'vision.action.configureProxy': '配置视觉代理',
 	'vision.panel.title': 'CLLMs 视觉代理',
-	'model.visionProxyNote':
-		'（原生不支持图片，但贴图会自动路由到视觉代理模型描述后转交本模型。）',
+	'model.visionProxyNote': '（原生不支持图片，但贴图会自动路由到视觉代理模型描述后转交本模型。）',
 	'vision.panel.description':
 		'配置一个支持图片输入的模型，用来先把图片转换成文字描述，再把描述随消息发送给所选模型。图片本身不会发送给该模型。',
 	'vision.panel.source.vscodeLm': 'VS Code 模型',
@@ -556,14 +498,6 @@ const en: Translations = {
 	'model.qwen3-coder-flash.detail': 'Fast coding',
 	'model.qwen3-coder-flash.tooltip':
 		'Qwen3 Coder Flash lightweight coding model with faster responses and lower cost, plus tool calling.',
-	'model.qwen-plus.detail': 'Balanced',
-	'model.qwen-plus.tooltip': 'Balanced everyday Qwen Plus model with toggleable thinking mode.',
-	'model.qwen3-max.detail': 'Flagship',
-	'model.qwen3-max.tooltip':
-		'Flagship Qwen3 model for broad world knowledge and complex tasks (thinking off by default).',
-	'model.qwen3-vl-plus.detail': 'Native vision',
-	'model.qwen3-vl-plus.tooltip':
-		'Qwen3-VL model with native image input — understands images directly.',
 	'model.qwen3.8-max.detail': 'Latest flagship',
 	'model.qwen3.8-max.tooltip':
 		'Qwen3.8 Max latest flagship (2.4T total / 95B active) with up to 1M context, native vision, built for demanding coding, professional work, and long-horizon agent tasks with thinking mode and tool calling.',
@@ -573,24 +507,12 @@ const en: Translations = {
 	'model.qwen3.7-plus.detail': 'Balanced flagship',
 	'model.qwen3.7-plus.tooltip':
 		'Qwen3.7 Plus balanced flagship with up to 1M context, balancing quality, speed, and cost for everyday coding and agent tasks with thinking mode and tool calling.',
-	'model.qwen3.6-flash.detail': 'Fast & light',
-	'model.qwen3.6-flash.tooltip':
-		'Qwen3.6 Flash lightweight model with up to 1M context, faster responses and lower cost for everyday coding and agent tasks with thinking mode and tool calling.',
 	'model.qwen3-coder-plus-intl.detail': 'Agentic coding',
 	'model.qwen3-coder-plus-intl.tooltip':
 		'Qwen3 Coder model for agentic programming and tool calling (international). Excels at large-scale refactoring.',
 	'model.qwen3-coder-flash-intl.detail': 'Fast coding',
 	'model.qwen3-coder-flash-intl.tooltip':
 		'Qwen3 Coder Flash lightweight coding model (international) with faster responses and lower cost, plus tool calling.',
-	'model.qwen-plus-intl.detail': 'Balanced',
-	'model.qwen-plus-intl.tooltip':
-		'Qwen Plus model for everyday balanced use (international), with toggleable thinking mode.',
-	'model.qwen3-max-intl.detail': 'Flagship',
-	'model.qwen3-max-intl.tooltip':
-		'Flagship Qwen3 model for broad world knowledge and complex tasks (international, thinking off by default).',
-	'model.qwen3-vl-plus-intl.detail': 'Native vision',
-	'model.qwen3-vl-plus-intl.tooltip':
-		'Qwen3-VL model with native image input (international) — understands images directly.',
 	'model.qwen3.8-max-intl.detail': 'Latest flagship',
 	'model.qwen3.8-max-intl.tooltip':
 		'Qwen3.8 Max latest flagship (international, 2.4T total / 95B active) with up to 1M context, native vision, built for demanding coding, professional work, and long-horizon agent tasks with thinking mode and tool calling.',
@@ -600,75 +522,42 @@ const en: Translations = {
 	'model.qwen3.7-plus-intl.detail': 'Balanced flagship',
 	'model.qwen3.7-plus-intl.tooltip':
 		'Qwen3.7 Plus balanced flagship (international) with up to 1M context, balancing quality, speed, and cost for everyday coding and agent tasks with thinking mode and tool calling.',
-	'model.qwen3.6-flash-intl.detail': 'Fast & light',
-	'model.qwen3.6-flash-intl.tooltip':
-		'Qwen3.6 Flash lightweight model (international) with up to 1M context, faster responses and lower cost for everyday coding and agent tasks with thinking mode and tool calling.',
 	'model.deepseek-v4-flash.detail': 'Fast flagship',
 	'model.deepseek-v4-flash.tooltip':
 		'DeepSeek-V4-Flash flagship with a 1M context and up to 384K output — supports both thinking and non-thinking modes, tool calling, and JSON output.',
 	'model.deepseek-v4-pro.detail': 'Pro flagship',
 	'model.deepseek-v4-pro.tooltip':
 		'DeepSeek-V4-Pro flagship with a 1M context and up to 384K output — deep thinking by default, ideal for complex reasoning and coding, with tool calling and JSON output.',
+	'model.glm-5.3.detail': 'Latest flagship',
+	'model.glm-5.3.tooltip':
+		'z.ai GLM-5.3 latest flagship with a 1M context — stronger coding and agentic capabilities for long-horizon tasks in complex environments, with deep thinking mode and tool calling.',
 	'model.glm-5.2.detail': 'Latest flagship',
 	'model.glm-5.2.tooltip':
 		'z.ai GLM-5.2 latest flagship with a 1M context — supports project-scale engineering context and complex long-horizon tasks, from requirements to multi-platform deployment in a single session, with deep thinking mode and tool calling.',
 	'model.glm-5.1.detail': 'Long-horizon coding',
 	'model.glm-5.1.tooltip':
 		'z.ai GLM-5.1 flagship with a 200K context — supports up to 8 hours of autonomous coding and agentic work, excels at complex engineering optimization and long-horizon tasks, with thinking mode and tool calling.',
-	'model.glm-4.6.detail': 'Coding & agents',
-	'model.glm-4.6.tooltip':
-		'z.ai GLM-4.6 flagship with a 200K context — strong at coding and agents, with thinking mode and tool calling.',
-	'model.glm-4.5-air.detail': 'Lightweight & fast',
-	'model.glm-4.5-air.tooltip':
-		'z.ai GLM-4.5-Air, a lightweight model with faster responses and lower cost, plus thinking mode and tool calling.',
-	'model.glm-4.5-airx.detail': 'Ultra-fast',
-	'model.glm-4.5-airx.tooltip':
-		'z.ai GLM-4.5-AirX ultra-fast lightweight model with extremely low latency, plus thinking mode and tool calling.',
 	'model.glm-5.detail': 'High-intelligence',
 	'model.glm-5.tooltip':
 		'z.ai GLM-5 high-intelligence model with a 200K context, strong at coding, complex reasoning, and tool calling with thinking mode.',
 	'model.glm-5-turbo.detail': 'Long-task optimized',
 	'model.glm-5-turbo.tooltip':
 		'z.ai GLM-5-Turbo model with a 200K context, optimized for long-running coding and agent tasks with thinking mode and tool calling.',
-	'model.glm-4.7.detail': 'Stronger coding',
-	'model.glm-4.7.tooltip':
-		'z.ai GLM-4.7 general model with a 200K context, stronger coding ability, thinking mode, and tool calling.',
-	'model.glm-4.7-flash.detail': 'Free model',
-	'model.glm-4.7-flash.tooltip':
-		'z.ai GLM-4.7-Flash, a free general-purpose model with tool calling.',
-	'model.glm-4.7-flashx.detail': 'Fast & affordable',
-	'model.glm-4.7-flashx.tooltip':
-		'z.ai GLM-4.7-FlashX lightweight model with a 200K context, faster responses and lower cost, plus tool calling.',
 	'model.glm-5v-turbo.detail': 'Vision + thinking',
 	'model.glm-5v-turbo.tooltip':
 		'z.ai GLM-5V-Turbo multimodal model with a 200K context, native image input, deep thinking, and tool calling.',
 	'model.MiniMax-M3.detail': 'Flagship agentic',
 	'model.MiniMax-M3.tooltip':
 		'MiniMax-M3 flagship with up to 1M context — strong at agentic reasoning, coding, and long-context tasks, with thinking mode and tool calling.',
-	'model.MiniMax-M2.7.detail': 'Fast coding',
-	'model.MiniMax-M2.7.tooltip':
-		'MiniMax-M2.7 model with strong coding and agent skills and faster inference (thinking on by default).',
-	'model.MiniMax-M2.5.detail': 'Cost-effective',
-	'model.MiniMax-M2.5.tooltip':
-		'MiniMax-M2.5 model for cost-effective reasoning, coding, and agent tasks with thinking mode and tool calling.',
 	'model.MiniMax-M3-intl.detail': 'Flagship agentic',
 	'model.MiniMax-M3-intl.tooltip':
 		'MiniMax-M3 flagship (international) with up to 1M context — strong at agentic reasoning, coding, and long-context tasks, with thinking mode and tool calling.',
-	'model.MiniMax-M2.7-intl.detail': 'Fast coding',
-	'model.MiniMax-M2.7-intl.tooltip':
-		'MiniMax-M2.7 model (international) with strong coding and agent skills and faster inference (thinking on by default).',
-	'model.MiniMax-M2.5-intl.detail': 'Cost-effective',
-	'model.MiniMax-M2.5-intl.tooltip':
-		'MiniMax-M2.5 model (international) for cost-effective reasoning, coding, and agent tasks with thinking mode and tool calling.',
 	'model.mimo-v2.5-pro.detail': 'Flagship coding',
 	'model.mimo-v2.5-pro.tooltip':
 		'Xiaomi MiMo V2.5 Pro flagship hybrid-reasoning model with up to 1M context — strong at complex reasoning and coding, with thinking mode and tool calling.',
 	'model.mimo-v2.5.detail': 'Multimodal',
 	'model.mimo-v2.5.tooltip':
 		'Xiaomi MiMo V2.5 omni model with native image input — understands images directly, plus thinking mode and tool calling.',
-	'model.mimo-v2-flash.detail': 'Fast & low cost',
-	'model.mimo-v2-flash.tooltip':
-		'Xiaomi MiMo V2 Flash model with faster responses and lower cost, plus thinking mode and tool calling.',
 	'model.kimi-k3.detail': 'Flagship 2.8T',
 	'model.kimi-k3.tooltip':
 		'Moonshot Kimi K3 flagship model with 2.8T parameters, 1M-token context, native vision, and always-on thinking (reasoning_effort) — built for long-range coding and knowledge work.',
@@ -702,15 +591,6 @@ const en: Translations = {
 	'model.hunyuan-2.0-think.detail': 'Deep thinking',
 	'model.hunyuan-2.0-think.tooltip':
 		'Tencent Hunyuan HY 2.0 Think flagship model with a 128K context — strong at coding and deep reasoning, with thinking mode and tool calling.',
-	'model.hunyuan-turbos.detail': 'Fast & balanced',
-	'model.hunyuan-turbos.tooltip':
-		'Tencent Hunyuan TurboS fast model with faster responses and lower cost, plus tool calling.',
-	'model.hunyuan-t1.detail': 'Deep thinking',
-	'model.hunyuan-t1.tooltip':
-		'Tencent Hunyuan T1 deep-thinking model with strong coding and reasoning skills at an affordable price, plus thinking mode and tool calling.',
-	'model.hunyuan-a13b.detail': 'Lightweight & fast',
-	'model.hunyuan-a13b.tooltip':
-		'Tencent Hunyuan A13B lightweight model with fastest responses and lowest cost, plus tool calling.',
 	'model.hunyuan-2.0-instruct.detail': 'Instruction-following',
 	'model.hunyuan-2.0-instruct.tooltip':
 		'Tencent Hunyuan HY 2.0 Instruct model with a 128K context, suited for instruction following, creative work, and knowledge-accurate tasks, plus tool calling.',
@@ -764,7 +644,8 @@ const en: Translations = {
 	'providers.action.statusPage': 'Status',
 	'providers.action.providerSettings': 'Settings',
 	'providers.summary': '{0} / {1} configured',
-	'providers.noneConfigured': 'No providers configured yet — click “Setup” on any provider to begin.',
+	'providers.noneConfigured':
+		'No providers configured yet — click “Setup” on any provider to begin.',
 	'providers.loading': 'Loading…',
 	'providers.error': 'Could not load provider status.',
 	'providers.retry': 'Retry',

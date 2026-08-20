@@ -215,7 +215,7 @@ export const PROVIDERS: Readonly<Record<ProviderId, ProviderDefinition>> = {
 		apiKeySetting: 'hunyuan.apiKey',
 		modelIdOverridesSetting: 'hunyuan.modelIdOverrides',
 		officialHost: 'api.hunyuan.cloud.tencent.com',
-		// Hunyuan T1 / HY 2.0 Think use deep thinking natively; toggle via
+		// HY 2.0 Think uses deep thinking natively; toggle via
 		// GLM-style `thinking: { type: 'enabled' | 'disabled' }`.
 		thinkingStyle: 'glm',
 		externalUrls: EXTERNAL_URLS.hunyuan,
@@ -311,73 +311,6 @@ export const MODELS: ModelDefinition[] = [
 		priceCategory: 'low',
 	},
 	{
-		id: 'qwen-plus',
-		name: 'Qwen Plus',
-		provider: 'qwen',
-		family: 'qwen',
-		version: 'qwen-plus',
-		detail: 'Balanced',
-		maxInputTokens: 1000000,
-		maxOutputTokens: 32768,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: true,
-		},
-		requiresThinkingParam: true,
-		pricing: {
-			USD: { cacheHitInput: 0.16, cacheMissInput: 0.4, output: 1.2 },
-			CNY: { cacheHitInput: 0.32, cacheMissInput: 0.8, output: 2 },
-		},
-		priceCategory: 'low',
-	},
-	{
-		id: 'qwen3-max',
-		name: 'Qwen3 Max',
-		provider: 'qwen',
-		family: 'qwen',
-		version: 'qwen3',
-		detail: 'Flagship',
-		maxInputTokens: 262144,
-		maxOutputTokens: 65536,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			// Stable `qwen3-max` is an instruct model and rejects `enable_thinking`.
-			// For a thinking flagship, override the API id to `qwen3-max-preview`
-			// (or `qwen3-max-thinking`) via `cllms.modelIdOverrides` and flip
-			// this to true.
-			thinking: false,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0.24, cacheMissInput: 1.2, output: 6 },
-			CNY: { cacheHitInput: 1.2, cacheMissInput: 6, output: 30 },
-		},
-		priceCategory: 'medium',
-	},
-	{
-		id: 'qwen3-vl-plus',
-		name: 'Qwen3-VL Plus',
-		provider: 'qwen',
-		family: 'qwen',
-		version: 'qwen3-vl',
-		detail: 'Native vision',
-		maxInputTokens: 262144,
-		maxOutputTokens: 32768,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: true,
-			thinking: true,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0.16, cacheMissInput: 0.8, output: 3.2 },
-			CNY: { cacheHitInput: 0.6, cacheMissInput: 1.5, output: 6 },
-		},
-		priceCategory: 'medium',
-	},
-	{
 		id: 'qwen3.8-max',
 		name: 'Qwen3.8 Max',
 		provider: 'qwen',
@@ -442,27 +375,6 @@ export const MODELS: ModelDefinition[] = [
 		},
 		priceCategory: 'medium',
 	},
-	{
-		id: 'qwen3.6-flash',
-		name: 'Qwen3.6 Flash',
-		provider: 'qwen',
-		family: 'qwen',
-		version: 'qwen3.6',
-		detail: 'Fast & light',
-		maxInputTokens: 1000000,
-		maxOutputTokens: 65536,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: true,
-		},
-		requiresThinkingParam: true,
-		pricing: {
-			USD: { cacheHitInput: 0.2, cacheMissInput: 0.5, output: 2.4 },
-			CNY: { cacheHitInput: 0.48, cacheMissInput: 1.2, output: 7.2 },
-		},
-		priceCategory: 'low',
-	},
 
 	// ---- Qwen (DashScope International / Singapore) ----
 	// Models are identical to the domestic Qwen lineup but connect to the
@@ -510,69 +422,6 @@ export const MODELS: ModelDefinition[] = [
 			CNY: { cacheHitInput: 0.4, cacheMissInput: 2, output: 8 },
 		},
 		priceCategory: 'low',
-	},
-	{
-		id: 'qwen-plus-intl',
-		name: 'Qwen Plus (Intl)',
-		provider: 'qwen-intl',
-		family: 'qwen',
-		version: 'qwen-plus',
-		detail: 'Balanced',
-		maxInputTokens: 1000000,
-		maxOutputTokens: 32768,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: true,
-		},
-		requiresThinkingParam: true,
-		pricing: {
-			USD: { cacheHitInput: 0.16, cacheMissInput: 0.4, output: 1.2 },
-			CNY: { cacheHitInput: 0.32, cacheMissInput: 0.8, output: 2 },
-		},
-		priceCategory: 'low',
-	},
-	{
-		id: 'qwen3-max-intl',
-		name: 'Qwen3 Max (Intl)',
-		provider: 'qwen-intl',
-		family: 'qwen',
-		version: 'qwen3',
-		detail: 'Flagship',
-		maxInputTokens: 262144,
-		maxOutputTokens: 65536,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: false,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0.24, cacheMissInput: 1.2, output: 6 },
-			CNY: { cacheHitInput: 1.2, cacheMissInput: 6, output: 30 },
-		},
-		priceCategory: 'medium',
-	},
-	{
-		id: 'qwen3-vl-plus-intl',
-		name: 'Qwen3-VL Plus (Intl)',
-		provider: 'qwen-intl',
-		family: 'qwen',
-		version: 'qwen3-vl',
-		detail: 'Native vision',
-		maxInputTokens: 262144,
-		maxOutputTokens: 32768,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: true,
-			thinking: true,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0.16, cacheMissInput: 0.8, output: 3.2 },
-			CNY: { cacheHitInput: 0.6, cacheMissInput: 1.5, output: 6 },
-		},
-		priceCategory: 'medium',
 	},
 	{
 		id: 'qwen3.8-max-intl',
@@ -638,27 +487,6 @@ export const MODELS: ModelDefinition[] = [
 		},
 		priceCategory: 'medium',
 	},
-	{
-		id: 'qwen3.6-flash-intl',
-		name: 'Qwen3.6 Flash (Intl)',
-		provider: 'qwen-intl',
-		family: 'qwen',
-		version: 'qwen3.6',
-		detail: 'Fast & light',
-		maxInputTokens: 1000000,
-		maxOutputTokens: 65536,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: true,
-		},
-		requiresThinkingParam: true,
-		pricing: {
-			USD: { cacheHitInput: 0.2, cacheMissInput: 0.5, output: 2.4 },
-			CNY: { cacheHitInput: 0.48, cacheMissInput: 1.2, output: 7.2 },
-		},
-		priceCategory: 'low',
-	},
 
 	// ---- DeepSeek ----
 	// Both V4 models default to thinking on and accept `thinking: { type }` plus
@@ -711,9 +539,30 @@ export const MODELS: ModelDefinition[] = [
 
 	// ---- z.ai (Zhipu GLM) ----
 	// Pricing is z.ai's public USD pricing per 1M tokens; CNY values are
-	// approximate conversions and only drive the picker's cost hints. GLM-5.1
-	// and older use `thinking: { type }` only. GLM-5.2 also accepts
+	// approximate conversions and only drive the picker's cost hints. GLM-5.1 uses
+	// `thinking: { type }` only. GLM-5.2 also accepts
 	// `reasoning_effort` (`high` / `max`) via the DeepSeek thinking style.
+	{
+		id: 'glm-5.3',
+		name: 'GLM-5.3',
+		provider: 'zai',
+		family: 'glm',
+		version: 'glm-5.3',
+		detail: 'Latest flagship',
+		maxInputTokens: 1000000,
+		maxOutputTokens: 128000,
+		capabilities: {
+			toolCalling: LLM_TOOLS_LIMIT,
+			imageInput: false,
+			thinking: true,
+		},
+		requiresThinkingParam: false,
+		pricing: {
+			USD: { cacheHitInput: 0.26, cacheMissInput: 1.4, output: 4.4 },
+			CNY: { cacheHitInput: 1.9, cacheMissInput: 10, output: 32 },
+		},
+		priceCategory: 'high',
+	},
 	{
 		id: 'glm-5.2',
 		name: 'GLM-5.2',
@@ -758,69 +607,6 @@ export const MODELS: ModelDefinition[] = [
 		priceCategory: 'high',
 	},
 	{
-		id: 'glm-4.6',
-		name: 'GLM-4.6',
-		provider: 'zai',
-		family: 'glm',
-		version: 'glm-4.6',
-		detail: 'Coding & agents',
-		maxInputTokens: 200000,
-		maxOutputTokens: 128000,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: true,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0.11, cacheMissInput: 0.6, output: 2.2 },
-			CNY: { cacheHitInput: 0.8, cacheMissInput: 4.3, output: 16 },
-		},
-		priceCategory: 'medium',
-	},
-	{
-		id: 'glm-4.5-air',
-		name: 'GLM-4.5-Air',
-		provider: 'zai',
-		family: 'glm',
-		version: 'glm-4.5',
-		detail: 'Lightweight & fast',
-		maxInputTokens: 128000,
-		maxOutputTokens: 65536,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: true,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0.03, cacheMissInput: 0.2, output: 1.1 },
-			CNY: { cacheHitInput: 0.2, cacheMissInput: 1.5, output: 8 },
-		},
-		priceCategory: 'low',
-	},
-	{
-		id: 'glm-4.5-airx',
-		name: 'GLM-4.5-AirX',
-		provider: 'zai',
-		family: 'glm',
-		version: 'glm-4.5',
-		detail: 'Ultra-fast',
-		maxInputTokens: 128000,
-		maxOutputTokens: 96000,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: true,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0.05, cacheMissInput: 0.3, output: 1.4 },
-			CNY: { cacheHitInput: 0.35, cacheMissInput: 2.1, output: 10 },
-		},
-		priceCategory: 'low',
-	},
-	{
 		id: 'glm-5',
 		name: 'GLM-5',
 		provider: 'zai',
@@ -863,69 +649,6 @@ export const MODELS: ModelDefinition[] = [
 		priceCategory: 'high',
 	},
 	{
-		id: 'glm-4.7',
-		name: 'GLM-4.7',
-		provider: 'zai',
-		family: 'glm',
-		version: 'glm-4.7',
-		detail: 'Stronger coding',
-		maxInputTokens: 200000,
-		maxOutputTokens: 128000,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: true,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0.12, cacheMissInput: 0.3, output: 1.1 },
-			CNY: { cacheHitInput: 0.8, cacheMissInput: 2, output: 8 },
-		},
-		priceCategory: 'medium',
-	},
-	{
-		id: 'glm-4.7-flashx',
-		name: 'GLM-4.7-FlashX',
-		provider: 'zai',
-		family: 'glm',
-		version: 'glm-4.7-flashx',
-		detail: 'Fast & affordable',
-		maxInputTokens: 200000,
-		maxOutputTokens: 128000,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: false,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0.04, cacheMissInput: 0.1, output: 0.5 },
-			CNY: { cacheHitInput: 0.2, cacheMissInput: 0.5, output: 3 },
-		},
-		priceCategory: 'low',
-	},
-	{
-		id: 'glm-4.7-flash',
-		name: 'GLM-4.7-Flash',
-		provider: 'zai',
-		family: 'glm',
-		version: 'glm-4.7',
-		detail: 'Free model',
-		maxInputTokens: 200000,
-		maxOutputTokens: 128000,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: true,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0, cacheMissInput: 0, output: 0 },
-			CNY: { cacheHitInput: 0, cacheMissInput: 0, output: 0 },
-		},
-		priceCategory: 'low',
-	},
-	{
 		id: 'glm-5v-turbo',
 		name: 'GLM-5V-Turbo',
 		provider: 'zai',
@@ -948,10 +671,9 @@ export const MODELS: ModelDefinition[] = [
 	},
 
 	// ---- MiniMax ----
-	// MiniMax reasoning is always on for M2.x and on-by-default for M3; we send
-	// `reasoning_split: true` so reasoning streams in `reasoning_content`. M3 is
-	// natively multimodal (text/image/video in) and accepts images directly;
-	// M2.7 is text-only and falls back to the vision proxy.
+	// MiniMax reasoning is on-by-default for M3; we send `reasoning_split: true`
+	// so reasoning streams in `reasoning_content`. M3 is natively multimodal
+	// (text/image/video in) and accepts images directly.
 	// USD pricing per 1M tokens (M3 figures approximate); CNY is an approximate
 	// conversion and only drives the picker cost hints.
 	{
@@ -972,48 +694,6 @@ export const MODELS: ModelDefinition[] = [
 		pricing: {
 			USD: { cacheHitInput: 0.06, cacheMissInput: 0.3, output: 1.2 },
 			CNY: { cacheHitInput: 0.4, cacheMissInput: 2.2, output: 8.6 },
-		},
-		priceCategory: 'low',
-	},
-	{
-		id: 'MiniMax-M2.7',
-		name: 'MiniMax-M2.7',
-		provider: 'minimax',
-		family: 'minimax',
-		version: 'minimax-m2.7',
-		detail: 'Fast coding',
-		maxInputTokens: 204800,
-		maxOutputTokens: 65536,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: true,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0.059, cacheMissInput: 0.299, output: 1.2 },
-			CNY: { cacheHitInput: 0.4, cacheMissInput: 2.2, output: 8.6 },
-		},
-		priceCategory: 'low',
-	},
-	{
-		id: 'MiniMax-M2.5',
-		name: 'MiniMax-M2.5',
-		provider: 'minimax',
-		family: 'minimax',
-		version: 'minimax-m2.5',
-		detail: 'Cost-effective',
-		maxInputTokens: 192000,
-		maxOutputTokens: 32768,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: true,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0.06, cacheMissInput: 0.3, output: 1.2 },
-			CNY: { cacheHitInput: 0.4, cacheMissInput: 2.1, output: 8.4 },
 		},
 		priceCategory: 'low',
 	},
@@ -1039,48 +719,6 @@ export const MODELS: ModelDefinition[] = [
 		pricing: {
 			USD: { cacheHitInput: 0.06, cacheMissInput: 0.3, output: 1.2 },
 			CNY: { cacheHitInput: 0.4, cacheMissInput: 2.2, output: 8.6 },
-		},
-		priceCategory: 'low',
-	},
-	{
-		id: 'MiniMax-M2.7-intl',
-		name: 'MiniMax-M2.7 (Intl)',
-		provider: 'minimax-intl',
-		family: 'minimax',
-		version: 'minimax-m2.7',
-		detail: 'Fast coding',
-		maxInputTokens: 204800,
-		maxOutputTokens: 65536,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: true,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0.059, cacheMissInput: 0.299, output: 1.2 },
-			CNY: { cacheHitInput: 0.4, cacheMissInput: 2.2, output: 8.6 },
-		},
-		priceCategory: 'low',
-	},
-	{
-		id: 'MiniMax-M2.5-intl',
-		name: 'MiniMax-M2.5 (Intl)',
-		provider: 'minimax-intl',
-		family: 'minimax',
-		version: 'minimax-m2.5',
-		detail: 'Cost-effective',
-		maxInputTokens: 192000,
-		maxOutputTokens: 32768,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: true,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0.06, cacheMissInput: 0.3, output: 1.2 },
-			CNY: { cacheHitInput: 0.4, cacheMissInput: 2.1, output: 8.4 },
 		},
 		priceCategory: 'low',
 	},
@@ -1131,27 +769,6 @@ export const MODELS: ModelDefinition[] = [
 		pricing: {
 			USD: { cacheHitInput: 0.0028, cacheMissInput: 0.14, output: 0.28 },
 			CNY: { cacheHitInput: 0.02, cacheMissInput: 1, output: 2 },
-		},
-		priceCategory: 'low',
-	},
-	{
-		id: 'mimo-v2-flash',
-		name: 'MiMo V2 Flash',
-		provider: 'xiaomi',
-		family: 'mimo',
-		version: 'mimo-v2',
-		detail: 'Fast & low cost',
-		maxInputTokens: 262144,
-		maxOutputTokens: 65536,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: true,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0.01, cacheMissInput: 0.1, output: 0.3 },
-			CNY: { cacheHitInput: 0.07, cacheMissInput: 0.7, output: 2.1 },
 		},
 		priceCategory: 'low',
 	},
@@ -1382,9 +999,9 @@ export const MODELS: ModelDefinition[] = [
 	},
 
 	// ---- Tencent Hunyuan (混元) ----
-	// Hunyuan provides an OpenAI-compatible endpoint. HY 2.0 Think and T1 are
-	// deep-thinking models; TurboS is the fast everyday model; A13B is the
-	// lightweight budget option. Thinking uses GLM-style
+	// Hunyuan provides an OpenAI-compatible endpoint. HY 2.0 Think is the
+	// deep-thinking model; HY 2.0 Instruct is the fast instruction-following
+	// model. Thinking uses GLM-style
 	// `thinking: { type: 'enabled' | 'disabled' }`. No native vision models
 	// yet for coding, so images fall back to the vision proxy.
 	{
@@ -1407,69 +1024,6 @@ export const MODELS: ModelDefinition[] = [
 			CNY: { cacheHitInput: 0, cacheMissInput: 3.975, output: 15.9 },
 		},
 		priceCategory: 'medium',
-	},
-	{
-		id: 'hunyuan-turbos',
-		name: 'Hunyuan TurboS',
-		provider: 'hunyuan',
-		family: 'hunyuan',
-		version: 'hunyuan-turbos',
-		detail: 'Fast & balanced',
-		maxInputTokens: 32768,
-		maxOutputTokens: 8192,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: false,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0, cacheMissInput: 0.11, output: 0.28 },
-			CNY: { cacheHitInput: 0, cacheMissInput: 0.8, output: 2 },
-		},
-		priceCategory: 'low',
-	},
-	{
-		id: 'hunyuan-t1',
-		name: 'Hunyuan T1',
-		provider: 'hunyuan',
-		family: 'hunyuan',
-		version: 'hunyuan-t1',
-		detail: 'Deep thinking',
-		maxInputTokens: 32768,
-		maxOutputTokens: 8192,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: true,
-		},
-		requiresThinkingParam: true,
-		pricing: {
-			USD: { cacheHitInput: 0, cacheMissInput: 0.14, output: 0.56 },
-			CNY: { cacheHitInput: 0, cacheMissInput: 1, output: 4 },
-		},
-		priceCategory: 'low',
-	},
-	{
-		id: 'hunyuan-a13b',
-		name: 'Hunyuan A13B',
-		provider: 'hunyuan',
-		family: 'hunyuan',
-		version: 'hunyuan-a13b',
-		detail: 'Lightweight & fast',
-		maxInputTokens: 32768,
-		maxOutputTokens: 8192,
-		capabilities: {
-			toolCalling: LLM_TOOLS_LIMIT,
-			imageInput: false,
-			thinking: false,
-		},
-		requiresThinkingParam: false,
-		pricing: {
-			USD: { cacheHitInput: 0, cacheMissInput: 0.07, output: 0.28 },
-			CNY: { cacheHitInput: 0, cacheMissInput: 0.5, output: 2 },
-		},
-		priceCategory: 'low',
 	},
 	{
 		id: 'hunyuan-2.0-instruct',

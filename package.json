@@ -3,7 +3,7 @@
   "displayName": "CLLMs for Copilot Chat",
   "description": "Pick Qwen, DeepSeek, GLM (z.ai), MiniMax, Xiaomi MiMo, Moonshot Kimi, and Tencent Hunyuan models from the Copilot Chat model picker. Vision, thinking mode, agent tools — zero config, BYOK.",
   "icon": "resources/icon.png",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "publisher": "CuiLiAn",
   "license": "MIT",
   "repository": {
@@ -420,13 +420,9 @@
           "default": {
             "qwen3-coder-plus": "qwen3-coder-plus",
             "qwen3-coder-flash": "qwen3-coder-flash",
-            "qwen-plus": "qwen-plus",
-            "qwen3-max": "qwen3-max",
-            "qwen3-vl-plus": "qwen3-vl-plus",
             "qwen3.8-max": "qwen3.8-max",
             "qwen3.7-max": "qwen3.7-max",
-            "qwen3.7-plus": "qwen3.7-plus",
-            "qwen3.6-flash": "qwen3.6-flash"
+            "qwen3.7-plus": "qwen3.7-plus"
           },
           "description": "%cllms.config.modelIdOverrides.description%",
           "additionalProperties": false,
@@ -434,18 +430,6 @@
             "qwen3-coder-plus": {
               "type": "string",
               "description": "%cllms.config.modelIdOverrides.qwen3-coder-plus.description%"
-            },
-            "qwen-plus": {
-              "type": "string",
-              "description": "%cllms.config.modelIdOverrides.qwen-plus.description%"
-            },
-            "qwen3-max": {
-              "type": "string",
-              "description": "%cllms.config.modelIdOverrides.qwen3-max.description%"
-            },
-            "qwen3-vl-plus": {
-              "type": "string",
-              "description": "%cllms.config.modelIdOverrides.qwen3-vl-plus.description%"
             },
             "qwen3.8-max": {
               "type": "string",
@@ -462,10 +446,6 @@
             "qwen3-coder-flash": {
               "type": "string",
               "description": "%cllms.config.modelIdOverrides.qwen3-coder-flash.description%"
-            },
-            "qwen3.6-flash": {
-              "type": "string",
-              "description": "%cllms.config.modelIdOverrides.qwen3.6-flash.description%"
             }
           }
         },
@@ -479,13 +459,9 @@
           "default": {
             "qwen3-coder-plus-intl": "qwen3-coder-plus",
             "qwen3-coder-flash-intl": "qwen3-coder-flash",
-            "qwen-plus-intl": "qwen-plus",
-            "qwen3-max-intl": "qwen3-max",
-            "qwen3-vl-plus-intl": "qwen3-vl-plus",
             "qwen3.8-max-intl": "qwen3.8-max",
             "qwen3.7-max-intl": "qwen3.7-max",
-            "qwen3.7-plus-intl": "qwen3.7-plus",
-            "qwen3.6-flash-intl": "qwen3.6-flash"
+            "qwen3.7-plus-intl": "qwen3.7-plus"
           },
           "markdownDescription": "%cllms.config.qwenIntl.modelIdOverrides.description%",
           "additionalProperties": false,
@@ -493,18 +469,6 @@
             "qwen3-coder-plus-intl": {
               "type": "string",
               "description": "%cllms.config.qwenIntl.modelIdOverrides.qwen3-coder-plus-intl.description%"
-            },
-            "qwen-plus-intl": {
-              "type": "string",
-              "description": "%cllms.config.qwenIntl.modelIdOverrides.qwen-plus-intl.description%"
-            },
-            "qwen3-max-intl": {
-              "type": "string",
-              "description": "%cllms.config.qwenIntl.modelIdOverrides.qwen3-max-intl.description%"
-            },
-            "qwen3-vl-plus-intl": {
-              "type": "string",
-              "description": "%cllms.config.qwenIntl.modelIdOverrides.qwen3-vl-plus-intl.description%"
             },
             "qwen3.8-max-intl": {
               "type": "string",
@@ -521,10 +485,6 @@
             "qwen3-coder-flash-intl": {
               "type": "string",
               "description": "%cllms.config.qwenIntl.modelIdOverrides.qwen3-coder-flash-intl.description%"
-            },
-            "qwen3.6-flash-intl": {
-              "type": "string",
-              "description": "%cllms.config.qwenIntl.modelIdOverrides.qwen3.6-flash-intl.description%"
             }
           }
         },
@@ -560,21 +520,20 @@
         "cllms.zai.modelIdOverrides": {
           "type": "object",
           "default": {
+            "glm-5.3": "glm-5.3",
             "glm-5.2": "glm-5.2",
             "glm-5.1": "glm-5.1",
-            "glm-4.6": "glm-4.6",
-            "glm-4.5-air": "glm-4.5-air",
-            "glm-4.5-airx": "glm-4.5-airx",
             "glm-5": "glm-5",
             "glm-5-turbo": "glm-5-turbo",
-            "glm-4.7": "glm-4.7",
-            "glm-4.7-flashx": "glm-4.7",
-            "glm-4.7-flash": "glm-4.7-flash",
             "glm-5v-turbo": "glm-5v-turbo"
           },
           "markdownDescription": "%cllms.config.zai.modelIdOverrides.description%",
           "additionalProperties": false,
           "properties": {
+            "glm-5.3": {
+              "type": "string",
+              "description": "%cllms.config.zai.modelIdOverrides.glm-5.3.description%"
+            },
             "glm-5.2": {
               "type": "string",
               "description": "%cllms.config.zai.modelIdOverrides.glm-5.2.description%"
@@ -583,18 +542,6 @@
               "type": "string",
               "description": "%cllms.config.zai.modelIdOverrides.glm-5.1.description%"
             },
-            "glm-4.6": {
-              "type": "string",
-              "description": "%cllms.config.zai.modelIdOverrides.glm-4.6.description%"
-            },
-            "glm-4.5-air": {
-              "type": "string",
-              "description": "%cllms.config.zai.modelIdOverrides.glm-4.5-air.description%"
-            },
-            "glm-4.5-airx": {
-              "type": "string",
-              "description": "%cllms.config.zai.modelIdOverrides.glm-4.5-airx.description%"
-            },
             "glm-5": {
               "type": "string",
               "description": "%cllms.config.zai.modelIdOverrides.glm-5.description%"
@@ -602,18 +549,6 @@
             "glm-5-turbo": {
               "type": "string",
               "description": "%cllms.config.zai.modelIdOverrides.glm-5-turbo.description%"
-            },
-            "glm-4.7": {
-              "type": "string",
-              "description": "%cllms.config.zai.modelIdOverrides.glm-4.7.description%"
-            },
-            "glm-4.7-flashx": {
-              "type": "string",
-              "description": "%cllms.config.zai.modelIdOverrides.glm-4.7-flashx.description%"
-            },
-            "glm-4.7-flash": {
-              "type": "string",
-              "description": "%cllms.config.zai.modelIdOverrides.glm-4.7-flash.description%"
             },
             "glm-5v-turbo": {
               "type": "string",
@@ -629,9 +564,7 @@
         "cllms.minimax.modelIdOverrides": {
           "type": "object",
           "default": {
-            "MiniMax-M3": "MiniMax-M3",
-            "MiniMax-M2.7": "MiniMax-M2.7",
-            "MiniMax-M2.5": "MiniMax-M2.5"
+            "MiniMax-M3": "MiniMax-M3"
           },
           "markdownDescription": "%cllms.config.minimax.modelIdOverrides.description%",
           "additionalProperties": false,
@@ -639,14 +572,6 @@
             "MiniMax-M3": {
               "type": "string",
               "description": "%cllms.config.minimax.modelIdOverrides.MiniMax-M3.description%"
-            },
-            "MiniMax-M2.7": {
-              "type": "string",
-              "description": "%cllms.config.minimax.modelIdOverrides.MiniMax-M2.7.description%"
-            },
-            "MiniMax-M2.5": {
-              "type": "string",
-              "description": "%cllms.config.minimax.modelIdOverrides.MiniMax-M2.5.description%"
             }
           }
         },
@@ -658,9 +583,7 @@
         "cllms.minimaxIntl.modelIdOverrides": {
           "type": "object",
           "default": {
-            "MiniMax-M3-intl": "MiniMax-M3",
-            "MiniMax-M2.7-intl": "MiniMax-M2.7",
-            "MiniMax-M2.5-intl": "MiniMax-M2.5"
+            "MiniMax-M3-intl": "MiniMax-M3"
           },
           "markdownDescription": "%cllms.config.minimaxIntl.modelIdOverrides.description%",
           "additionalProperties": false,
@@ -668,14 +591,6 @@
             "MiniMax-M3-intl": {
               "type": "string",
               "description": "%cllms.config.minimaxIntl.modelIdOverrides.MiniMax-M3-intl.description%"
-            },
-            "MiniMax-M2.7-intl": {
-              "type": "string",
-              "description": "%cllms.config.minimaxIntl.modelIdOverrides.MiniMax-M2.7-intl.description%"
-            },
-            "MiniMax-M2.5-intl": {
-              "type": "string",
-              "description": "%cllms.config.minimaxIntl.modelIdOverrides.MiniMax-M2.5-intl.description%"
             }
           }
         },
@@ -688,8 +603,7 @@
           "type": "object",
           "default": {
             "mimo-v2.5-pro": "mimo-v2.5-pro",
-            "mimo-v2.5": "mimo-v2.5",
-            "mimo-v2-flash": "mimo-v2-flash"
+            "mimo-v2.5": "mimo-v2.5"
           },
           "markdownDescription": "%cllms.config.xiaomi.modelIdOverrides.description%",
           "additionalProperties": false,
@@ -701,10 +615,6 @@
             "mimo-v2.5": {
               "type": "string",
               "description": "%cllms.config.xiaomi.modelIdOverrides.mimo-v2.5.description%"
-            },
-            "mimo-v2-flash": {
-              "type": "string",
-              "description": "%cllms.config.xiaomi.modelIdOverrides.mimo-v2-flash.description%"
             }
           }
         },
@@ -795,9 +705,6 @@
           "type": "object",
           "default": {
             "hunyuan-2.0-think": "hunyuan-2.0-thinking-20251109",
-            "hunyuan-turbos": "hunyuan-turbos-latest",
-            "hunyuan-t1": "hunyuan-t1-latest",
-            "hunyuan-a13b": "hunyuan-a13b",
             "hunyuan-2.0-instruct": "hunyuan-2.0-instruct-20251111"
           },
           "markdownDescription": "%cllms.config.hunyuan.modelIdOverrides.description%",
@@ -806,18 +713,6 @@
             "hunyuan-2.0-think": {
               "type": "string",
               "description": "%cllms.config.hunyuan.modelIdOverrides.hunyuan-2.0-think.description%"
-            },
-            "hunyuan-turbos": {
-              "type": "string",
-              "description": "%cllms.config.hunyuan.modelIdOverrides.hunyuan-turbos.description%"
-            },
-            "hunyuan-t1": {
-              "type": "string",
-              "description": "%cllms.config.hunyuan.modelIdOverrides.hunyuan-t1.description%"
-            },
-            "hunyuan-a13b": {
-              "type": "string",
-              "description": "%cllms.config.hunyuan.modelIdOverrides.hunyuan-a13b.description%"
             },
             "hunyuan-2.0-instruct": {
               "type": "string",

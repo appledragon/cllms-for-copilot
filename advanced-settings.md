@@ -33,7 +33,7 @@ Thinking models replay marker-carried `reasoning_content` on later turns. The de
 Use `cllms.utility.maxOutputTokens` and `cllms.utility.modelIdByProvider` only for lightweight helper requests such as chat titles, commit messages, branch names, inline progress, rename suggestions, prompt categorization, settings resolution, and todo tracking. Real agent turns and unrecognized requests are never capped or downgraded by these settings. Prefer VS Code's native utility model routing when available.
 
 - `cllms.utility.maxOutputTokens` is combined with `cllms.maxTokens` by taking the smaller non-zero cap.
-- `cllms.utility.modelIdByProvider` is keyed by provider id, for example `{ "qwen": "qwen3.6-flash" }`.
+- `cllms.utility.modelIdByProvider` is keyed by provider id, for example `{ "qwen": "qwen3-coder-flash" }`.
 - Session cost estimates use the utility override model when it matches a known model with pricing; unknown override IDs are tracked as unbilled usage instead of being estimated from the selected model.
 - Utility routing is classifier-driven, so prompts that do not look like one-shot helper work keep the selected chat/agent model.
 

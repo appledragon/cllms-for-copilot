@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## 0.7.0
+
+- **Remove retired legacy models** — dropped the superseded Qwen models (Qwen Plus, Qwen3 Max, Qwen3-VL Plus, Qwen3.6/3.7 Flash with `-intl` variants), GLM-4.5-Air/AirX, GLM-4.6, GLM-4.7/4.7-Flash/4.7-FlashX, MiniMax M2.5/M2.7 (with `-intl` variants), MiMo V2 Flash, and Hunyuan TurboS/T1/A13B from the model registry, i18n strings, `modelIdOverrides` settings, and docs. Kimi K2.5/K2.6 remain available.
 - **Update DeepSeek pricing** — V4 Flash / Pro now use the official off-peak rates from 2026-08-16 (peak is 2× during Beijing 09:00–12:00 and 14:00–18:00). Session cost remains a single-rate estimate.
 
 ## 0.6.0

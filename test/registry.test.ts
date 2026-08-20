@@ -141,41 +141,42 @@ describe("model registry", () => {
     }
   });
 
-  it("exposes the MiniMax models on the minimax provider; only M3 has native vision", () => {
+  it("exposes the MiniMax models on the minimax provider; M3 has native vision", () => {
     const minimaxIds = MODELS.filter((m) => m.provider === "minimax")
       .map((m) => m.id)
       .sort();
-    assert.deepEqual(minimaxIds, ["MiniMax-M2.5", "MiniMax-M2.7", "MiniMax-M3"]);
-    for (const id of ["MiniMax-M3", "MiniMax-M2.7", "MiniMax-M2.5"]) {
-      const model = MODELS.find((m) => m.id === id);
-      assert.ok(model, `missing ${id}`);
-      assert.equal(model.capabilities.thinking, true, `${id} should be a thinking model`);
-    }
-    // M3 is natively multimodal; M2.x are text-only and use the vision proxy.
-    assert.equal(MODELS.find((m) => m.id === "MiniMax-M3")?.capabilities.imageInput, true);
-    assert.equal(MODELS.find((m) => m.id === "MiniMax-M2.7")?.capabilities.imageInput, false);
-    assert.equal(MODELS.find((m) => m.id === "MiniMax-M2.5")?.capabilities.imageInput, false);
+    assert.deepEqual(minimaxIds, ["MiniMax-M3"]);
+    const model = MODELS.find((m) => m.id === "MiniMax-M3");
+    assert.ok(model, "missing MiniMax-M3");
+    assert.equal(model.capabilities.thinking, true, "MiniMax-M3 should be a thinking model");
+    // M3 is natively multimodal.
+    assert.equal(model.capabilities.imageInput, true);
   });
 
   it("exposes the Xiaomi MiMo models on the xiaomi provider", () => {
     const xiaomiIds = MODELS.filter((m) => m.provider === "xiaomi")
       .map((m) => m.id)
       .sort();
-    assert.deepEqual(xiaomiIds, ["mimo-v2-flash", "mimo-v2.5", "mimo-v2.5-pro"]);
+    assert.deepEqual(xiaomiIds, ["mimo-v2.5", "mimo-v2.5-pro"]);
     for (const model of MODELS.filter((m) => m.provider === "xiaomi")) {
       assert.equal(model.capabilities.thinking, true, `${model.id} should be a thinking model`);
     }
-    // The omni model carries native vision; the others fall back to the proxy.
+    // The omni model carries native vision; the pro model falls back to the proxy.
     assert.equal(MODELS.find((m) => m.id === "mimo-v2.5")?.capabilities.imageInput, true);
     assert.equal(MODELS.find((m) => m.id === "mimo-v2.5-pro")?.capabilities.imageInput, false);
-    assert.equal(MODELS.find((m) => m.id === "mimo-v2-flash")?.capabilities.imageInput, false);
   });
 
   it("exposes the Moonshot Kimi models on the moonshot provider with native vision", () => {
     const moonshotIds = MODELS.filter((m) => m.provider === "moonshot")
       .map((m) => m.id)
       .sort();
-    assert.deepEqual(moonshotIds, ["kimi-k2.5", "kimi-k2.6", "kimi-k2.7", "kimi-k2.7-code-highspeed", "kimi-k3"]);
+    assert.deepEqual(moonshotIds, [
+      "kimi-k2.5",
+      "kimi-k2.6",
+      "kimi-k2.7",
+      "kimi-k2.7-code-highspeed",
+      "kimi-k3",
+    ]);
     for (const model of MODELS.filter((m) => m.provider === "moonshot")) {
       assert.equal(model.capabilities.thinking, true, `${model.id} should be a thinking model`);
       assert.equal(model.capabilities.imageInput, true, `${model.id} is natively multimodal`);
@@ -201,8 +202,6 @@ describe("model registry", () => {
       "kimi-k3",
       "kimi-k3-intl",
       "mimo-v2.5",
-      "qwen3-vl-plus",
-      "qwen3-vl-plus-intl",
       "qwen3.8-max",
       "qwen3.8-max-intl",
     ]);

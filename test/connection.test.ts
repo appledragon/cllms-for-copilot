@@ -24,19 +24,24 @@ describe("connection test feedback", () => {
     const duplicateMissingId = "shared-missing-model";
     const availableModelIds = qwenModels
       .map((model) => model.id)
-      .filter((id) => id !== "qwen-plus" && id !== "qwen3-max");
+      .filter((id) => id !== "qwen3-coder-plus" && id !== "qwen3-coder-flash");
 
     const stale = findStaleOverrides(PROVIDERS.qwen, availableModelIds, (_provider, modelId) =>
-      modelId === "qwen-plus" || modelId === "qwen3-max" ? duplicateMissingId : modelId,
+      modelId === "qwen3-coder-plus" || modelId === "qwen3-coder-flash"
+        ? duplicateMissingId
+        : modelId,
     );
 
     assert.deepEqual(stale, [
       {
         apiModelId: duplicateMissingId,
-        modelNames: ["Qwen Plus", "Qwen3 Max"],
+        modelNames: ["Qwen3 Coder Plus", "Qwen3 Coder Flash"],
       },
     ]);
-    assert.equal(formatStaleOverrides(stale), "shared-missing-model (Qwen Plus, Qwen3 Max)");
+    assert.equal(
+      formatStaleOverrides(stale),
+      "shared-missing-model (Qwen3 Coder Plus, Qwen3 Coder Flash)",
+    );
   });
 
   it("includes grouped stale override details in the success result", () => {
@@ -48,8 +53,8 @@ describe("connection test feedback", () => {
 
     assert.equal(result.kind, "stale-overrides");
     assert.match(result.message, /configured model IDs were not found/);
-    assert.match(result.message, /Qwen Plus/);
-    assert.match(result.message, /qwen-plus/);
+    assert.match(result.message, /Qwen3 Coder Flash/);
+    assert.match(result.message, /qwen3-coder-flash/);
   });
 
   it("formats connection failure summaries without leaking stacks", () => {

@@ -30,7 +30,7 @@ function mockResponse(opts: {
 const context: RequestErrorContext = {
   baseUrl: "https://example.com/v1",
   providerId: "qwen",
-  request: { model: "qwen3-max", messages: [{ role: "user", content: "hi" }], stream: true },
+  request: { model: "qwen3.7-max", messages: [{ role: "user", content: "hi" }], stream: true },
 };
 
 const moonshotContext: RequestErrorContext = {

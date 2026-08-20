@@ -325,7 +325,7 @@ describe("runtime integration", () => {
   it("estimates session cost from the actual utility override model and surfaces actions", async () => {
     const originalFetch = globalThis.fetch;
     let requestBody: { model?: string } | undefined;
-    const utilityModel = MODELS.find((model) => model.id === "qwen3.6-flash");
+    const utilityModel = MODELS.find((model) => model.id === "qwen3-coder-flash");
     const selectedModel = MODELS.find((model) => model.id === "qwen3-coder-plus");
     assert.ok(utilityModel);
     assert.ok(selectedModel);
