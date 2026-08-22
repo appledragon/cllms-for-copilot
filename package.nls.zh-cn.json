@@ -66,6 +66,7 @@
   "cllms.config.deepseek.baseUrl.description": "DeepSeek API 基础 URL（OpenAI 兼容模式），默认使用 https://api.deepseek.com/v1。",
   "cllms.config.deepseek.modelIdOverrides.description": "覆盖各 DeepSeek 模型实际使用的 API 模型 ID，默认使用官方 DeepSeek ID，仅在对接不同兼容端点或模型名称时需要修改。",
   "cllms.config.deepseek.modelIdOverrides.deepseek-v4-flash.description": "DeepSeek-V4-Flash 的 API 模型 ID。",
+  "cllms.config.deepseek.modelIdOverrides.deepseek-v4-flash-vision-exp.description": "DeepSeek-V4-Flash-Vision-Exp 的 API 模型 ID。",
   "cllms.config.deepseek.modelIdOverrides.deepseek-v4-pro.description": "DeepSeek-V4-Pro 的 API 模型 ID。",
   "cllms.config.zai.baseUrl.description": "z.ai（智谱 GLM）API 基础 URL（OpenAI 兼容模式），默认使用通用端点 https://api.z.ai/api/paas/v4。如果使用 GLM Coding Plan 订阅，请改为 https://api.z.ai/api/coding/paas/v4。",
   "cllms.config.zai.modelIdOverrides.description": "覆盖各 z.ai（GLM）模型实际使用的 API 模型 ID，默认使用官方 z.ai ID，仅在对接不同兼容端点或模型名称时需要修改。",

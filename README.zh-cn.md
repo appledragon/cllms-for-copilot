@@ -55,6 +55,7 @@ CLLMs 支持 **Remote - SSH**、**Dev Containers** 和 **WSL**。扩展运行在
 | 模型 | 适用场景 |
 |---|---|
 | **DeepSeek-V4-Flash** | 旗舰极速，1M 上下文，支持思考与非思考模式 |
+| **DeepSeek-V4-Flash-Vision-Exp** | 实验性多模态极速模型，原生图片输入，定价与 Flash 一致 |
 | **DeepSeek-V4-Pro** | 旗舰专业，1M 上下文，默认深度思考 |
 
 **z.ai（智谱 GLM）**

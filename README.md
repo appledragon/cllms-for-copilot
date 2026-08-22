@@ -57,6 +57,7 @@ Seven providers ship out of the box. Each model has its own API key and endpoint
 | Model | Best For |
 |---|---|
 | **DeepSeek-V4-Flash** | Fast flagship, 1M context, thinking & non-thinking modes |
+| **DeepSeek-V4-Flash-Vision-Exp** | Experimental multimodal Flash, native image input, same pricing as Flash |
 | **DeepSeek-V4-Pro** | Pro flagship, 1M context, deep thinking by default |
 
 **z.ai (Zhipu GLM)**

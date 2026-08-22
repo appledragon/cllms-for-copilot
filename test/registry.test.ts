@@ -134,11 +134,20 @@ describe("model registry", () => {
     const deepseekIds = MODELS.filter((m) => m.provider === "deepseek")
       .map((m) => m.id)
       .sort();
-    assert.deepEqual(deepseekIds, ["deepseek-v4-flash", "deepseek-v4-pro"]);
+    assert.deepEqual(deepseekIds, [
+      "deepseek-v4-flash",
+      "deepseek-v4-flash-vision-exp",
+      "deepseek-v4-pro",
+    ]);
     for (const model of MODELS.filter((m) => m.provider === "deepseek")) {
       assert.equal(model.capabilities.thinking, true, `${model.id} should be a thinking model`);
-      assert.equal(model.capabilities.imageInput, false, `${model.id} is text-only`);
     }
+    assert.equal(MODELS.find((m) => m.id === "deepseek-v4-flash")?.capabilities.imageInput, false);
+    assert.equal(MODELS.find((m) => m.id === "deepseek-v4-pro")?.capabilities.imageInput, false);
+    assert.equal(
+      MODELS.find((m) => m.id === "deepseek-v4-flash-vision-exp")?.capabilities.imageInput,
+      true,
+    );
   });
 
   it("exposes the MiniMax models on the minimax provider; M3 has native vision", () => {
@@ -190,6 +199,7 @@ describe("model registry", () => {
     assert.deepEqual(visionIds, [
       "MiniMax-M3",
       "MiniMax-M3-intl",
+      "deepseek-v4-flash-vision-exp",
       "glm-5v-turbo",
       "kimi-k2.5",
       "kimi-k2.5-intl",

@@ -489,10 +489,12 @@ export const MODELS: ModelDefinition[] = [
 	},
 
 	// ---- DeepSeek ----
-	// Both V4 models default to thinking on and accept `thinking: { type }` plus
+	// V4 models default to thinking on and accept `thinking: { type }` plus
 	// `reasoning_effort` (`high` / `max`). Pricing per 1M tokens is the official
 	// off-peak (idle) rate effective 2026-08-16 16:00 UTC; peak is 2× during
 	// 09:00–12:00 and 14:00–18:00 Beijing time (01:00–04:00 and 06:00–10:00 UTC).
+	// Flash-Vision-Exp matches Flash on text and pricing; images are billed as
+	// input tokens (up to 384 per image).
 	// https://api-docs.deepseek.com/quick_start/pricing
 	{
 		id: 'deepseek-v4-flash',
@@ -506,6 +508,27 @@ export const MODELS: ModelDefinition[] = [
 		capabilities: {
 			toolCalling: LLM_TOOLS_LIMIT,
 			imageInput: false,
+			thinking: true,
+		},
+		requiresThinkingParam: false,
+		pricing: {
+			USD: { cacheHitInput: 0.007, cacheMissInput: 0.22, output: 0.66 },
+			CNY: { cacheHitInput: 0.05, cacheMissInput: 1.5, output: 4.5 },
+		},
+		priceCategory: 'low',
+	},
+	{
+		id: 'deepseek-v4-flash-vision-exp',
+		name: 'DeepSeek-V4-Flash-Vision-Exp',
+		provider: 'deepseek',
+		family: 'deepseek',
+		version: 'deepseek-v4',
+		detail: 'Vision (exp)',
+		maxInputTokens: 1000000,
+		maxOutputTokens: 384000,
+		capabilities: {
+			toolCalling: LLM_TOOLS_LIMIT,
+			imageInput: true,
 			thinking: true,
 		},
 		requiresThinkingParam: false,

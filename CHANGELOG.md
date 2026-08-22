@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.7.1
+
+- **Add DeepSeek-V4-Flash-Vision-Exp** — experimental multimodal Flash with native image input. Text capability, 1M context, 384K output, thinking modes, tool calling, and pricing match V4-Flash; images are billed as input tokens (up to 384 per image).
 
 ## 0.7.0
 

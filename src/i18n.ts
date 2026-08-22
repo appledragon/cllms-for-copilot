@@ -51,6 +51,9 @@ const zh: Translations = {
 	'model.deepseek-v4-flash.detail': '旗舰极速',
 	'model.deepseek-v4-flash.tooltip':
 		'DeepSeek-V4-Flash 旗舰模型，1M 上下文，最高 384K 输出，支持思考与非思考两种模式、工具调用和 JSON 输出。',
+	'model.deepseek-v4-flash-vision-exp.detail': '实验视觉',
+	'model.deepseek-v4-flash-vision-exp.tooltip':
+		'DeepSeek-V4-Flash-Vision-Exp 实验性多模态模型，文本能力与 V4-Flash 持平，1M 上下文，最高 384K 输出，原生支持图片输入，支持思考与非思考两种模式、工具调用和 JSON 输出。',
 	'model.deepseek-v4-pro.detail': '旗舰专业',
 	'model.deepseek-v4-pro.tooltip':
 		'DeepSeek-V4-Pro 旗舰专业模型，1M 上下文，最高 384K 输出，默认深度思考模式，适合复杂推理与编码任务，支持工具调用和 JSON 输出。',
@@ -525,6 +528,9 @@ const en: Translations = {
 	'model.deepseek-v4-flash.detail': 'Fast flagship',
 	'model.deepseek-v4-flash.tooltip':
 		'DeepSeek-V4-Flash flagship with a 1M context and up to 384K output — supports both thinking and non-thinking modes, tool calling, and JSON output.',
+	'model.deepseek-v4-flash-vision-exp.detail': 'Vision (exp)',
+	'model.deepseek-v4-flash-vision-exp.tooltip':
+		'DeepSeek-V4-Flash-Vision-Exp experimental multimodal model matching V4-Flash on text — 1M context, up to 384K output, native image input, thinking and non-thinking modes, tool calling, and JSON output.',
 	'model.deepseek-v4-pro.detail': 'Pro flagship',
 	'model.deepseek-v4-pro.tooltip':
 		'DeepSeek-V4-Pro flagship with a 1M context and up to 384K output — deep thinking by default, ideal for complex reasoning and coding, with tool calling and JSON output.',

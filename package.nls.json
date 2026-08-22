@@ -66,6 +66,7 @@
   "cllms.config.deepseek.baseUrl.description": "DeepSeek API base URL (OpenAI-compatible). Defaults to https://api.deepseek.com/v1.",
   "cllms.config.deepseek.modelIdOverrides.description": "Override the API model ID sent for each DeepSeek model. Defaults are prefilled with official DeepSeek IDs; change them only when using a different compatible endpoint or model names.",
   "cllms.config.deepseek.modelIdOverrides.deepseek-v4-flash.description": "API model ID for DeepSeek-V4-Flash",
+  "cllms.config.deepseek.modelIdOverrides.deepseek-v4-flash-vision-exp.description": "API model ID for DeepSeek-V4-Flash-Vision-Exp",
   "cllms.config.deepseek.modelIdOverrides.deepseek-v4-pro.description": "API model ID for DeepSeek-V4-Pro",
   "cllms.config.zai.baseUrl.description": "z.ai (Zhipu GLM) API base URL (OpenAI-compatible). Defaults to the general endpoint https://api.z.ai/api/paas/v4. If you use a GLM Coding Plan subscription, set https://api.z.ai/api/coding/paas/v4 instead.",
   "cllms.config.zai.modelIdOverrides.description": "Override the API model ID sent for each z.ai (GLM) model. Defaults are prefilled with official z.ai IDs; change them only when using a different compatible endpoint or model names.",
